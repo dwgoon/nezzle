@@ -1,0 +1,8 @@
+qtpy
+ipython
+qtconsole
+numpy
+networkx
+matplotlib
+seaborn
+cachetools
