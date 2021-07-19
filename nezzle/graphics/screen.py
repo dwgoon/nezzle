@@ -45,7 +45,7 @@ class GraphicsView(QGraphicsView):
 
         # Create context menu
         self.pop_menu = QMenu(self)
-        self.pop_menu.addMenu(self.mw.ui_menuAlign)  # Use the existing one.
+        #self.pop_menu.addMenu(self.mw.ui_menuAlign)  # Use the existing one.
 
     def on_context_menu(self, event):
         self.pop_menu.exec_(self.mapToGlobal(event.pos()))
@@ -55,10 +55,10 @@ class GraphicsView(QGraphicsView):
         """
         items = self.scene().selected_movable_items()
 
-        if len(items) > 1:
-            self.mw.ui_menuAlign.setEnabled(True)
-        else:
-            self.mw.ui_menuAlign.setEnabled(False)
+        # if len(items) > 1:
+            # self.mw.ui_menuAlign.setEnabled(True)
+        # else:
+            # self.mw.ui_menuAlign.setEnabled(False)
 
     def mousePressEvent(self, event):
         if self.dragMode() == QGraphicsView.RubberBandDrag:

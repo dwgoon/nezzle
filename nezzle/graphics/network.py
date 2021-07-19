@@ -81,7 +81,7 @@ class Network(MappableItem):
         self.nodes[node.iden] = node
         self.scene.addItem(node)
         self.nxdg.add_node(node.iden)
-        self.nxdg.node[node.iden]['VIS'] = node
+        self.nxdg.nodes[node.iden]['VIS'] = node
 
     def remove_node(self, obj):
         if isinstance(obj, BaseNode):
