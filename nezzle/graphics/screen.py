@@ -45,7 +45,7 @@ class GraphicsView(QGraphicsView):
 
         # Create context menu
         self.pop_menu = QMenu(self)
-        #self.pop_menu.addMenu(self.mw.ui_menuAlign)  # Use the existing one.
+        self.pop_menu.addMenu(self.mw.ui_menuAlign)  # Use the existing one.
 
     def on_context_menu(self, event):
         self.pop_menu.exec_(self.mapToGlobal(event.pos()))
@@ -55,10 +55,10 @@ class GraphicsView(QGraphicsView):
         """
         items = self.scene().selected_movable_items()
 
-        # if len(items) > 1:
-            # self.mw.ui_menuAlign.setEnabled(True)
-        # else:
-            # self.mw.ui_menuAlign.setEnabled(False)
+        if len(items) > 1:
+            self.mw.ui_menuAlign.setEnabled(True)
+        else:
+            self.mw.ui_menuAlign.setEnabled(False)
 
     def mousePressEvent(self, event):
         if self.dragMode() == QGraphicsView.RubberBandDrag:
@@ -66,7 +66,7 @@ class GraphicsView(QGraphicsView):
             item_clicked = self.scene().itemAt(self.mapToScene(event.pos()),
                                                QTransform())
 
-            print("Item under mouse: %s"%item_clicked)
+            #print("Item under mouse: %s"%item_clicked)
 
             # Process the context menu actions such as alignment.
             if event.button() == Qt.RightButton:
@@ -99,10 +99,10 @@ class GraphicsView(QGraphicsView):
             factor = 1.1
 
         self.scale(factor, factor)
-        print("Zoom factor: %s (angle: %s)"%(factor, ad))
+        #print("Zoom factor: %s (angle: %s)"%(factor, ad))
 
         transform = self.transform()
-        print("Transform: %.3f, %.3f"%(transform.m11(), transform.m22()))
+        #print("Transform: %.3f, %.3f"%(transform.m11(), transform.m22()))
         #print( "angleDelta: %s"%( event.angleDelta() ) )
 
     def keyPressEvent(self, event):

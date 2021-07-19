@@ -196,8 +196,6 @@ class MenuActionHandler(QWidget):
         print("Paste!")
         pass
 
-
-
     @Slot(bool)
     def process_open_network(self):
 
