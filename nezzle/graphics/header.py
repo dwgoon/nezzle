@@ -12,7 +12,7 @@ class HeaderClassFactory(object):
         elif header_type.upper() == 'HAMMER':
             return Hammer
         else:
-            raise TypeError("Undefined link type: %s" % (header_type))
+            raise TypeError("Undefined lins type: %s" % (header_type))
 
 
 class BaseHeader(object):

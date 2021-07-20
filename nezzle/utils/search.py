@@ -9,7 +9,7 @@ def search_links(net, substr):
     net: nezzle.graphics.Network
         Network object whose links are searched.
     substr: str
-        Substring to search in the identity string of link (link.iden).
+        Substring to search in the identity string of lins (lins.iden).
 
     Returns
     -------

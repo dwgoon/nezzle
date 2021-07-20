@@ -3,21 +3,21 @@
 from .mappableitem import MappableGraphicsItem
 from .mappableitem import PainterOptionItem
 
-from .node.nodefactory import NodeClassFactory
-from .node.basenode import BaseNode
-from .node.ellipsenode import EllipseNode
-from .node.ellipsenode import CircleNode
+from .nodes.nodefactory import NodeClassFactory
+from .nodes.basenode import BaseNode
+from .nodes.ellipsenode import EllipseNode
+from .nodes.ellipsenode import CircleNode
 
 from .header import HeaderClassFactory
 
-from .link.linkfactory import LinkClassFactory
-from .link.baselink import BaseLink
-from .link.straightlink import StraightLink
-from .link.curvedlink import CurvedLink
-from .link.selflooplink import SelfloopLink
+from .lins.linkfactory import LinkClassFactory
+from .lins.baselink import BaseLink
+from .lins.straightlink import StraightLink
+from .lins.curvedlink import CurvedLink
+from .lins.selflooplink import SelfloopLink
 
-from .label.labelfactory import LabelClassFactory
-from .label.textlabel import TextLabel
+from .labels.labelfactory import LabelClassFactory
+from .labels.textlabel import TextLabel
 
 
 from .network import Network

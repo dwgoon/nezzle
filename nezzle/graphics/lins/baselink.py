@@ -117,14 +117,14 @@ from nezzle.graphics import HeaderClassFactory
 #     @property
 #     def pos_src(self):
 #         """
-#         The position of source relative to its parent link
+#         The position of source relative to its parent lins
 #         """
 #         return self._source.pos() - self.pos()
 #
 #     @property
 #     def pos_tgt(self):
 #         """
-#         The position of target relative to its parent link
+#         The position of target relative to its parent lins
 #         """
 #         return self._target.pos() - self.pos()
 #
@@ -447,14 +447,14 @@ class TwoNodeLink(BaseLink):
     @property
     def pos_src(self):
         """
-        The position of source relative to its parent link
+        The position of source relative to its parent lins
         """
         return self._source.pos() - self.pos()
 
     @property
     def pos_tgt(self):
         """
-        The position of target relative to its parent link
+        The position of target relative to its parent lins
         """
         return self._target.pos() - self.pos()
 
@@ -463,7 +463,7 @@ class TwoNodeLink(BaseLink):
 
     def are_nodes_close(self):
         """Decide whether the two nodes are overlapped
-        to show the graphics of link appropriately.
+        to show the graphics of lins appropriately.
         """
         v = self.pos_tgt - self.pos_src
         angle_rad = np.arccos(v.x() / length(v))

@@ -73,7 +73,7 @@ def test_copy_label():
     n1 = NodeClass("ID1", 5, pos=QPointF(10, -20))
 
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
-    label1 = LabelClass(parent=n1, text="This is text label")
+    label1 = LabelClass(parent=n1, text="This is text labels")
     label2 = label1.copy()
 
     assert label1.text == label2.text

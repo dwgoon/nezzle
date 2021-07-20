@@ -138,7 +138,7 @@ def test_create_network():
 
     # Test creating font
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
-    label = LabelClass(node, "This is label")
+    label = LabelClass(node, "This is labels")
     label.iden = 'LABEL_1'
     net.add_label(label)
     label['TEXT_COLOR'] = Qt.red

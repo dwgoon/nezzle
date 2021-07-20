@@ -56,8 +56,8 @@ class SelfloopLink(BaseLink):
         self._create_path()
 
     def _identify_pos(self):
-        node_hw = self._node.width/2  # Half of node width
-        node_hh = self._node.height/2  # Half of node height
+        node_hw = self._node.width/2  # Half of nodes width
+        node_hh = self._node.height/2  # Half of nodes height
         len_minor = min(node_hw, node_hh)
         self._radius_core = (node_hw**2 + node_hh**2)/(2*len_minor)
 
@@ -78,8 +78,8 @@ class SelfloopLink(BaseLink):
             self._angle_offset = 0
 
     def _calculate_angle_sweep(self):
-        node_hw = self._node.width/2  # Half of node width
-        node_hh = self._node.height/2  # Half of node height
+        node_hw = self._node.width/2  # Half of nodes width
+        node_hh = self._node.height/2  # Half of nodes height
         radius = self._radius_core
         self._angle_sweep = 360 - self._angle_offset
 
@@ -96,8 +96,8 @@ class SelfloopLink(BaseLink):
         self._angle_header = self._angle_sweep - (self._angle_begin-90)
 
     def _calculate_angle_begin(self):
-        node_hw = self._node.width / 2  # Half of node width
-        #node_hh = self._node.height / 2  # Half of node height
+        node_hw = self._node.width / 2  # Half of nodes width
+        #node_hh = self._node.height / 2  # Half of nodes height
         radius = self._radius_core
 
         self._angle_begin = 270

@@ -16,4 +16,4 @@ class NodeClassFactory(object):
         elif node_type.upper() == "SQUARE_NODE":
             return SquareNode
         else:
-            raise TypeError("Undefined node type: %s" % (node_type))
+            raise TypeError("Undefined nodes type: %s" % (node_type))

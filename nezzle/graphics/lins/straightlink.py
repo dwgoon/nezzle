@@ -16,7 +16,7 @@ from nezzle.utils import length
 from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics.mixins import Lockable
-from nezzle.graphics.link.baselink import TwoNodeLink
+from nezzle.graphics.lins.baselink import TwoNodeLink
 
 
 @Lockable

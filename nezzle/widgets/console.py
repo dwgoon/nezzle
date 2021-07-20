@@ -90,7 +90,7 @@ class ConsoleWidget(RichJupyterWidget):
 
     def pushVariables(self, variableDict):
         """
-        Given a dictionary containing label / value pairs, push those variables
+        Given a dictionary containing labels / value pairs, push those variables
         to the Jupyter console widget
         """
 

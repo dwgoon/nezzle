@@ -10,14 +10,14 @@ from qtpy.QtGui import QFont
 
 import networkx as nx
 
-from .node.nodefactory import NodeClassFactory
-from .link.linkfactory import LinkClassFactory
-from .label.labelfactory import LabelClassFactory
+from .nodes.nodefactory import NodeClassFactory
+from .lins.linkfactory import LinkClassFactory
+from .labels.labelfactory import LabelClassFactory
 from .header import HeaderClassFactory
 
-from .link.baselink import BaseLink
-from .label.textlabel import TextLabel
-from .node.basenode import BaseNode
+from .lins.baselink import BaseLink
+from .labels.textlabel import TextLabel
+from .nodes.basenode import BaseNode
 
 from nezzle.graphics import SelfloopLink
 from nezzle.graphics.mappableitem import MappableItem
@@ -98,7 +98,7 @@ class Network(MappableItem):
         del self.nodes[iden]
 
     def add_link(self, link):
-        """Add a link object.
+        """Add a lins object.
 
         Parameters
         ----------
@@ -160,12 +160,12 @@ class Network(MappableItem):
         # obj._scene.setSceneRect(0, 0, self.scene.width(), self.scene.height())
         # obj._scene.setBackgroundBrush(self.scene.backgroundBrush())
         #
-        # for iden, node in self.nodes.items():
-        #     obj.add_node(node.copy())
-        # for iden, link in self.links.items():
-        #     obj.add_link(link.copy())
-        # for iden, label in self.labels.items():
-        #     obj.add_label(label.copy())
+        # for iden, nodes in self.nodes.items():
+        #     obj.add_node(nodes.copy())
+        # for iden, lins in self.links.items():
+        #     obj.add_link(lins.copy())
+        # for iden, labels in self.labels.items():
+        #     obj.add_label(labels.copy())
         #
         # return obj
         return self.from_dict(self.to_dict())
@@ -277,12 +277,12 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
     name : str, optional
         Network name, also used for network identity.
     msc : dict, optional
-        Dictionary for mapping signs to link classes.
+        Dictionary for mapping signs to lins classes.
         If it is not given, a positive value in the adjacency
-        is used for creating arrow link, and a negative value
-        for creating hammer link.
+        is used for creating arrow lins, and a negative value
+        for creating hammer lins.
     nodes : dict, optional
-        Dictionary of node objects (nezzle.graphics.BaseNode).
+        Dictionary of nodes objects (nezzle.graphics.BaseNode).
         The new nodes are created by copying these nodes.
         This dictionary should be given with i2n.
 
@@ -346,7 +346,7 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
 
             node.add_link(link)
             net_new.add_link(link)
-        else:  # Two-node link
+        else:  # Two-nodes lins
             if src not in nodes_cache:
                 node_src = nodes[src].copy()
                 nodes_cache[src] = node_src

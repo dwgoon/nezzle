@@ -70,12 +70,12 @@ from nezzle.constants import DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
 #         # [REF] http://stackoverflow.com/questions/25635485/pyqt-close-unselected-tab
 #
 #
-#     def appendView(self, view, label):
+#     def appendView(self, view, labels):
 #         if self.isEmpty:
 #             self.tab_widget.removeTab(0)
 #             self.isEmpty = False
 #
-#         self.tab_widget.addTab(view, label)
+#         self.tab_widget.addTab(view, labels)
 #         self.tab_widget.setCurrentWidget(view)
 #
 #     def set_current_view_scene(self, scene, text):

@@ -120,11 +120,11 @@ class MenuActionHandler(QWidget):
     #     net = self.mw.nt_manager.currentItemData
     #     if net:
     #         view.set_current_view_scene(net.scene)
-    #         label = net.name
+    #         labels = net.name
     #     else:
-    #         label = "<Not selected>"
+    #         labels = "<Not selected>"
     #
-    #     self.mw.sv_manager.appendView(view, label)
+    #     self.mw.sv_manager.appendView(view, labels)
 
 
     # TODO: Implement Copy & Paste QGraphicsItem to the clipboard

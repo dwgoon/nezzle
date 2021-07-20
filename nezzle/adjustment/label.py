@@ -23,7 +23,7 @@ def align_label(net, pos='bottomright', dp=7):
     """
     Align labels with the position relative to their parent nodes
     The alignment should be updated after changing fonts,
-    because setting new fonts changes the size of label, which invalidates
+    because setting new fonts changes the size of labels, which invalidates
     the previous alignment.
     """
 
@@ -34,7 +34,7 @@ def align_label(net, pos='bottomright', dp=7):
 
     for label in net.labels:
         node = label.parent
-        #label.setPos(node._radius + dp_x, node._radius + dp_y)
+        #labels.setPos(nodes._radius + dp_x, nodes._radius + dp_y)
         label.setPos(dp_x, dp_y)
 
 

@@ -67,7 +67,7 @@ def read_sif(fpath,
             str_src, str_link_type, str_tgt = items[:3]
 
             if not no_link_type and (str_link_type not in (str_act, str_inh)):
-                raise ValueError("Undefined link type: %s"%(str_link_type))
+                raise ValueError("Undefined lins type: %s"%(str_link_type))
 
             color = Qt.white
             half_width = scene_width/2
@@ -124,7 +124,7 @@ def read_sif(fpath,
             if HeaderClass:
                 header = HeaderClass()
 
-            if str_src == str_tgt: # Self-loop link
+            if str_src == str_tgt: # Self-loop lins
                 LinkClass = LinkClassFactory.create('SELFLOOP_LINK')
                 iden = "%s%s%s" % (str_src, str_link_type, str_src)
                 link = LinkClass(iden=iden,
@@ -149,7 +149,7 @@ def read_sif(fpath,
             net.add_link(link)
         # end of for : reading each line of SIF file
 
-        # Add node and label in network
+        # Add nodes and labels in network
         font = QFont()
         font.setFamily("Tahoma")
         font.setPointSize(10)

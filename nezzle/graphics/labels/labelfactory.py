@@ -7,4 +7,4 @@ class LabelClassFactory(object):
         if label_type.upper() == 'TEXT_LABEL':
             return TextLabel
         else:
-            raise TypeError("Undefined label type: %s" % (label_type))
+            raise TypeError("Undefined labels type: %s" % (label_type))
