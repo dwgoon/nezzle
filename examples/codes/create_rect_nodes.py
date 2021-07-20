@@ -40,7 +40,7 @@ def update(nav, net):
     header = HeaderClass(width=10, height=10, offset=4)
     curve = LinkClass("ID_LINK_1", src, tgt, width=4, header=header)
     curve['FILL_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_COLOR'] = QColor(25, 50, 100)
+    curve['BORDER_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_WIDTH'] = 2
 
     _net.add_link(curve)

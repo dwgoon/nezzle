@@ -81,12 +81,11 @@ class NavigationTreeManager(QObject):
 
     @Slot(QItemSelection, QItemSelection)
     def on_selection_changed(self, selected, deselected):
-
         if selected:
-            print("selected: ", [ind.row() for ind in selected.indexes()])
+            print("[NAV] selected: ", [ind.row() for ind in selected.indexes()])
 
         if deselected:
-            print("deselected: ", [ind.row() for ind in deselected.indexes()])
+            print("[NAV] deselected: ", [ind.row() for ind in deselected.indexes()])
 
 
         self.mw.sv_manager.current_view.enable_menu_align()

@@ -3,7 +3,8 @@
 import numpy as np
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QLineF
-from qtpy.QtGui import QColor, QPainterPath
+from qtpy.QtCore import QRectF
+from qtpy.QtGui import QBrush, QColor, QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
 from .straightlink import StraightLink
@@ -77,6 +78,21 @@ class CurvedLink(StraightLink):
     #     else:
     #         self.set_adjusted(False)
 
+    def boundingRect(self):
+
+        # All self.pos_xxxx are relative positions to the this link.
+        # Thus, the origin of self.pos_xxxx is actually the position of this link.
+        if self.is_straight():
+            return super().boundingRect()
+        max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()])
+        max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()])
+
+        min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()])
+        min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()])
+
+        rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
+        return rect
+
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedChange:
             self._ctrl_point.update()
@@ -86,8 +102,15 @@ class CurvedLink(StraightLink):
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
 
+        ## [DEBUG] Draw the bounding rect
+        #rect = self.boundingRect()
+        #painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
+        #painter.drawRect(rect)
+        #######################
+
         if self.isSelected():
             painter.setBrush(Qt.red)
+            # painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
             painter.drawEllipse(-2.5, -2.5, 5, 5)
             painter.setPen(QColor(50, 50, 50, 100))
 

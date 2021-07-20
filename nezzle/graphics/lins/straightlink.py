@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Feb  1 19:29:49 2017
-
-@author: dwlee
-"""
-
 import numpy as np
 
 from qtpy.QtCore import QPointF
