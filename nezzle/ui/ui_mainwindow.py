@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './nezzle/ui/ui_mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -59,7 +59,6 @@ class Ui_MainWindow(object):
         self.ui_netDockContents = QtWidgets.QWidget()
         self.ui_netDockContents.setObjectName("ui_netDockContents")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.ui_netDockContents)
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.splitterControlPanel = QtWidgets.QSplitter(self.ui_netDockContents)
         self.splitterControlPanel.setOrientation(QtCore.Qt.Vertical)
@@ -92,7 +91,6 @@ class Ui_MainWindow(object):
         self.widget.setObjectName("widget")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout_9.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout()
         self.verticalLayout_8.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
@@ -135,7 +133,6 @@ class Ui_MainWindow(object):
         self.ui_consoleDockConetents = QtWidgets.QWidget()
         self.ui_consoleDockConetents.setObjectName("ui_consoleDockConetents")
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.ui_consoleDockConetents)
-        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.ui_consoleTabWidget = QtWidgets.QTabWidget(self.ui_consoleDockConetents)
         self.ui_consoleTabWidget.setObjectName("ui_consoleTabWidget")
@@ -148,7 +145,6 @@ class Ui_MainWindow(object):
         self.ui_visStyleDockLayout = QtWidgets.QWidget()
         self.ui_visStyleDockLayout.setObjectName("ui_visStyleDockLayout")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.ui_visStyleDockLayout)
-        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.ui_styleTabWidget = QtWidgets.QTabWidget(self.ui_visStyleDockLayout)
         self.ui_styleTabWidget.setTabPosition(QtWidgets.QTabWidget.North)
@@ -157,7 +153,6 @@ class Ui_MainWindow(object):
         self.ui_nodeTabLayout = QtWidgets.QWidget()
         self.ui_nodeTabLayout.setObjectName("ui_nodeTabLayout")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.ui_nodeTabLayout)
-        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.ui_nodeStyleTable = QtWidgets.QTableView(self.ui_nodeTabLayout)
         self.ui_nodeStyleTable.setEnabled(False)
@@ -167,7 +162,6 @@ class Ui_MainWindow(object):
         self.ui_linkTabLayout = QtWidgets.QWidget()
         self.ui_linkTabLayout.setObjectName("ui_linkTabLayout")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.ui_linkTabLayout)
-        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.ui_linkStyleTable = QtWidgets.QTableView(self.ui_linkTabLayout)
         self.ui_linkStyleTable.setObjectName("ui_linkStyleTable")

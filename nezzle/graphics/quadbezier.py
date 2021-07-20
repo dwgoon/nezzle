@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Identifying sub-control points (sps), Q and D points
 for quadratic Bezier curve with a width is based on

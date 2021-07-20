@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './nezzle/ui/ui_opennetworkdialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_OpenNetworkDialog(object):
     def setupUi(self, OpenNetworkDialog):
         OpenNetworkDialog.setObjectName("OpenNetworkDialog")
-        OpenNetworkDialog.resize(461, 260)
+        OpenNetworkDialog.resize(457, 384)
         OpenNetworkDialog.setSizeGripEnabled(False)
         OpenNetworkDialog.setModal(True)
         self.layoutWidget = QtWidgets.QWidget(OpenNetworkDialog)
@@ -39,12 +39,14 @@ class Ui_OpenNetworkDialog(object):
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.layoutWidget4 = QtWidgets.QWidget(OpenNetworkDialog)
-        self.layoutWidget4.setGeometry(QtCore.QRect(20, 20, 421, 223))
+        self.layoutWidget4.setGeometry(QtCore.QRect(20, 20, 421, 343))
         self.layoutWidget4.setObjectName("layoutWidget4")
         self.verticalLayout_13 = QtWidgets.QVBoxLayout(self.layoutWidget4)
+        self.verticalLayout_13.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.verticalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_13.setObjectName("verticalLayout_13")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
@@ -64,6 +66,7 @@ class Ui_OpenNetworkDialog(object):
         spacerItem2 = QtWidgets.QSpacerItem(20, 2, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         self.verticalLayout_13.addItem(spacerItem2)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         spacerItem3 = QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem3)
@@ -80,6 +83,7 @@ class Ui_OpenNetworkDialog(object):
         spacerItem5 = QtWidgets.QSpacerItem(20, 2, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         self.verticalLayout_13.addItem(spacerItem5)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_5.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.groupBox = QtWidgets.QGroupBox(self.layoutWidget4)
         self.groupBox.setFlat(False)

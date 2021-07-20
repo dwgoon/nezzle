@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 from qtpy.QtCore import QRectF
 from qtpy.QtWidgets import QGraphicsItem
 

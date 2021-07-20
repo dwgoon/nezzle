@@ -9,9 +9,9 @@ from .basenode import BaseNode
 
 
 @Lockable
-class EllipseNode(BaseNode):
+class RectangleNode(BaseNode):
 
-    ITEM_TYPE = 'ELLIPSE_NODE'
+    ITEM_TYPE = 'RECT_NODE'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,12 +20,12 @@ class EllipseNode(BaseNode):
 
     def shape(self):
         path = QPainterPath()
-        path.addEllipse(self._rect)
+        path.addRect(self._rect)
         return path
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
-        painter.drawEllipse(self._rect)
+        painter.drawRect(self._rect)
 
     def calculate_radius(self, angle):
         """
@@ -37,9 +37,9 @@ class EllipseNode(BaseNode):
 
 
 @Lockable
-class CircleNode(EllipseNode):
+class SquareNode(RectangleNode):
 
-    ITEM_TYPE = 'CIRCLE_NODE'
+    ITEM_TYPE = 'SQUARE_NODE'
 
     def __init__(self, iden, radius, *args, **kwargs):
         super().__init__(iden, width=2*radius, height=2*radius, *args, **kwargs)

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>461</width>
-    <height>260</height>
+    <width>457</width>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,12 +69,18 @@
      <x>20</x>
      <y>20</y>
      <width>421</width>
-     <height>223</height>
+     <height>343</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_13">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetNoConstraint</enum>
+    </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -148,6 +154,9 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
       <item>
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
@@ -214,6 +223,9 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="title">
