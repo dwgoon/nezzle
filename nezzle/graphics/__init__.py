@@ -10,11 +10,11 @@ from .nodes.ellipsenode import CircleNode
 
 from .header import HeaderClassFactory
 
-from .lins.linkfactory import LinkClassFactory
-from .lins.baselink import BaseLink
-from .lins.straightlink import StraightLink
-from .lins.curvedlink import CurvedLink
-from .lins.selflooplink import SelfloopLink
+from .links.linkfactory import LinkClassFactory
+from .links.baselink import BaseLink
+from .links.straightlink import StraightLink
+from .links.curvedlink import CurvedLink
+from .links.selflooplink import SelfloopLink
 
 from .labels.labelfactory import LabelClassFactory
 from .labels.textlabel import TextLabel

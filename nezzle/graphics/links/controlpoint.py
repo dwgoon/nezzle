@@ -37,6 +37,10 @@ class ControlPoint(QGraphicsItem, Movable):
         self.update()
 
     @property
+    def radius(self):
+        return self._radius
+
+    @property
     def parent(self):
         return self.parentItem()
 

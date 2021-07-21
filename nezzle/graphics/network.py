@@ -11,11 +11,11 @@ from qtpy.QtGui import QFont
 import networkx as nx
 
 from .nodes.nodefactory import NodeClassFactory
-from .lins.linkfactory import LinkClassFactory
+from .links.linkfactory import LinkClassFactory
 from .labels.labelfactory import LabelClassFactory
 from .header import HeaderClassFactory
 
-from .lins.baselink import BaseLink
+from .links.baselink import BaseLink
 from .labels.textlabel import TextLabel
 from .nodes.basenode import BaseNode
 
@@ -98,7 +98,7 @@ class Network(MappableItem):
         del self.nodes[iden]
 
     def add_link(self, link):
-        """Add a lins object.
+        """Add a links object.
 
         Parameters
         ----------
@@ -162,8 +162,8 @@ class Network(MappableItem):
         #
         # for iden, nodes in self.nodes.items():
         #     obj.add_node(nodes.copy())
-        # for iden, lins in self.links.items():
-        #     obj.add_link(lins.copy())
+        # for iden, links in self.links.items():
+        #     obj.add_link(links.copy())
         # for iden, labels in self.labels.items():
         #     obj.add_label(labels.copy())
         #
@@ -277,10 +277,10 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
     name : str, optional
         Network name, also used for network identity.
     msc : dict, optional
-        Dictionary for mapping signs to lins classes.
+        Dictionary for mapping signs to links classes.
         If it is not given, a positive value in the adjacency
-        is used for creating arrow lins, and a negative value
-        for creating hammer lins.
+        is used for creating arrow links, and a negative value
+        for creating hammer links.
     nodes : dict, optional
         Dictionary of nodes objects (nezzle.graphics.BaseNode).
         The new nodes are created by copying these nodes.
@@ -346,7 +346,7 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
 
             node.add_link(link)
             net_new.add_link(link)
-        else:  # Two-nodes lins
+        else:  # Two-nodes links
             if src not in nodes_cache:
                 node_src = nodes[src].copy()
                 nodes_cache[src] = node_src

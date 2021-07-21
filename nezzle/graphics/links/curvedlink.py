@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import numpy as np
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QLineF
@@ -84,11 +82,14 @@ class CurvedLink(StraightLink):
         # Thus, the origin of self.pos_xxxx is actually the position of this link.
         if self.is_straight():
             return super().boundingRect()
-        max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()])
-        max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()])
 
-        min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()])
-        min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()])
+        pad_x = self.width
+        pad_y = 2 * self._ctrl_point.radius  # Padding with the radius of control point
+        max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) + pad_x
+        max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) + pad_y
+
+        min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) - pad_x
+        min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) - pad_y
 
         rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
         return rect
@@ -118,7 +119,7 @@ class CurvedLink(StraightLink):
             painter.drawLine(self.pos_ctrl, self.pos_src)
             painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
-        # for DEBUG PURPOSE
+        ## [DEBUG] 
         # painter.setBrush(Qt.blue)
         # for i in range(self._path_paint.elementCount()):
         #     elem = self._path_paint.elementAt(i)
@@ -131,7 +132,7 @@ class CurvedLink(StraightLink):
         #         elem = self._path_header.elementAt(i)
         #         painter.drawEllipse(-0.5+elem.x,
         #                             -0.5+elem.y, 1, 1)
-
+        ##########################################################
 
     def is_straight(self):
         v1 = self.pos_src - self.ctrl_point.pos()

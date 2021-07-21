@@ -331,8 +331,10 @@ class BaseLink(PainterOptionItem):
             The following check prevents this item being selected
             simply according to boundingRect.
             """
+
             pos = event.pos() - self.pos()
             if self._path_paint.contains(pos):
+                print("[MOUSE EVENT] Selected!")
                 self.setSelected(True)
                 event.accept()
         else:

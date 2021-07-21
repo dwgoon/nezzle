@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from .straightlink import StraightLink
 from .curvedlink import CurvedLink
 from .selflooplink import SelfloopLink
