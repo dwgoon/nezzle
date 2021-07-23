@@ -31,8 +31,8 @@ def update(nav, net):
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.darkCyan
-    tgt['FILL_COLOR'] = Qt.cyan
+    src['FILL_COLOR'] = Qt.blue
+    tgt['FILL_COLOR'] = Qt.blue
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
