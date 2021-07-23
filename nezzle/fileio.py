@@ -25,14 +25,14 @@ import math
 from nezzle.utils.math import rotate, dist, internal_division
 
 
-def read_network(fpath, str_act=None, str_inh=None, no_link_type=True):
+def read_network(fpath, link_map=None):
     if not fpath:
         raise ValueError("Invalid file path: %s"%(fpath))
     file_name_ext = os.path.basename(fpath)
     fname, fext = os.path.splitext(file_name_ext)
 
     if file_name_ext.endswith('.sif'):
-        return read_sif(fpath, str_act, str_inh, no_link_type)
+        return read_sif(fpath, link_map)
     elif file_name_ext.endswith('.json'):
         return read_json(fpath)
 
@@ -43,9 +43,7 @@ def read_network(fpath, str_act=None, str_inh=None, no_link_type=True):
 
 
 # TODO: need to make a rule to map str_act and str_inh
-def read_sif(fpath,
-             str_act='+', str_inh='-',
-             no_link_type=False):
+def read_sif(fpath, link_map=None):
 
     scene_width = DEFAULT_SCENE_WIDTH
     scene_height = DEFAULT_SCENE_HEIGHT
@@ -66,8 +64,8 @@ def read_sif(fpath,
             items = line.split()
             str_src, str_link_type, str_tgt = items[:3]
 
-            if not no_link_type and (str_link_type not in (str_act, str_inh)):
-                raise ValueError("Undefined lins type: %s"%(str_link_type))
+            if link_map and (str_link_type not in link_map):
+                raise ValueError("Undefined link type: %s"%(str_link_type))
 
             color = Qt.white
             half_width = scene_width/2
@@ -112,6 +110,8 @@ def read_sif(fpath,
             counter_link += 1
 
             header = None
+            HeaderClass = None
+            """
             if no_link_type:
                 HeaderClass = None
             elif str_link_type == '+':
@@ -119,6 +119,10 @@ def read_sif(fpath,
                 HeaderClass = HeaderClassFactory.create(header_type)
             elif str_link_type == '-':
                 header_type = 'HAMMER'
+                HeaderClass = HeaderClassFactory.create(header_type)
+            """
+            if link_map:
+                header_type = link_map[str_link_type]
                 HeaderClass = HeaderClassFactory.create(header_type)
 
             if HeaderClass:

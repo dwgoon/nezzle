@@ -25,6 +25,7 @@ class StraightLink(TwoNodeLink):
     def _initialize(self):
         self._identify_pos()
         self._create_path()
+        self._update_bounding_rect()
 
     def _identify_header(self):
         StraightLink._identify_header_pos(self)

@@ -9,6 +9,7 @@ by Gabriel Suchowolski, Jul 10, 2012
 http://microbians.com/?page=math&id=math-quadraticbezieroffseting
 """
 
+from typing import Union
 import numpy as np
 # from cachetools import cached
 
@@ -22,7 +23,74 @@ from nezzle.utils import solve_cubic
 from nezzle.utils import rotate
 
 
-def _integrate_sqrt_quad(coeff: np.ndarray, bounds: np.ndarray) -> float:
+# def _integrate_sqrt_quad(coeff: np.ndarray, bounds: np.ndarray) -> float:
+#     """
+#     An exact solution of integrating sqrt(a*x^2 + b*x + c) over bounds.
+#
+#     Args:
+#         coeff: A sequence of the coefficients, (a, b, c).
+#         bounds: Upper nad lower bounds.
+#     """
+#
+#     if np.abs(bounds[0] - bounds[1]) < 1e-5:
+#         return 0.0
+#
+#     a, b, c = coeff
+#
+#     """
+#     # The function of definite integral
+#     # (1) Calcuate Fq
+#     f = np.sqrt(a*q**2 + b*q + c)
+#     g = (2*a*q + b) / (a**0.5) + 2*f
+#     Fq = (b/(4.*a) + 0.5*q)*f+(4*a*c-b**2)/(8*a**(1.5))*np.log(g)
+#
+#     # (2) Calculate Fp
+#     f = np.sqrt(a*p**2 + b*p + c)
+#     g = (2 * a * p + b) / (a ** 0.5) + 2 * f
+#     Fp = (b / (4. * a) + 0.5 * p) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
+#     """
+#
+#     f = np.sqrt(a * bounds ** 2 + b * bounds + c)
+#     g = (2 * a * bounds + b) / (a ** 0.5) + 2 * f
+#     F = (b / (4. * a) + 0.5 * bounds) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
+#     return F[1] - F[0]
+#
+#
+# def arc_length(x: np.ndarray, y: np.ndarray, t1: float, t2: float) -> float:
+#     """
+#     The arc length of quadratic Bezier curve, given (t1, t2)
+#
+#     Args:
+#         x: The x-axis coordinates of the three control points of quadratic Bezier curve.
+#         y: The x-axis coordinates of the three control points of quadratic Bezier curve.
+#         t1: The lower bound.
+#         t2: The upper bound.
+#
+#     '''math
+#     x'(t)^2 = 4*((P-Q)^2*t^2 -2*P*(P-Q)*t + P^2)
+#     y'(t)^2 = 4*((R-S)^2*t^2 -2*R*(R-S)*t + R^2)
+#     '''
+#
+#     Integrate 2*\sprt{x'(t)^2 + y'(t)^2} over (t1, t2)
+#     """
+#
+#     #p0, p1, p2 = cps
+#
+#     p = x[1] - x[0]  #p1.x() - p0.x()
+#     q = x[2] - x[1]  #p2.x() - p1.x()
+#     r = y[1] - y[0]  #p1.y() - p0.y()
+#     s = y[2] - y[1]  #p2.y() - p1.y()
+#
+#     coeff = np.zeros(3, dtype=np.float64)
+#     coeff[0] = (p - q) ** 2 + (r - s) ** 2
+#     coeff[1] = -2 * ((p - q) * p + (r - s) * r)
+#     coeff[2] = p ** 2 + r ** 2
+#
+#     return 2 * _integrate_sqrt_quad(coeff, np.array([t1, t2]))
+
+def _integrate_sqrt_quad(coeff: np.ndarray,
+                         lower: Union[np.ndarray, float],
+                         upper: Union[np.ndarray, float]) -> Union[np.ndarray, float]:
     """
     An exact solution of integrating sqrt(a*x^2 + b*x + c) over bounds.
 
@@ -31,39 +99,35 @@ def _integrate_sqrt_quad(coeff: np.ndarray, bounds: np.ndarray) -> float:
         bounds: Upper nad lower bounds.
     """
 
-    if np.abs(bounds[0] - bounds[1]) < 1e-5:
-        return 0.0
-
     a, b, c = coeff
 
-    """
+
     # The function of definite integral
-    # (1) Calcuate Fq
-    f = np.sqrt(a*q**2 + b*q + c)
-    g = (2*a*q + b) / (a**0.5) + 2*f
-    Fq = (b/(4.*a) + 0.5*q)*f+(4*a*c-b**2)/(8*a**(1.5))*np.log(g)
+    # (1) Calcuate Fl (lower)
+    f = np.sqrt(a*lower**2 + b*lower + c)
+    g = (2*a*lower + b) / (a**0.5) + 2*f
+    Fl = (b/(4.*a) + 0.5*lower)*f+(4*a*c-b**2)/(8*a**(1.5))*np.log(g)
 
-    # (2) Calculate Fp
-    f = np.sqrt(a*p**2 + b*p + c)
-    g = (2 * a * p + b) / (a ** 0.5) + 2 * f
-    Fp = (b / (4. * a) + 0.5 * p) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
-    """
+    # (2) Calculate Fu (upper)
+    f = np.sqrt(a*upper**2 + b*upper + c)
+    g = (2 * a * upper + b) / (a ** 0.5) + 2 * f
+    Fu = (b / (4. * a) + 0.5 * upper) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
 
-    f = np.sqrt(a * bounds ** 2 + b * bounds + c)
-    g = (2 * a * bounds + b) / (a ** 0.5) + 2 * f
-    F = (b / (4. * a) + 0.5 * bounds) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
-    return F[1] - F[0]
+    return Fu - Fl
 
 
-def arc_length(x: np.ndarray, y: np.ndarray, t1: float, t2: float) -> float:
+def arc_length(x: np.ndarray,
+               y: np.ndarray,
+               lower: Union[np.ndarray, float],
+               upper: Union[np.ndarray, float]) -> Union[np.ndarray, float]:
     """
     The arc length of quadratic Bezier curve, given (t1, t2)
 
     Args:
         x: The x-axis coordinates of the three control points of quadratic Bezier curve.
         y: The x-axis coordinates of the three control points of quadratic Bezier curve.
-        t1: The lower bound.
-        t2: The upper bound.
+        lower: The lower bound.
+        upper: The upper bound.
 
     '''math
     x'(t)^2 = 4*((P-Q)^2*t^2 -2*P*(P-Q)*t + P^2)
@@ -85,7 +149,8 @@ def arc_length(x: np.ndarray, y: np.ndarray, t1: float, t2: float) -> float:
     coeff[1] = -2 * ((p - q) * p + (r - s) * r)
     coeff[2] = p ** 2 + r ** 2
 
-    return 2 * _integrate_sqrt_quad(coeff, np.array([t1, t2]))
+    return 2 * _integrate_sqrt_quad(coeff, lower, upper)
+
 
 
 def nearest_point(cps, pa):

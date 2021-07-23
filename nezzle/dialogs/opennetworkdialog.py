@@ -15,7 +15,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         self.setupUi(self)
 
         self.setWindowTitle("Open a network file")
-        self.setFixedSize(self.width(), self.height())
+        # self.setFixedSize(self.width(), self.height())  # Fix the size of dialog
 
         validator_double = QDoubleValidator()
         validator_double.setBottom(0.0)
@@ -29,7 +29,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         self.ui_sceneWidthEdit.setText(str(DEFAULT_SCENE_WIDTH))
         self.ui_sceneHeightEdit.setText(str(DEFAULT_SCENE_HEIGHT))
 
-        self.ui_sceneSizeGroup.setVisible(False)
+        # self.ui_sceneSizeGroup.setVisible(False)
         # self.ui_sceneWidthEdit.setVisible(False)
         # self.ui_sceneHeightEdit.setVisible(False)
         # self.ui_sceneWidthEdit.setEnabled(False)

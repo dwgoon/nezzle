@@ -34,6 +34,10 @@ class CurvedLink(StraightLink):
                                self._trigger_set_ctrl_pos_y,
                                when='set')
 
+
+        # To avoid repetitive memory allocation, make this variable as a member.
+        self._arr_t = np.arange(1, 0.5, -0.001, dtype=np.float64)
+
     @property
     def pos_ctrl(self):
         return self._ctrl_point.pos()
@@ -50,49 +54,26 @@ class CurvedLink(StraightLink):
         self._ctrl_point.setY(value)
         return value
 
-    # def mousePressEvent(self, event):
-    #     if event.button() == Qt.LeftButton:
-    #         """
-    #         The following check prevents this item being selected
-    #         simply according to boundingRect.
-    #         """
-    #         pos = event.pos() - self.pos()
-    #         if self._path_paint.contains(pos):
-    #             self.setSelected(True)
-    #             event.accept()
-    #     else:
-    #         event.reject()
-
-    # def contextMenuEvent(self, event):
-    #     #if not self.isSelected():
-    #     #    event.ignore()
+    # def boundingRect(self):
     #
-    #     self.setSelected(True)
-    #     selectedAction = self.menu.exec(event.screenPos())
-    #     #action_restart_console = self.pop_menu.addAction('Restart console')
-    #     if self._action_adjust.isChecked():
-    #         print("This is checked")
-    #         self.set_adjusted(True)
-    #     else:
-    #         self.set_adjusted(False)
-
-    def boundingRect(self):
-
-        # All self.pos_xxxx are relative positions to the this link.
-        # Thus, the origin of self.pos_xxxx is actually the position of this link.
-        if self.is_straight():
-            return super().boundingRect()
-
-        pad_x = self.width
-        pad_y = 2 * self._ctrl_point.radius  # Padding with the radius of control point
-        max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) + pad_x
-        max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) + pad_y
-
-        min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) - pad_x
-        min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) - pad_y
-
-        rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
-        return rect
+    #     # All self.pos_xxxx are relative positions to the this link.
+    #     # Thus, the origin of self.pos_xxxx is actually the position of this link.
+    #     if self.is_straight():
+    #         return super().boundingRect()
+    #
+    #     for i in range(self._path_paint.elementCount()):
+    #         print(i, self._path_paint.elementAt(i))
+    #
+    #     pad_x = self.width
+    #     pad_y = 2 * self._ctrl_point.radius  # Padding with the radius of control point
+    #     max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) + pad_x
+    #     max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) + pad_y
+    #
+    #     min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) - pad_x
+    #     min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) - pad_y
+    #
+    #     rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
+    #     return rect
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedChange:
@@ -154,6 +135,18 @@ class CurvedLink(StraightLink):
         self._create_control_items()
         self._create_subpoints()
         self._create_path()
+        self._update_bounding_rect()
+
+    def _update_bounding_rect(self):
+        super()._update_bounding_rect()
+
+        rect_cl_src = QRectF(self.pos_ctrl, self.pos_src)
+        rect_cl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
+
+        rect = self._bounding_rect
+        rect = rect.united(rect_cl_src)
+        rect = rect.united(rect_cl_tgt)
+        self._bounding_rect = rect
 
     def _create_control_items(self):
         mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
@@ -182,16 +175,16 @@ class CurvedLink(StraightLink):
         p2 = self.pos_tgt
         pc = self.ctrl_point.pos()
 
-        t = 0
         x = np.array([p1.x(), pc.x(), p2.x()], dtype=np.float64)
         y = np.array([p1.y(), pc.y(), p2.y()], dtype=np.float64)
-        for i in range(1000):
-            t = 1 - 0.001 * i
-            arclen = quadbezier.arc_length(x, y, t, 1)
-            rchange = abs(arclen-offset)/offset
-            if rchange<5e-2:
-                self._t_header = t
-                break
+
+        arclen = quadbezier.arc_length(x, y, self._arr_t, 1)
+        rchange = np.abs(arclen - offset) / offset
+
+        ix = np.argmax(rchange < 5e-2)
+        t = self._arr_t[ix]
+        self._t_header = t
+        #print("t: %f"%(t))
 
         ph = (1-t)**2*p1 + 2*(1-t)*t*pc + t**2*p2
         self.pos_header.setX(ph.x())

@@ -49,7 +49,7 @@ class Ui_ExportImageDialog(object):
         spacerItem = QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.label = QtWidgets.QLabel(self.layoutWidget4)
-        self.label.setObjectName("labels")
+        self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
         self.ui_filePathEdit = QtWidgets.QLineEdit(self.layoutWidget4)
         self.ui_filePathEdit.setReadOnly(False)

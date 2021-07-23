@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from qtpy.QtCore import QPointF
 from nezzle.utils import rotate
 from nezzle.utils import TriggerDict

@@ -101,7 +101,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label = QtWidgets.QLabel(self.widget)
-        self.label.setObjectName("labels")
+        self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
         self.ui_codeFilePathEdit = QtWidgets.QLineEdit(self.widget)
         self.ui_codeFilePathEdit.setObjectName("ui_codeFilePathEdit")

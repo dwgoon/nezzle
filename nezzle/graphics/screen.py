@@ -56,7 +56,7 @@ class GraphicsView(QGraphicsView):
         """
         items = self.scene().selected_movable_items()
 
-        if not self.mw and len(items) > 1:
+        if self.mw and len(items) > 1:
             self.mw.ui_menuAlign.setEnabled(True)
         else:
             self.mw.ui_menuAlign.setEnabled(False)

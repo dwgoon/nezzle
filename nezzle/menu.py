@@ -43,7 +43,7 @@ class MenuActionHandler(QWidget):
         super().__init__()
         self.mw = mainWindow
         self.initialize_actions()
-        self.openNetworkDialog = OpenNetworkDialog(parent=self.mw)
+        #self.openNetworkDialog = OpenNetworkDialog(parent=self.mw)
         self.exportImageDialog = ExportImageDialog(parent=self.mw)
         
         
@@ -200,67 +200,74 @@ class MenuActionHandler(QWidget):
     def process_open_network(self):
 
         while True:
-            self.openNetworkDialog.exec()
+            # self.openNetworkDialog.exec()
+            #
+            # if self.openNetworkDialog.result() == QDialog.Rejected:
+            #     return
+            #
+            # fpath = self.openNetworkDialog.fpath
+            # networkName = self.openNetworkDialog.network_name
+            # actSym = self.openNetworkDialog.act_sym
+            # inhSym = self.openNetworkDialog.inh_sym
+            #
+            #
+            # # TODO: Remove setting scene rect.
+            # # which prevents the automatic resizing of scene
+            #
+            # """
+            # [Qt Documentation: http://doc.qt.io/qt-5/qgraphicsscene.html]
+            #
+            # The scene's bounding rect is set by calling setSceneRect().
+            # Items can be placed at any position on the scene,
+            # and the size of the scene is by default unlimited.
+            #
+            # The scene rect is used only for internal bookkeeping,
+            # maintaining the scene's item index. If the scene rect is unset,
+            # QGraphicsScene will use the bounding area of all items,
+            # as returned by itemsBoundingRect(), as the scene rect.
+            #
+            # However, itemsBoundingRect() is a relatively time consuming
+            # function, as it operates by collecting positional information
+            # for every item on the scene. Because of this, you should always
+            # set the scene rect when operating on large scenes.
+            # """
+            #
+            # sceneWidth = self.openNetworkDialog.scene_width
+            # sceneHeight = self.openNetworkDialog.scene_height
+            # noLinkType = self.openNetworkDialog.no_link_type
+            #
+            # if noLinkType:
+            #     actSym = None
+            #     inhSym = None
 
-            if self.openNetworkDialog.result() == QDialog.Rejected:
-                return
+            dialog = QFileDialog(self)
+            dialog.setWindowTitle("Open a network file")
+            dialog.setAcceptMode(QFileDialog.AcceptOpen)
+            dialog.setNameFilters([self.tr("Text files (*.sif *.json)")])
+            dialog.setFileMode(QFileDialog.ExistingFile)
+            choice = dialog.exec()
+            print("choice:", choice)
+            if choice == QDialog.Rejected:
+                break
+            elif choice == QDialog.Accepted:
+                fpath = dialog.selectedFiles()[0]
+                fpath = fpath.strip()
+                try:
+                    net = fileio.read_network(fpath)
+                except Exception as err:
+                    err_msg = "An error has occurred during opening the file.\n%s"
+                    self.show_error("Open a network file", err_msg % format_exc())
+                    continue
 
-            fpath = self.openNetworkDialog.fpath
-            networkName = self.openNetworkDialog.network_name
-            actSym = self.openNetworkDialog.act_sym
-            inhSym = self.openNetworkDialog.inh_sym
+                net.name = os.path.basename(fpath)
+                self.mw.sv_manager.set_current_view_scene(net.scene, net.name)
+                self.mw.nt_manager.append_item(net)
+                # self.mw.ct_manager.update_console_variables()
 
-
-            # TODO: Remove setting scene rect.
-            # which prevents the automatic resizing of scene
-
-            """
-            [Qt Documentation: http://doc.qt.io/qt-5/qgraphicsscene.html]
-
-            The scene's bounding rect is set by calling setSceneRect().
-            Items can be placed at any position on the scene,
-            and the size of the scene is by default unlimited.
-
-            The scene rect is used only for internal bookkeeping,
-            maintaining the scene's item index. If the scene rect is unset,
-            QGraphicsScene will use the bounding area of all items,
-            as returned by itemsBoundingRect(), as the scene rect.
-
-            However, itemsBoundingRect() is a relatively time consuming
-            function, as it operates by collecting positional information
-            for every item on the scene. Because of this, you should always
-            set the scene rect when operating on large scenes.
-            """
-
-            sceneWidth = self.openNetworkDialog.scene_width
-            sceneHeight = self.openNetworkDialog.scene_height
-            noLinkType = self.openNetworkDialog.no_link_type
-
-            if noLinkType:
-                actSym = None
-                inhSym = None
-
-            try:
-                net = fileio.read_network(fpath,
-                                          actSym, inhSym,
-                                          noLinkType)
-            except Exception as err:
-                err_msg = "An error has occurred during opening the file.\n%s"
-                self.show_error("Open a network file", err_msg % format_exc())
-                continue
-
+            # end of if
             break
         # end of while
 
-
-        if networkName:
-            net.name = networkName
-        elif not net.name:
-            net.name = os.path.basename(fpath)
-
-        self.mw.sv_manager.set_current_view_scene(net.scene, net.name)
-        self.mw.nt_manager.append_item(net)
-        #self.mw.ct_manager.update_console_variables()
 
     @Slot(bool)
     def process_save_network(self):

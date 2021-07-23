@@ -133,12 +133,11 @@ class BaseLink(PainterOptionItem):
         """
 
         """
-
-
         super().__init__(iden, *args, **kwargs)
 
         self._pos_header = QPointF()
         self._path_paint = QPainterPath()
+        self._bounding_rect = QRectF()
 
         self.setFlags(QGraphicsItem.ItemIsSelectable
                       | QGraphicsItem.ItemIsFocusable
@@ -222,13 +221,15 @@ class BaseLink(PainterOptionItem):
         else:
             event.reject()
 
-    def boundingRect(self):
-        rect = self._path_paint.boundingRect()
-        if self._pen:
-            wp = self._pen.width()
-            rect.adjust(-wp, -wp, +wp, +wp)
 
-        return rect
+    """
+    [Reference] https://stackoverflow.com/a/34199293
+    QGraphicsItem::shape is used for object collision detection, hit tests and knowing where mouse clicks occur.
+    In contrast, QGraphicsItem::boundingRect is used when drawing an object, knowing when an object is off the screen, or obscured.
+    """
+
+    def boundingRect(self):
+        return self._bounding_rect
 
     def shape(self):
         return self._path_paint
@@ -249,6 +250,7 @@ class BaseLink(PainterOptionItem):
 
     def update(self, *args, **kwargs):
         self._create_path()
+        self._update_bounding_rect()
         self._invalidate()
         return super().update(*args, **kwargs)
 
@@ -296,11 +298,13 @@ class BaseLink(PainterOptionItem):
     def is_movable(self):
         return False
 
-    # def _identify_header_pos(self):
-    #     raise NotImplementedError()
-    #
-    # def _calculate_header_angle(self):
-    #     raise NotImplementedError()
+    def _update_bounding_rect(self):
+        rect = self._path_paint.boundingRect()
+        if self._pen:
+            wp = self._pen.width()
+            rect.adjust(-wp, -wp, +wp, +wp)
+
+        self._bounding_rect = rect
 
 
 class TwoNodeLink(BaseLink):

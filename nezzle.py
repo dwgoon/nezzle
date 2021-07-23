@@ -9,8 +9,8 @@ __status__ = "Production"
 
 
 
-# import cgitb
-# cgitb.enable(format='text')
+import cgitb
+cgitb.enable(format='text')
 
 import os
 import argparse
