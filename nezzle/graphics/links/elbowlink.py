@@ -6,21 +6,19 @@ from qtpy.QtGui import QBrush, QColor, QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
 from .straightlink import StraightLink
+from .curvedlink import CurvedLink
 from .controlpoint import ControlPoint
 
-from nezzle.utils import dist
 from nezzle.utils import dot
 from nezzle.utils import internal_division
 from nezzle.utils import length
-from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
 from nezzle.graphics.mixins import Lockable
 
 
 @Lockable
-class CurvedLink(StraightLink):
-
-    ITEM_TYPE = 'CURVED_LINK'
+class ElbowLink(StraightLink):
+    ITEM_TYPE = 'ELBOW_LINK'
 
     def __init__(self, *args, **kwargs):
         self._t_header = 0
@@ -50,32 +48,6 @@ class CurvedLink(StraightLink):
         self._ctrl_point.setY(value)
         return value
 
-    # def mousePressEvent(self, event):
-    #     if event.button() == Qt.LeftButton:
-    #         """
-    #         The following check prevents this item being selected
-    #         simply according to boundingRect.
-    #         """
-    #         pos = event.pos() - self.pos()
-    #         if self._path_paint.contains(pos):
-    #             self.setSelected(True)
-    #             event.accept()
-    #     else:
-    #         event.reject()
-
-    # def contextMenuEvent(self, event):
-    #     #if not self.isSelected():
-    #     #    event.ignore()
-    #
-    #     self.setSelected(True)
-    #     selectedAction = self.menu.exec(event.screenPos())
-    #     #action_restart_console = self.pop_menu.addAction('Restart console')
-    #     if self._action_adjust.isChecked():
-    #         print("This is checked")
-    #         self.set_adjusted(True)
-    #     else:
-    #         self.set_adjusted(False)
-
     def boundingRect(self):
 
         # All self.pos_xxxx are relative positions to the this link.
@@ -104,9 +76,9 @@ class CurvedLink(StraightLink):
         super().paint(painter, option, widget)
 
         ## [DEBUG] Draw the bounding rect
-        #rect = self.boundingRect()
-        #painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
-        #painter.drawRect(rect)
+        # rect = self.boundingRect()
+        # painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
+        # painter.drawRect(rect)
         #######################
 
         if self.isSelected():
@@ -139,13 +111,13 @@ class CurvedLink(StraightLink):
         v2 = self.pos_tgt - self.ctrl_point.pos()
         len_v1 = length(v1)
         len_v2 = length(v2)
-        
+
         try:
-            inner_product = np.clip(dot(v1, v2)/(len_v1*len_v2), -1, 1)
+            inner_product = np.clip(dot(v1, v2) / (len_v1 * len_v2), -1, 1)
             control_angle = np.arccos(inner_product)
         except ZeroDivisionError:
             return True
-            
+
         return np.isclose(control_angle, 0, atol=0.1) \
                or np.isclose(control_angle, np.pi, atol=1e-1)
 
@@ -183,17 +155,15 @@ class CurvedLink(StraightLink):
         pc = self.ctrl_point.pos()
 
         t = 0
-        x = np.array([p1.x(), pc.x(), p2.x()], dtype=np.float64)
-        y = np.array([p1.y(), pc.y(), p2.y()], dtype=np.float64)
         for i in range(1000):
             t = 1 - 0.001 * i
-            arclen = quadbezier.arc_length(x, y, t, 1)
-            rchange = abs(arclen-offset)/offset
-            if rchange<5e-2:
+            arclen = quadbezier.arc_length((p1, pc, p2), t, 1)
+            rchange = abs(arclen - offset) / offset
+            if rchange < 5e-2:
                 self._t_header = t
                 break
 
-        ph = (1-t)**2*p1 + 2*(1-t)*t*pc + t**2*p2
+        ph = (1 - t) ** 2 * p1 + 2 * (1 - t) * t * pc + t ** 2 * p2
         self.pos_header.setX(ph.x())
         self.pos_header.setY(ph.y())
 
@@ -236,8 +206,8 @@ class CurvedLink(StraightLink):
     def _create_curve_path(self):
 
         self._identify_curve_points()
+
         self._path_paint = QPainterPath()
-        # self._path_paint.clear()  # supported from Qt 5.13
         self._path_paint.setFillRule(Qt.WindingFill)
 
         self._path_paint.moveTo(self._qps_top[0])

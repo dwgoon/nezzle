@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 from .etc import *
 from .math import *
 from .meta import *

@@ -1,13 +1,3 @@
-
-__author__ = "Daewon Lee"
-__copyright__ = "Copyright 2021, Daewon Lee"
-__credits__ = ["Daewon Lee", ]
-__license__ = "MIT"
-__version__ = "0.0.1"
-__maintainer__ = "Daewon Lee (daewon4you@gmail.com)"
-__email__ = "daewon4you@gmail.com"
-__status__ = "Production"
-
 # import warnings
 # warnings.filterwarnings("ignore")
 
@@ -22,11 +12,10 @@ from qtpy.QtCore import QFileInfo, QSize
 
 from nezzle.mainwindow import MainWindow
 
-
 base_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(base_dir)
 
-def main():
+def main(args=None):
     libpaths = QtWidgets.QApplication.libraryPaths()
     libpaths.append(os.getcwd())
     #libpaths.append("C:/Users/dwlee/Envs/calc/Lib/site-packages/qtpy/Qt/plugins")
@@ -55,10 +44,22 @@ def main():
     print(icon.name(), icon.themeName())
     mw.setWindowIcon(icon)
 
+    # Before showing the main window, process arguments.
+
+    if args:
+        if not args.fpath_code:
+            pass
+        elif os.path.isfile(args.fpath_code):
+                mw.code_manager.process_code(args.fpath_code)
+                print("%s has been executed."%(args.fpath_code))
+                mw.code_manager.file_path_edit.setText(args.fpath_code)
+        else:
+            sys.stderr.write("Network file is not valid: %s\n"%(args.fpath_code))
+
+
+    # Show the main window.
     mw.show()
 
     sys.exit(app.exec())
 
     
-if __name__ == "__main__":
-    main()

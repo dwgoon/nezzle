@@ -10,8 +10,7 @@ http://microbians.com/?page=math&id=math-quadraticbezieroffseting
 """
 
 import numpy as np
-
-from cachetools import cached
+# from cachetools import cached
 
 from qtpy.QtCore import QPointF
 
@@ -23,101 +22,70 @@ from nezzle.utils import solve_cubic
 from nezzle.utils import rotate
 
 
-def _calc_coeff(w0, w1, w2, wx):
-    A = w0 - 2 * w1 + w2
-    B = 2 * (w1 - w0)
-    C = w0 - wx
-    D = B ** 2 - 4 * A * C
-    return A, B, C, D
-
-def _solve_quad(coeff):
-    A, B, C, D = coeff
-    if A != 0:
-        D = np.sqrt(D)
-        s1 = (-B + D)/(2*A)
-        s2 = (-B - D)/(2*A)
-        sols = []
-
-        # The parameter should be within [0, 1].
-        if 0 <= s1 <= 1.0:
-            sols.append(s1)
-        if 0 <= s2 <= 1.0:
-            sols.append(s2)
-
-        return sols
-    else:
-        s = -C / B
-        return [s]
-
-def _is_on_the_curve(cps, pt, t):
+def _integrate_sqrt_quad(coeff: np.ndarray, bounds: np.ndarray) -> float:
     """
-    Parameters
-    ----------
-    cps: The control points of quadratic Bezier curve.
-    pt: Point to be checked.
-    t: The quadratic Bezier curve parameter corresponding to pt.
+    An exact solution of integrating sqrt(a*x^2 + b*x + c) over bounds.
+
+    Args:
+        coeff: A sequence of the coefficients, (a, b, c).
+        bounds: Upper nad lower bounds.
     """
-    p0, p1, p2 = cps
-    px = (1-t)**2*p0 + 2*(1-t)*t*p1 + t** 2*p2
-    return np.allclose((pt.x(), pt.y()), (px.x(), px.y()))
 
+    if np.abs(bounds[0] - bounds[1]) < 1e-5:
+        return 0.0
 
-def identify_parameter(cps, pt):
-    p0, p1, p2 = cps
-    coeff_x = _calc_coeff(p0.x(), p1.x(), p2.x(), pt.x())
-    sols_x = _solve_quad(coeff_x)
-    for t in sols_x:
-        if _is_on_the_curve(cps, pt, t):
-            return t
-
-    raise ValueError("There is no solution to find the correct t.")
-
-
-def _integrate_sqrt_quad(coeff, p, q):
-    """
-    An exact solution of integrating sqrt(a*x^2 + b*x + c) within (p, q)
-
-    Paramters
-    ---------
-    coeff: A sequence of the coefficients, (a, b, c)
-    p, q: Integrating range, (p, q)
-    """
     a, b, c = coeff
 
-    def F(x):  # The function of definite integral
-        f = np.sqrt(a*x**2 + b*x + c)
-        g = (2*a*x + b) / (a**0.5) + 2*f
-        return (b/(4.*a) + 0.5*x)*f+(4*a*c-b**2)/(8*a**(1.5))*np.log(g)
+    """
+    # The function of definite integral
+    # (1) Calcuate Fq
+    f = np.sqrt(a*q**2 + b*q + c)
+    g = (2*a*q + b) / (a**0.5) + 2*f
+    Fq = (b/(4.*a) + 0.5*q)*f+(4*a*c-b**2)/(8*a**(1.5))*np.log(g)
 
-    return F(q) - F(p)
+    # (2) Calculate Fp
+    f = np.sqrt(a*p**2 + b*p + c)
+    g = (2 * a * p + b) / (a ** 0.5) + 2 * f
+    Fp = (b / (4. * a) + 0.5 * p) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
+    """
+
+    f = np.sqrt(a * bounds ** 2 + b * bounds + c)
+    g = (2 * a * bounds + b) / (a ** 0.5) + 2 * f
+    F = (b / (4. * a) + 0.5 * bounds) * f + (4 * a * c - b ** 2) / (8 * a ** (1.5)) * np.log(g)
+    return F[1] - F[0]
 
 
-def arc_length(cps, t1, t2):
+def arc_length(x: np.ndarray, y: np.ndarray, t1: float, t2: float) -> float:
     """
     The arc length of quadratic Bezier curve, given (t1, t2)
 
-    cps: The control points of quadratic Bezier curve.
-    t1: The parameter value at the beginning.
-    t2: The parameter value at the end.
+    Args:
+        x: The x-axis coordinates of the three control points of quadratic Bezier curve.
+        y: The x-axis coordinates of the three control points of quadratic Bezier curve.
+        t1: The lower bound.
+        t2: The upper bound.
 
+    '''math
     x'(t)^2 = 4*((P-Q)^2*t^2 -2*P*(P-Q)*t + P^2)
     y'(t)^2 = 4*((R-S)^2*t^2 -2*R*(R-S)*t + R^2)
+    '''
 
-    Integrate 2*sprt(x'(t)^2 + y'(t)^2) for (t1, t2)
+    Integrate 2*\sprt{x'(t)^2 + y'(t)^2} over (t1, t2)
     """
 
-    p0, p1, p2 = cps
+    #p0, p1, p2 = cps
 
-    P = p1.x() - p0.x()
-    Q = p2.x() - p1.x()
-    R = p1.y() - p0.y()
-    S = p2.y() - p1.y()
+    p = x[1] - x[0]  #p1.x() - p0.x()
+    q = x[2] - x[1]  #p2.x() - p1.x()
+    r = y[1] - y[0]  #p1.y() - p0.y()
+    s = y[2] - y[1]  #p2.y() - p1.y()
 
-    A = (P - Q) ** 2 + (R - S) ** 2
-    B = -2 * ((P - Q) * P + (R - S) * R)
-    C = P ** 2 + R ** 2
+    coeff = np.zeros(3, dtype=np.float64)
+    coeff[0] = (p - q) ** 2 + (r - s) ** 2
+    coeff[1] = -2 * ((p - q) * p + (r - s) * r)
+    coeff[2] = p ** 2 + r ** 2
 
-    return 2 * _integrate_sqrt_quad((A, B, C), t1, t2)
+    return 2 * _integrate_sqrt_quad(coeff, np.array([t1, t2]))
 
 
 def nearest_point(cps, pa):

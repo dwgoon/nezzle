@@ -14,7 +14,9 @@ from nezzle.graphics.links.baselink import TwoNodeLink
 
 @Lockable
 class StraightLink(TwoNodeLink):
-
+    """
+    Straight link class.
+    """
     ITEM_TYPE = 'STRAIGHT_LINK'
 
     def __init__(self, *args, **kwargs):

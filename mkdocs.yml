@@ -1,0 +1,80 @@
+# Project information
+site_name: Nezzle
+#site_url: 
+site_description: Network Visualization through both Programming and GUI.
+site_author: Daewon Lee
+
+# Repository
+repo_url: https://github.com/dwgoon/nezzle
+repo_name: dwgoon/nezzle
+#edit_uri: "" #disables edit button
+
+# Theme
+theme:
+  name: material
+  logo: assets/images/favicon.png
+  favicon: assets/images/favicon.png
+
+# Plugins
+plugins:
+  - search
+  - autorefs  
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          selection:
+            docstring_style: "google"
+            inherited_members: false
+          rendering:
+            #show_signature_annotations: true
+            #show_root_full_path: true
+            #show_root_heading: true
+            show_source: true
+            #show_category_heading: true
+            
+          setup_commands:
+            - import sys
+            - sys.path.append("docs")
+        selection:
+          new_path_syntax: yes
+      watch:
+        - nezzle/
+
+markdown_extensions:
+  - admonition
+  - markdown_katex
+  #- markdown_katex:
+  #    no_inline_svg: True
+  #    insert_fonts_css: True
+  #    macro-file: macros.tex
+
+# Page tree
+nav:
+  - Home: index.md
+  - Installation: install.md
+  - Tutorial:
+    - Data: network_data.md    
+    - Codes:
+      - Creating Networks: create_networks.md
+      - Modifying Graphics: modify_graphics.md
+    - Console: console.md
+    - Graphics:
+      - Aligning Items: align_items.md
+    
+  - API:
+    - graphics:      
+      - nodes: nezzle/grpahics/nodes/nodes.md
+      - links:
+        - BaseLink: nezzle/graphics/links/baselink.md
+        - TwoNodeLink: nezzle/graphics/links/twonodelink.md
+        - StraightLink: nezzle/graphics/links/straightlink.md
+      
+      
+    # - CLI: nezzle/main.md
+    # - Configuration: nezzle/config.md
+    # - Data: nezzle/data.md
+    # - Models: nezzle/models.md
+    # - Training: nezzle/train.md
+    # - Inference: nezzle/predict.md
+    # - Utilities: nezzle/utils.md

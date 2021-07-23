@@ -271,37 +271,33 @@ def solve_cubic(a, b, c, d):
 
 
 def rotate(ap, rp, angle, tlen=None):
-    """Rotate a point clockwise with respect to
-    the given axis.
+    """Rotate a point clockwise with respect to the given axis.
 
-    Parameters
-    ----------
-    ap : QPointF
-        Axis point.
-    rp : QPointF
-        Point to be rotated.
-    tlen : float (optional)
-        Target length of the rotated point
-        from the axis point.
+    Args:
+        ap : QPointF
+            Axis point.
+        rp : QPointF
+            Point to be rotated.
+        tlen : float (optional)
+            Target length of the rotated point
+            from the axis point.
 
-    Returns
-    -------
-    tp : QPointF
-         Transformed point (i.e., rotated and scaled).
+    Returns:
+        tp : QPointF
+             Transformed point (i.e., rotated and scaled).
 
-    Examples
-    --------
-    >>> v1 = QPointF(1, 0)
-    >>> org = QPointF(0, 0)
-    >>> rotate(org, v1, 90)
-    PyQt5.QtCore.QPointF(0.0, 1.0)
+    Examples:
+        >>> v1 = QPointF(1, 0)
+        >>> org = QPointF(0, 0)
+        >>> rotate(org, v1, 90)
+        PyQt5.QtCore.QPointF(0.0, 1.0)
 
-    >>> rotate(org, v1, 90, tlen=2.0)
-    PyQt5.QtCore.QPointF(0.0, 2.0)
+        >>> rotate(org, v1, 90, tlen=2.0)
+        PyQt5.QtCore.QPointF(0.0, 2.0)
 
-    >>> v1 = QPointF(1, 1)
-    >>> rotate(org, v1, 45)
-    PyQt5.QtCore.QPointF(0.0, 1.4142135623730951)
+        >>> v1 = QPointF(1, 1)
+        >>> rotate(org, v1, 45)
+        PyQt5.QtCore.QPointF(0.0, 1.4142135623730951)
     """
     transform = QTransform()
     v = rp - ap
