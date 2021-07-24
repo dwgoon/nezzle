@@ -18,7 +18,7 @@ from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
 from nezzle.graphics.mixins import Lockable
-from nezzle.graphics.mappableitem import PainterOptionItem
+from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import HeaderClassFactory
 
 

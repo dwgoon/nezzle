@@ -20,7 +20,7 @@ from .labels.textlabel import TextLabel
 from .nodes.basenode import BaseNode
 
 from nezzle.graphics import SelfloopLink
-from nezzle.graphics.mappableitem import MappableItem
+from nezzle.graphics.baseitem import MappableItem
 from nezzle.graphics.screen import GraphicsScene
 from nezzle.utils.math import rotate, dist, internal_division
 

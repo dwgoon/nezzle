@@ -13,9 +13,11 @@ from qtpy.QtGui import QPainter
 from qtpy.QtGui import QClipboard
 
 from qtpy.QtCore import Qt
+from qtpy.QtCore import QSize
 from qtpy.QtCore import QRectF
 from qtpy.QtCore import QMimeData
 from qtpy.QtCore import QBuffer
+from qtpy.QtCore import QDataStream
 from qtpy.QtCore import QByteArray
 from qtpy.QtCore import QIODevice
 from qtpy.QtCore import Signal, Slot
@@ -65,23 +67,34 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionCopy.setShortcut(QKeySequence('Ctrl+C'))
 
         self.mw.ui_actionPaste.triggered.connect(self.process_paste)
-        self.mw.ui_actionPaste.setShortcut(QKeySequence('Ctrl+P'))
+        self.mw.ui_actionPaste.setShortcut(QKeySequence('Ctrl+V'))
 
 
         # View
         self.mw.ui_actionViewNetworksDock.triggered.connect(
-            self.process_view_networks_dock)
+            self.process_view_networks_dock
+        )
         self.mw.ui_actionViewConsoleDock.triggered.connect(
-            self.process_view_console_dock)
+            self.process_view_console_dock
+        )
 
 
-        # Select -> Lock
+        # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
         self.mw.ui_actionLockNodes.triggered.connect(
-            self.process_lock_nodes)
+            self.process_lock_nodes
+        )
         self.mw.ui_actionLockLinks.triggered.connect(
-            self.process_lock_links)
+            self.process_lock_links
+        )
         self.mw.ui_actionLockLabels.triggered.connect(
-            self.process_lock_labels)
+            self.process_lock_labels
+        )
+
+        # Select -> Select All
+        self.mw.ui_actionSelectAll.triggered.connect(
+            self.process_select_all
+        )
+        self.mw.ui_actionSelectAll.setShortcut(QKeySequence('Ctrl+A'))
 
 
         # The following objects are locked at first.
@@ -138,57 +151,72 @@ class MenuActionHandler(QWidget):
 
         net = item.data()
         scene = net.scene
-        scene.clear_selection()
+        scene.clearSelection()
         brect = scene.itemsBoundingRect()
         brect.adjust(-5, -5, +10, +10)
 
-        image = QImage(brect.width(),
-                       brect.height(),
-                       QImage.Format_ARGB32)
+        width = brect.width() #int(brect.width() / 1.25)
+        height = brect.height() #int(brect.height() / 1.25)
 
-        image.fill(Qt.transparent)
-        #bbrush = scene.backgroundBrush()
-        #bcolor = bbrush.color()
-
+        # Create a buffer
         data = QByteArray()
         b = QBuffer(data)
         b.open(QIODevice.WriteOnly)
 
+        # Create SVG
         svgGen = QSvgGenerator()
         svgGen.setOutputDevice(b)
-        svgGen.setSize(brect.size().toSize())
-        svgGen.setViewBox(QRectF(0.0, 0.0, brect.width(), brect.height()))
+        # svgGen.setSize(brect.size().toSize())
+        # svgGen.setViewBox(QRectF(0.0, 0.0, brect.width(), brect.height()))
+        svgGen.setSize(QSize(width, height))
+        svgGen.setViewBox(QRectF(0.0, 0.0, width, height))
+        #svgGen.setResolution(100)
+        print("SVG resolution:", svgGen.resolution())
 
         painter = QPainter()
         painter.begin(svgGen)
-        painter.setRenderHint(QPainter.Antialiasing)
-        scene.render(painter)
-        painter.end()
+        painter.setBackgroundMode(Qt.TransparentMode)  # Added
+        painter.setRenderHint(QPainter.HighQualityAntialiasing)
 
+        scene.render(painter)
+        #self.mw.sv_manager.view.render(painter)
+
+        painter.end()
         mimeData = QMimeData()
         mimeData.setData("image/svg+xml", b.buffer())
         QApplication.clipboard().setMimeData(mimeData, QClipboard.Clipboard)
 
 
 
+        # image = QImage(brect.width(),
+        #                brect.height(),
+        #                QImage.Format_ARGB32)
+        # # dpm = 600 / 0.0254
+        # # image.setDotsPerMeterX(dpm)
+        # # image.setDotsPerMeterY(dpm)
+        #
+        # print(image.dotsPerMeterX())
+        #
+        # image.fill(Qt.transparent)
+        # #image.fill(Qt.white)
+        #
         # painter = QPainter(image)
-        # painter.setBackgroundMode(Qt.TransparentMode)
+        # #painter.setBackgroundMode(Qt.TransparentMode)
         # painter.setRenderHint(QPainter.Antialiasing)
-        # painter.setRenderHint(QPainter.HighQualityAntialiasing)
+        # #painter.setRenderHint(QPainter.SmoothPixmapTransform)
         # scene.render(painter, source=brect)
         # painter.end()
         #
-        # image.save(buffer, "PNG")
-        # buffer.close()
-        #
+        # image.save(b, "PNG")
         #
         # clipboard = QApplication.clipboard()
         # mimeData = QMimeData()
-        # #mimeData.setImageData(image)
-        # mimeData.setData("image/png", data)
+        # mimeData.setImageData(image)
+        # #mimeData.setData("image/png", data)
         # clipboard.setMimeData(mimeData)
-
-        #QApplication.clipboard().setImage(image, QClipboard.Clipboard)
+        #
+        # #QApplication.clipboard().setImage(image, QClipboard.Clipboard)
+        # b.close()
         pass
 
     @Slot()
@@ -353,6 +381,18 @@ class MenuActionHandler(QWidget):
     def process_lock_links(self, checked):
         ss = get_system_state()
         ss.set_locked(Lock.LINKS, checked)
+
+    @Slot(bool)
+    def process_select_all(self):
+        item = self.mw.nt_manager.current_item
+        if not item:
+            return
+
+        net = item.data()
+        scene = net.scene
+        for graphics_item in scene.items():
+            graphics_item.setSelected(True)
+
 
     @Slot()
     def process_align_left(self):

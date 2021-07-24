@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .mappableitem import MappableGraphicsItem
-from .mappableitem import PainterOptionItem
+from .baseitem import MappableGraphicsItem
+from .baseitem import PainterOptionItem
 
 from .nodes.nodefactory import NodeClassFactory
 from .nodes.basenode import BaseNode

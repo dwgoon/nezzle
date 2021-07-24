@@ -28,11 +28,11 @@ def update(nav, net):
     # A single arrow lins with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
-    src = NodeClass('ID_NODE_1', 40, 20, pos=QPoint(x1, y1))
-    tgt = NodeClass('ID_NODE_2', 40, 20, pos=QPoint(x0, y0))
+    src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
+    tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.blue
-    tgt['FILL_COLOR'] = Qt.blue
+    src['FILL_COLOR'] = Qt.cyan
+    tgt['FILL_COLOR'] = Qt.cyan
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
@@ -43,6 +43,15 @@ def update(nav, net):
     curve['BORDER_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_WIDTH'] = 2
 
+    LabelClass = LabelClassFactory.create("TEXT_LABEL")
+
+    for (node, name) in [(src, "Source"), (tgt, "Target")]:
+        label = LabelClass(node, name)
+        label["FONT_SIZE"] = 10
+        rect = label.boundingRect()
+        label.setPos(-rect.width()/2, -rect.height()/2)
+        _net.add_label(label)
+        
     _net.add_link(curve)
     _net.add_node(src)
     _net.add_node(tgt)
@@ -56,8 +65,8 @@ def update(nav, net):
     # A single arrow lins with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
-    src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
-    tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))
+    src = NodeClass('NODE_1', 50, 20, pos=QPoint(x1, y1))
+    tgt = NodeClass('NODE_2', 50, 20, pos=QPoint(x0, y0))
 
     src['FILL_COLOR'] = Qt.blue
     tgt['FILL_COLOR'] = Qt.blue

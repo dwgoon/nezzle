@@ -7,7 +7,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPainterPath
 
-from nezzle.graphics.mappableitem import Movable
+from nezzle.graphics.baseitem import Movable
 from nezzle.utils import length
 
 

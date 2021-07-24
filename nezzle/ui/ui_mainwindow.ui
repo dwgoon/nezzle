@@ -63,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>1127</width>
-     <height>21</height>
+     <height>36</height>
     </rect>
    </property>
    <widget class="QMenu" name="ui_menuFile">
@@ -105,6 +105,7 @@
      <addaction name="ui_actionLockLabels"/>
     </widget>
     <addaction name="ui_menuLock"/>
+    <addaction name="ui_actionSelectAll"/>
    </widget>
    <widget class="QMenu" name="ui_menuLayout">
     <property name="title">
@@ -530,6 +531,11 @@
   <action name="ui_actionDistributeVertically">
    <property name="text">
     <string>Distribute Vertically</string>
+   </property>
+  </action>
+  <action name="ui_actionSelectAll">
+   <property name="text">
+    <string>Select All</string>
    </property>
   </action>
  </widget>

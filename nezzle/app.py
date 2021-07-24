@@ -5,6 +5,8 @@ import os
 from os.path import join as pjoin
 import sys
 
+from qtpy import QtCore
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtWidgets import QStyleFactory
 from qtpy.QtGui import QIcon
@@ -21,7 +23,9 @@ def main(args=None):
     #libpaths.append("C:/Users/dwlee/Envs/calc/Lib/site-packages/qtpy/Qt/plugins")
     QtWidgets.QApplication.setLibraryPaths(libpaths)
 
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     app = QtWidgets.QApplication(sys.argv)
+    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
     # It is possible to choose the theme of GUI
     QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
