@@ -39,8 +39,6 @@ def read_network(fpath, link_map=None):
 # end of read_network
 
 
-
-# TODO: need to make a rule to map str_act and str_inh
 def read_sif(fpath, link_map=None):
 
     scene_width = DEFAULT_SCENE_WIDTH
@@ -48,7 +46,8 @@ def read_sif(fpath, link_map=None):
 
     fname = os.path.basename(fpath)
     net = Network(fname)
-    net.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
+    #net.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
+    net.scene.setBackgroundBrush(Qt.transparent)
 
     with codecs.open(fpath, "r", encoding="utf-8-sig") as fin:
         NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
@@ -109,16 +108,7 @@ def read_sif(fpath, link_map=None):
 
             header = None
             HeaderClass = None
-            """
-            if no_link_type:
-                HeaderClass = None
-            elif str_link_type == '+':
-                header_type = 'ARROW'
-                HeaderClass = HeaderClassFactory.create(header_type)
-            elif str_link_type == '-':
-                header_type = 'HAMMER'
-                HeaderClass = HeaderClassFactory.create(header_type)
-            """
+
             if link_map:
                 header_type = link_map[str_link_type]
                 HeaderClass = HeaderClassFactory.create(header_type)
@@ -149,7 +139,7 @@ def read_sif(fpath, link_map=None):
             src.add_link(link)
             tgt.add_link(link)
             net.add_link(link)
-        # end of for : reading each line of SIF file
+        # end of for: reading each line of SIF file
 
         # Add nodes and labels in network
         font = QFont()

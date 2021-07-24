@@ -24,7 +24,8 @@ def to_graphics(dg, iden, no_link_type=False):
         raise TypeError("NetworkX.DiGraph should be given, not %s"%(type(dg)))
 
     net = Network(iden)
-    net.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
+    #net.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
+    net.scene.setBackgroundBrush(Qt.transparent)
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     nodes = {}

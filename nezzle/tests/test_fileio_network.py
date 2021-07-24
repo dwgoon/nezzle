@@ -156,7 +156,7 @@ def test_create_network():
 
     assert dict_net['ID'] == dict_net2['ID']
     assert dict_net['NAME'] == dict_net2['NAME']
-    assert dict_net['SFV_VERSION'] == dict_net2['SFV_VERSION']
+    assert dict_net['NEZZLE_VERSION'] == dict_net2['NEZZLE_VERSION']
     assert dict_net['BACKGROUND_COLOR'] == dict_net2['BACKGROUND_COLOR']
     assert len(dict_net["NODES"]) == len(dict_net2["NODES"])
     assert len(dict_net["LINKS"]) == len(dict_net2["LINKS"])

@@ -182,6 +182,7 @@ class GraphicsScene(QGraphicsScene):
     def __init__(self, *args, parent=None, **kwargs):
         super().__init__(*args, parent, **kwargs)
         self.selectionChanged.connect(self.on_selection_changed)
+        self.setBackgroundBrush(Qt.transparent)
 
     def selected_movable_items(self):
         items_selected = self.selectedItems()

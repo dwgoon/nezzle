@@ -173,11 +173,8 @@ class Network(MappableItem):
     def to_dict(self):
         dict_net = {}
 
-        dict_net["SFV_VERSION"] = (0, 0, 1)
+        dict_net["NEZZLE_VERSION"] = (0, 0, 1)
         dict_net["NAME"] = self.name
-        #dict_net["SCENE"] = {}
-        #dict_net["SCENE"]["SCENE_WIDTH"] = self.scene.width()
-        #dict_net["SCENE"]["SCENE_HEIGHT"] = self.scene.height()
 
         bg_color = self.scene.backgroundBrush().color()
         dict_net["BACKGROUND_COLOR"] = bg_color.name(QColor.HexArgb)
@@ -322,7 +319,8 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
     ir, ic = A.nonzero()
     nodes_cache = {}
     net_new = Network(name)
-    net_new.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
+    # net_new.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
+    net_new.scene.setBackgroundBrush(Qt.transparent)
     for i in range(ir.size):
         itgt, isrc = ir[i], ic[i]
         tgt, src = i2n[itgt], i2n[isrc]

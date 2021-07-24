@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QObject
 from qtpy.QtCore import Slot

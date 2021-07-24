@@ -171,9 +171,12 @@ class TextLabel(PainterOptionItem):
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
-        painter.setPen(Qt.red)
-        painter.setBrush(Qt.NoBrush)
-        painter.drawRect(self.boundingRect())
+
+        ## [DEBUG]
+        # painter.setPen(Qt.red)
+        # painter.setBrush(Qt.NoBrush)
+        # painter.drawRect(self.boundingRect())
+        ############################################
 
         self._text_item.paint(painter, option, widget)
 

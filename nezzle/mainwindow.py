@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-
-
 from qtpy.QtWidgets import QMainWindow
-
 
 from nezzle.managers.view import SingleViewManager
 from nezzle.managers.navigation import NavigationTreeManager
