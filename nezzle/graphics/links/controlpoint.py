@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtCore import QRectF
 from qtpy.QtCore import QPointF
@@ -11,7 +9,7 @@ from nezzle.graphics.baseitem import Movable
 from nezzle.utils import length
 
 
-class ControlPoint(QGraphicsItem, Movable):
+class BaseControlPoint(QGraphicsItem, Movable):
     def __init__(self, parent, pos, radius=5):
         super().__init__()
         self.setParentItem(parent)
@@ -44,19 +42,6 @@ class ControlPoint(QGraphicsItem, Movable):
     def parent(self):
         return self.parentItem()
 
-    def itemChange(self, change, value):
-
-        if change == QGraphicsItem.ItemPositionChange:
-            if self.parent.is_node_selected():
-                return super().itemChange(change, self.pos())
-
-        elif change == QGraphicsItem.ItemPositionHasChanged:
-            pos = value
-            self.parent['CTRL_POS_X'] = pos.x()
-            self.parent['CTRL_POS_Y'] = pos.y()
-            self.parent.update()
-
-        return super().itemChange(change, value)
 
     def boundingRect(self):
         rect = QRectF()
@@ -96,3 +81,41 @@ class ControlPoint(QGraphicsItem, Movable):
            self.setPos(QPointF(0, 0))
 
         return super().mouseReleaseEvent(event)
+
+
+class ControlPoint(BaseControlPoint):
+
+    def itemChange(self, change, value):
+
+        if change == QGraphicsItem.ItemPositionChange:
+            if self.parent.is_node_selected():
+                return super().itemChange(change, self.pos())
+
+        elif change == QGraphicsItem.ItemPositionHasChanged:
+            pos = value
+            self.parent['CTRL_POS_X'] = pos.x()
+            self.parent['CTRL_POS_Y'] = pos.y()
+            self.parent.update()
+
+        return super().itemChange(change, value)
+
+
+class XaxisControlPoint(BaseControlPoint):
+
+    def itemChange(self, change, value):
+
+        if change == QGraphicsItem.ItemPositionChange:
+            if self.parent.is_node_selected():
+                return super().itemChange(change, self.pos())
+
+            pos = value
+            pos.setY(0)  # Limit the range of y-axis
+
+        elif change == QGraphicsItem.ItemPositionHasChanged:
+            pos = value
+            self.parent['CTRL_POS_X'] = pos.x()
+            self.parent['CTRL_POS_Y'] = pos.y()
+            self.parent.update()
+
+        return super().itemChange(change, value)
+

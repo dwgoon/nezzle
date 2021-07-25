@@ -58,7 +58,7 @@ def main(args=None):
                 print("%s has been executed."%(args.fpath_code))
                 mw.code_manager.file_path_edit.setText(args.fpath_code)
         else:
-            sys.stderr.write("Network file is not valid: %s\n"%(args.fpath_code))
+            sys.stderr.write("File path of source code is not valid: %s\n"%(args.fpath_code))
 
 
     # Show the main window.
