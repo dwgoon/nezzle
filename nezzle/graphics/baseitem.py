@@ -10,9 +10,7 @@ from qtpy.QtWidgets import QStyle
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
 from qtpy.QtCore import Qt
-from qtpy.QtCore import QPointF
 
-from .header import HeaderClassFactory
 from .attributemapper import AttributeMapper
 from nezzle.utils import TriggerDict
 

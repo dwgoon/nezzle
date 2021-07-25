@@ -125,9 +125,9 @@ class BaseLink(PainterOptionItem):
 
     def __init__(self,
                  iden,
-                 *args,
                  header=None,
                  width=2,
+                 *args,
                  **kwargs):
 
         """
@@ -153,7 +153,6 @@ class BaseLink(PainterOptionItem):
         self._header = header
         if header:
             self._header.parent = self
-            self._angle_header = None  # degrees
 
         self._initialize()
 
@@ -238,9 +237,9 @@ class BaseLink(PainterOptionItem):
         return super().itemChange(change, value)
 
     def _create_header_path(self):
-        points = self.header.calculate_points(self.pos_header,
-                                              self.width,
-                                              self._angle_header)
+        points = self.header.find_points(self.pos_header,
+                                         self.width,
+                                         self._header_transform)
         path = QPainterPath()
         path.moveTo(points[0])
         for pt in points[1:]:
@@ -365,17 +364,6 @@ class TwoNodeLink(BaseLink):
     def _identify_pos(self):
         m = internal_division(self.source.pos(), self.target.pos(), 0.5, 0.5)
         self.setPos(m)
-
-    # def _create_header_path(self):
-    #     points = self.header.calculate_points(self.pos_header,
-    #                                           self.width,
-    #                                           self._angle_header)
-    #     path = QPainterPath()
-    #     path.moveTo(points[0])
-    #     for pt in points[1:]:
-    #         path.lineTo(pt)
-    #
-    #     self._path_header = path
 
     def to_dict(self):
         attr = super().to_dict()

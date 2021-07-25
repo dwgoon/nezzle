@@ -2,6 +2,7 @@ from qtpy.QtCore import QPointF
 from nezzle.utils import rotate
 from nezzle.utils import TriggerDict
 
+
 class HeaderClassFactory(object):
     @staticmethod
     def create(header_type):
@@ -93,8 +94,8 @@ class BaseHeader(object):
     def update(self):
         self.parent.update()
 
-    def calculate_points(self, head, link_body_width, angle=None):
-        raise NotImplementedError("calculate_points should be implemented!")
+    def find_points(self, head, link_body_width, angle=None):
+        raise NotImplementedError("identify_pos should be implemented!")
 
     def to_dict(self):
         dict_header = {}
@@ -124,7 +125,8 @@ class Arrow(BaseHeader):
     def __init__(self, width=10, height=10, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
 
-    def calculate_points(self, head, link_body_width, angle=None):
+    #def identify_pos(self, head, link_body_width, angle=None):
+    def find_points(self, head, link_body_width, transform=None):
 
         neck1 = head + QPointF(0, -link_body_width/2)
         neck2 = head + QPointF(0, +link_body_width/2)
@@ -134,12 +136,18 @@ class Arrow(BaseHeader):
         top = head + QPointF(self.height, 0)
 
         points = [neck1, face1, top, face2, neck2]
-        if angle:
+        # if angle:
+        #     for i, pt in enumerate(points):
+        #         points[i] = rotate(head, pt, angle)
+
+        # TODO: Apply transform objects to header points to generalize the header point adjustment.
+        # transform is a callable object, which defines its own transformation in __call__.
+        if transform:
             for i, pt in enumerate(points):
-                points[i] = rotate(head, pt, angle)
+                points[i] = transform(pt, head)
 
         return points
-    # end of def calculate_points
+    # end of def identify_pos
 
     def set_size_from_link(self, link_width):
         self.width = 5*link_width
@@ -154,7 +162,7 @@ class Hammer(BaseHeader):
     def __init__(self, width=14, height=2, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
 
-    def calculate_points(self, head, link_body_width, angle=None):
+    def find_points(self, head, link_body_width, transform=None):
 
         neck1 = head + QPointF(0, -link_body_width/2)
         neck2 = head + QPointF(0, +link_body_width/2)
@@ -167,12 +175,12 @@ class Hammer(BaseHeader):
 
         points = [neck1, face1, face2, face3, face4, neck2]
 
-        if angle:
+        if transform:
             for i, pt in enumerate(points):
-                points[i] = rotate(head, pt, angle)
+                points[i] = transform(pt, head)
 
         return points
-    # end of def calculate_points
+    # end of def identify_pos
 
     def set_size_from_link(self, link_width):
         self.width = 7*link_width

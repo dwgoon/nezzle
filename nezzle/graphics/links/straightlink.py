@@ -10,7 +10,7 @@ from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.links.baselink import TwoNodeLink
-
+from nezzle.graphics.header.transform import Rotate
 
 @Lockable
 class StraightLink(TwoNodeLink):
@@ -20,7 +20,12 @@ class StraightLink(TwoNodeLink):
     ITEM_TYPE = 'STRAIGHT_LINK'
 
     def __init__(self, *args, **kwargs):
+        self._angle_header = None
+        self._header_transform = Rotate()
+        #print(self._header_transform, self._header_transform.angle)
+
         super().__init__(*args, **kwargs)
+
 
     def _initialize(self):
         self._identify_pos()
@@ -30,6 +35,8 @@ class StraightLink(TwoNodeLink):
     def _identify_header(self):
         StraightLink._identify_header_pos(self)
         StraightLink._calculate_header_angle(self)
+        #self._identify_header_pos()
+        #self._calculate_header_angle()
         super()._create_header_path()
 
     def _identify_header_pos(self):
@@ -54,6 +61,7 @@ class StraightLink(TwoNodeLink):
 
     def _calculate_header_angle(self):
         self._angle_header = -QLineF(self.pos_src, self.pos_tgt).angle()
+        self._header_transform.angle = self._angle_header
 
     def _identify_pos(self):
         m = internal_division(self.source.pos(), self.target.pos(), 0.5, 0.5)

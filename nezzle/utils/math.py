@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Utility functions for mathematical calculation.
 """
@@ -317,5 +316,45 @@ def rotate(ap, rp, angle, tlen=None):
     return tp
 
 
+def reflect_yaxis(ap, rp):
+    """Reflect a point with respect to the y-axis.
+
+    Args:
+        ap : QPointF
+            Axis point.
+        rp : QPointF
+            Point to be reflected.
+
+    Returns:
+        tp : QPointF
+             Transformed point.
+    """
+
+    # Temporary x-coord. (tx)
+    tx = rp.x() - ap.x()  # Move the x-coord of origin to that of the axis point (ap).
+
+    # New x-coord. (nx)
+    nx = -tx + ap.x()  # Reflect and find the coordinates to the original origin.
+    return QPointF(nx, rp.y())
 
 
+def reflect_xaxis(ap, rp):
+    """Reflect a point with respect to the x-axis.
+
+    Args:
+        ap : QPointF
+            Axis point.
+        rp : QPointF
+            Point to be reflected.
+
+    Returns:
+        tp : QPointF
+             Transformed point.
+    """
+
+    # Temporary y-coord. (ty)
+    ty = rp.y() - ap.y()  # Move the x-coord of origin to that of the axis point (ap).
+
+    # New x-coord. (ny)
+    ny = -ty + ap.y()  # Reflect and find the coordinates to the original origin.
+    return QPointF(rp.x(), ny)

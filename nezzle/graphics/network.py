@@ -13,7 +13,7 @@ import networkx as nx
 from .nodes.nodefactory import NodeClassFactory
 from .links.linkfactory import LinkClassFactory
 from .labels.labelfactory import LabelClassFactory
-from .header import HeaderClassFactory
+from nezzle.graphics.header.header import HeaderClassFactory
 
 from .links.baselink import BaseLink
 from .labels.textlabel import TextLabel
