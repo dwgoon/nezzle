@@ -237,9 +237,9 @@ class BaseLink(PainterOptionItem):
         return super().itemChange(change, value)
 
     def _create_header_path(self):
-        points = self.header.find_points(self.pos_header,
-                                         self.width,
-                                         self._header_transform)
+        points = self.header.identify_points(self.pos_header,
+                                             self.width,
+                                             self._header_transform)
         path = QPainterPath()
         path.moveTo(points[0])
         for pt in points[1:]:

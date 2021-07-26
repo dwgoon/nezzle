@@ -94,7 +94,7 @@ class BaseHeader(object):
     def update(self):
         self.parent.update()
 
-    def find_points(self, head, link_body_width, angle=None):
+    def identify_points(self, head, link_body_width, angle=None):
         raise NotImplementedError("identify_pos should be implemented!")
 
     def to_dict(self):
@@ -126,7 +126,7 @@ class Arrow(BaseHeader):
         super().__init__(width, height, *args, **kwargs)
 
     #def identify_pos(self, head, link_body_width, angle=None):
-    def find_points(self, head, link_body_width, transform=None):
+    def identify_points(self, head, link_body_width, transform=None):
 
         neck1 = head + QPointF(0, -link_body_width/2)
         neck2 = head + QPointF(0, +link_body_width/2)
@@ -162,7 +162,7 @@ class Hammer(BaseHeader):
     def __init__(self, width=14, height=2, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
 
-    def find_points(self, head, link_body_width, transform=None):
+    def identify_points(self, head, link_body_width, transform=None):
 
         neck1 = head + QPointF(0, -link_body_width/2)
         neck2 = head + QPointF(0, +link_body_width/2)

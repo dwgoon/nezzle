@@ -101,18 +101,22 @@ class CurvedLink(StraightLink):
             painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
         ## [DEBUG]
-        # painter.setBrush(Qt.blue)
-        # for i in range(self._path_paint.elementCount()):
-        #     elem = self._path_paint.elementAt(i)
-        #     painter.drawEllipse(-0.5+elem.x,
-        #                         -0.5+elem.y, 1, 1)
-        #
-        # painter.setBrush(Qt.green)
-        # if self.header:
-        #     for i in range(self._path_header.elementCount()):
-        #         elem = self._path_header.elementAt(i)
-        #         painter.drawEllipse(-0.5+elem.x,
-        #                             -0.5+elem.y, 1, 1)
+        if self.header:
+            painter.setPen(Qt.black)
+            painter.setBrush(Qt.white)
+            painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
+
+            painter.setPen(Qt.green)
+            painter.setBrush(Qt.green)
+            for i in range(0, 3):
+                elem = self._path_header.elementAt(i)
+                painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
+
+            painter.setPen(Qt.blue)
+            painter.setBrush(Qt.blue)
+            for i in range(3, self._path_header.elementCount()):
+                elem = self._path_header.elementAt(i)
+                painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
         ##########################################################
 
     def is_straight(self):
@@ -202,6 +206,7 @@ class CurvedLink(StraightLink):
 
     def _calculate_header_angle(self):
         self._angle_header = -QLineF(self.pos_ctrl, self.pos_header).angle()
+        self._header_transform.angle = self._angle_header
 
     def _identify_curve_points(self):
         # Control points for quadratic Bezier curve

@@ -31,8 +31,8 @@ def update(nav, net):
     src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
     tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.cyan
-    tgt['FILL_COLOR'] = Qt.cyan
+    src['FILL_COLOR'] = QColor(0, 0, 200, 100) #Qt.cyan
+    tgt['FILL_COLOR'] = QColor(0, 0, 200, 100) #Qt.cyan
 
     LinkClass = LinkClassFactory.create("ELBOW_LINK")
 
