@@ -4,9 +4,10 @@ Utility functions for mathematical calculation.
 
 import numpy as np
 
+from qtpy.QtCore import QLineF
 from qtpy.QtCore import QPointF
 from qtpy.QtGui import QTransform
-
+from qtpy.QtGui import QVector2D
 
 def dot(v1, v2):
     """Calculate the dot product of two vectors.
@@ -100,41 +101,54 @@ def dist(p1, p2):
     return np.sqrt(diff.x()**2 + diff.y()**2)
 
 
-def angle(v1, v2):
-    """Calculate the angle in degrees between two vectors.
+# def angle(v1, v2):
+#     """Calculate the angle in degrees between two vectors.
+#
+#     Parameters
+#     ----------
+#     v1 : QPointF
+#         First vector from the origin.
+#     v2 : QPointF
+#         Second vector from the origin.
+#
+#     Returns
+#     -------
+#     angle : float
+#         Angle between the two vectors, v1 and v2.
+#
+#     Examples
+#     --------
+#     >>> v1 = QPointF(10, 0)
+#     >>> v2 = QPointF(10, 10)
+#     >>> angle(v1, v2)
+#     45.00000000000001
+#
+#     >>> v3 = QPointF(-10, 0)
+#     >>> angle(v1, v3)
+#     180.0
+#
+#     >>> angle(v2, v3)
+#     135.0
+#
+#     >>> v1 = QPointF()
+#     """
+#
+#     len_v1 = length(v1)
+#     len_v2 = length(v2)
+#     return np.degrees(np.arccos(dot(v1, v2)/(len_v1*len_v2)))
 
-    Parameters
-    ----------
-    v1 : QPointF
-        First vector from the origin.
-    v2 : QPointF
-        Second vector from the origin.
-
-    Returns
-    -------
-    angle : float
-        Angle between the two vectors, v1 and v2.
-
-    Examples
-    --------
-    >>> v1 = QPointF(10, 0)
-    >>> v2 = QPointF(10, 10)
-    >>> angle(v1, v2)
-    45.00000000000001
-
-    >>> v3 = QPointF(-10, 0)
-    >>> angle(v1, v3)
-    180.0
-
-    >>> angle(v2, v3)
-    135.0
-
-    >>> v1 = QPointF()
+def angle(v1, v2, radian=False):
+    """Get the counter clock-wise angle between two vectors or points.
     """
+    radian = np.pi / 180 if radian else 1
 
-    len_v1 = length(v1)
-    len_v2 = length(v2)
-    return np.degrees(np.arccos(dot(v1, v2)/(len_v1*len_v2)))
+    return QLineF(v1.x(), v1.y(), v2.x(), v2.y()).anlge() * radian
+
+def normal_vector(v):
+    """Get the counter clock-wise normal vector for a given vector.
+    """
+    v = QVector2D(v.x(), v.y()).normalized()
+    return QVector2D(-v.y(), v.x())
 
 
 def internal_division(p1, p2, r1, r2):
@@ -277,6 +291,8 @@ def rotate(ap, rp, angle, tlen=None):
             Axis point.
         rp : QPointF
             Point to be rotated.
+        angle: float
+            Angle in degree
         tlen : float (optional)
             Target length of the rotated point
             from the axis point.

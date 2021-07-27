@@ -4,6 +4,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 from qtpy.QtCore import QLineF
 from qtpy.QtCore import QRectF
+from qtpy.QtGui import QVector2D
 from qtpy.QtGui import QBrush, QColor, QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
@@ -11,9 +12,11 @@ from nezzle.graphics.links.baselink import TwoNodeLink
 from nezzle.graphics.links.straightlink import StraightLink
 from .controlpoint import ControlPoint, XaxisControlPoint
 
+from nezzle.utils import angle
 from nezzle.utils import dist
 from nezzle.utils import dot
 from nezzle.utils import internal_division
+from nezzle.utils import normal_vector
 from nezzle.utils import length
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
@@ -150,13 +153,13 @@ class ElbowLink(StraightLink):
         # Draw outer line points
         painter.setPen(Qt.yellow)
         painter.setBrush(Qt.yellow)
-        for elem in self.ops:
+        for elem in self.fps:
             painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
 
         # Draw inner line points
         painter.setPen(Qt.cyan)
         painter.setBrush(Qt.cyan)
-        for elem in self.ips:
+        for elem in self.bps:
             painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
 
         if self.header:
@@ -207,22 +210,24 @@ class ElbowLink(StraightLink):
         self._ctrl_point = ControlPoint(parent=self, pos=mid)
 
     def _create_subpoints(self):
-        self.cps = []
-        self.ops = []
-        self.ips = []
+        self.cps = []  # Central points
+        self.fps = []  # Forward points
+        self.bps = []  # Backward points
         self._pos_connectors = [QPointF(), QPointF()]
 
+        self.cps.append(self.pos_src)  # Dummy point
         self.cps.append(self.pos_src)
-        self.ops.append(QPointF())
-        self.ips.append(QPointF())
+        self.fps.append(QPointF())
+        self.bps.append(QPointF())
         for pos in self._pos_connectors:
             self.cps.append(pos)
-            self.ops.append(QPointF())
-            self.ips.append(QPointF())
+            self.fps.append(QPointF())
+            self.bps.append(QPointF())
 
         self.cps.append(self.pos_tgt)
-        self.ops.append(QPointF())
-        self.ips.append(QPointF())
+        self.cps.append(self.pos_tgt)  # Dummy point
+        self.fps.append(QPointF())
+        self.bps.append(QPointF())
 
     def _identify_connectors_pos(self):
         pos_ctrl = self.ctrl_point.pos()
@@ -362,13 +367,57 @@ class ElbowLink(StraightLink):
 
     def _identify_elbow_points(self):
         # Update positions of source and target
-        self.cps[0] = self.pos_src
+        self.cps[0] = self.pos_src  # Dummy point
+        self.cps[1] = self.pos_src
         # for i, pos in enumerate(self._pos_connectors):
         #     self.cps[i+1] = pos
         self.cps[-1] = self.pos_tgt
+        self.cps[-2] = self.pos_tgt # Dummy point
 
         hw = self.width / 2  # The half of width
 
+        #p0 = self.cps[0]
+        #p1 = self.cps[1]
+        #p2 = self.cps[2]
+        #v1 = QVector2D(p1 - p0)
+        #v2 = QVector2D(p2 - p1)
+
+        #ix_ops = 0
+        #nv1 = hw * normal_vector(v1)
+        #self.fps[0] = p0 + nv1.toPointF()  # The first point
+
+        #ix_ops = 1
+        #sa_v1v2 = np.sin(angle(v1, v2))  # Sign of angle between v1 and v2
+        #vp1 = sa_v1v2 * QPointF(-vp0.y(), +vp0.x())
+        #self.fps[ix_ops] = p1 + vp1
+
+
+        for i in range(1, len(self.cps) - 1):
+            p0 = self.cps[i - 1]
+            p1 = self.cps[i]
+            p2 = self.cps[i + 1]
+            v1 = QVector2D(p1 - p0)
+            v2 = QVector2D(p2 - p1)
+
+            nv1 = hw * normal_vector(v1)  # Normal vector of v1
+            nv2 = hw * normal_vector(v2)  # Normal vector of v2
+            self.fps[i-1] = p1 + (nv1 + nv2).toPointF()
+        # end of for
+
+        len_cps = len(self.cps)
+        for i in range(len(self.cps) - 2, 0, -1):
+            p0 = self.cps[i + 1]
+            p1 = self.cps[i]
+            p2 = self.cps[i - 1]
+            v1 = QVector2D(p1 - p0)
+            v2 = QVector2D(p2 - p1)
+
+            nv1 = hw * normal_vector(v1)  # Normal vector of v1
+            nv2 = hw * normal_vector(v2)  # Normal vector of v2
+            self.bps[(len_cps-2)-i] = p1 + (nv1 + nv2).toPointF()
+        # end of for
+
+        """
         # Outer line
         p0 = self.cps[0]
         p1 = self.cps[1]
@@ -433,7 +482,7 @@ class ElbowLink(StraightLink):
 
         for i, pos in enumerate(self.ops):
             print("OPS[%d]: %s" % (i, pos))
-
+        """
     def _create_elbow_path(self):
         self._identify_elbow_points()
 
@@ -441,13 +490,11 @@ class ElbowLink(StraightLink):
         self._path_paint.setFillRule(Qt.WindingFill)
 
         # Outer line
-        ix_ops = 0
-        self._path_paint.moveTo(self.ops[0])
-
-        for i in range(1, len(self.ops)-1):
-            self._path_paint.lineTo(self.ops[i])
+        self._path_paint.moveTo(self.fps[0])
+        for i in range(1, len(self.fps)-1):
+            self._path_paint.lineTo(self.fps[i])
         # end of for
-        self._path_paint.lineTo(self.ops[-1])
+        #self._path_paint.lineTo(self.fps[-1])
 
         # Transition to the inner line
         if self.header:  # Add the header
@@ -458,13 +505,14 @@ class ElbowLink(StraightLink):
 
             self._path_paint.connectPath(self._path_header)
         else:
-            self._path_paint.lineTo(self.ips[0])
+            self._path_paint.lineTo(self.fps[-1])
+            self._path_paint.lineTo(self.bps[0])
 
         # Inner line
-        for i in range(1, len(self.ips) - 1):
-            self._path_paint.lineTo(self.ips[i])
+        for i in range(1, len(self.bps)):
+            self._path_paint.lineTo(self.bps[i])
         # end of for
-        self._path_paint.lineTo(self.ips[-1])
+        #self._path_paint.lineTo(self.bps[-1])
 
 
         """
