@@ -189,7 +189,6 @@ class ElbowLink(StraightLink):
         else:
             return False
 
-
     def _update_bounding_rect(self):
         super()._update_bounding_rect()
 
