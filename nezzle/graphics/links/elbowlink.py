@@ -8,7 +8,6 @@ from qtpy.QtGui import QVector2D
 from qtpy.QtGui import QBrush, QColor, QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
-from nezzle.graphics.links.baselink import TwoNodeLink
 from nezzle.graphics.links.straightlink import StraightLink
 from .controlpoint import ControlPoint, XaxisControlPoint
 
@@ -42,8 +41,6 @@ class ElbowLink(StraightLink):
         self._attr.set_trigger('CTRL_POS_Y',
                                self._trigger_set_ctrl_pos_y,
                                when='set')
-
-
 
     @property
     def pos_ctrl(self):
@@ -150,13 +147,13 @@ class ElbowLink(StraightLink):
         for elem in self.cps:
             painter.drawEllipse(-0.5+elem.x(), -0.5+elem.y(), 1.5, 1.5)
 
-        # Draw outer line points
+        # Draw Forward line points
         painter.setPen(Qt.yellow)
         painter.setBrush(Qt.yellow)
         for elem in self.fps:
             painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
 
-        # Draw inner line points
+        # Draw Backward line points
         painter.setPen(Qt.cyan)
         painter.setBrush(Qt.cyan)
         for elem in self.bps:
@@ -206,7 +203,6 @@ class ElbowLink(StraightLink):
     def _create_control_items(self):
         mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
         #self._ctrl_point = XaxisControlPoint(parent=self, pos=mid)
-        #self._ctrl_point = XaxisControlPoint(parent=self, pos=mid)
         self._ctrl_point = ControlPoint(parent=self, pos=mid)
 
     def _create_subpoints(self):
@@ -232,11 +228,6 @@ class ElbowLink(StraightLink):
     def _identify_connectors_pos(self):
         pos_ctrl = self.ctrl_point.pos()
 
-        # Vertical Connectors
-        #  ____*
-        #      |
-        #      *----
-
         vcon0 = self._pos_connectors[0]
         vcon1 = self._pos_connectors[1]
 
@@ -247,68 +238,8 @@ class ElbowLink(StraightLink):
         # Vertical Connector (1)
         vcon1.setX(pos_ctrl.x())
         vcon1.setY(self.pos_tgt.y())
-
-
-        # for i, pos in enumerate(self.cps):
-        #     print("CPS[%d]: %s"%(i, pos))
-
-        """
-        # Vertical Connectors
-        #  ____*
-        #      |
-        #      *----
-
-        vcon0 = self._pos_connectors[0]
-        vcon1 = self._pos_connectors[1]
-
-        # Vertical Connector (0)
-        vcon0.setX(pos_ctrl.x())
-        vcon0.setY(self.pos_src.y())
-
-        # Vertical Connector (1)
-        vcon1.setX(pos_ctrl.x())
-        vcon1.setY(self.pos_tgt.y())
-
-        # Horizontal Connectors
-        #  |
-        #  *____*
-        #       |
-
-        hcon0 = self._pos_horizontal_connectors[0]
-        hcon1 = self._pos_horizontal_connectors[1]
-
-        # Horizontal Connector (0)
-        hcon0.setX(self.pos_src.x())
-        hcon0.setY(pos_ctrl.y())
-
-        # Horizontal Connector (1)
-        hcon1.setX(self.pos_tgt.x())
-        hcon1.setY(pos_ctrl.y())
-        """
-
 
     def _identify_header_pos(self):
-        # offset = self._calculate_header_offset()
-        #
-        # p1 = self.pos_src
-        # p2 = self.pos_tgt
-        # pc = self.ctrl_point.pos()
-        #
-        # x = np.array([p1.x(), pc.x(), p2.x()], dtype=np.float64)
-        # y = np.array([p1.y(), pc.y(), p2.y()], dtype=np.float64)
-        #
-        # arclen = quadbezier.arc_length(x, y, self._arr_t, 1)
-        # rchange = np.abs(arclen - offset) / offset
-        #
-        # ix = np.argmax(rchange < 5e-2)
-        # t = self._arr_t[ix]
-        # self._t_header = t
-        # # print("t: %f"%(t))
-        #
-        # ph = (1 - t) ** 2 * p1 + 2 * (1 - t) * t * pc + t ** 2 * p2
-        # self.pos_header.setX(ph.x())
-        # self.pos_header.setY(ph.y())
-
         # The version of StraightLink
         offset = self._calculate_header_offset()
 
@@ -350,17 +281,8 @@ class ElbowLink(StraightLink):
                                              self._header_transform)
         path = QPainterPath()
 
-        sx, sy = self.pos_src.x(), self.pos_src.y()
-        tx, ty = self.pos_tgt.x(), self.pos_tgt.y()
-
-        dx = tx - sx  # Direction from source to target in X-axis.
-        dy = ty - sy  # Direction from source to target in Y-axis.
-
-        if dx < 0:
-            points.reverse()
-
-        path.moveTo(points[0])
-        for pt in points[1:]:
+        path.moveTo(points[-1])
+        for pt in points[-2::-1]:
             path.lineTo(pt)
 
         self._path_header = path
@@ -375,22 +297,6 @@ class ElbowLink(StraightLink):
         self.cps[-2] = self.pos_tgt # Dummy point
 
         hw = self.width / 2  # The half of width
-
-        #p0 = self.cps[0]
-        #p1 = self.cps[1]
-        #p2 = self.cps[2]
-        #v1 = QVector2D(p1 - p0)
-        #v2 = QVector2D(p2 - p1)
-
-        #ix_ops = 0
-        #nv1 = hw * normal_vector(v1)
-        #self.fps[0] = p0 + nv1.toPointF()  # The first point
-
-        #ix_ops = 1
-        #sa_v1v2 = np.sin(angle(v1, v2))  # Sign of angle between v1 and v2
-        #vp1 = sa_v1v2 * QPointF(-vp0.y(), +vp0.x())
-        #self.fps[ix_ops] = p1 + vp1
-
 
         for i in range(1, len(self.cps) - 1):
             p0 = self.cps[i - 1]
@@ -417,86 +323,19 @@ class ElbowLink(StraightLink):
             self.bps[(len_cps-2)-i] = p1 + (nv1 + nv2).toPointF()
         # end of for
 
-        """
-        # Outer line
-        p0 = self.cps[0]
-        p1 = self.cps[1]
-        p2 = self.cps[2]
-        v1 = p1 - p0
-        v2 = p2 - p1
-
-        ix_ops = 0
-        #dxdy = hw * -1 * QPointF(np.sign(v2.x()), np.sign(v2.y()))  # dxdy = hw * (-v2)
-        dx = +1 * hw * np.abs(np.sign(v1.y()))
-        dy = +1 * hw * np.abs(np.sign(v1.x()))
-        dxdy = QPointF(dx, dy)
-        self.ops[ix_ops] = self.pos_src + dxdy
-        ix_ops += 1
-
-        for i in range(1, len(self.cps) - 1):
-            p0 = self.cps[i - 1]
-            p1 = self.cps[i]
-            p2 = self.cps[i + 1]
-            #v_out = -p0 + 2 * p1 - p2
-            #dxdy = hw * QPointF(np.sign(v_out.x()), np.sign(v_out.y()))
-            v1 = p1 - p0
-            v2 = p2 - p1
-            v_out = v1 - v2
-            dx = hw * np.sign(v_out.x())
-            dy = hw * np.sign(v_out.y())
-            dxdy = QPointF(dx, dy)
-            self.ops[ix_ops] = p1 + dxdy
-            ix_ops += 1
-        # end of for
-
-        p0 = self.cps[-3]
-        p1 = self.cps[-2]
-        p2 = self.cps[-1]
-        v1 = p1 - p0
-        dxdy = hw * QPointF(np.sign(v1.x()), np.sign(v1.y()))  # dxdy = hw * (-v1)
-        self.ops[ix_ops] = p2 + dxdy
-        ix_ops += 1
-
-        # Inner line
-        ix_ips = 0
-        self.ips[ix_ips] = p2 - dxdy
-        ix_ips += 1
-
-        for i in range(len(self.cps) - 2, 0, -1):
-            p0 = self.cps[i + 1]
-            p1 = self.cps[i]
-            p2 = self.cps[i - 1]
-
-            v_in = p0 - 2 * p1 + p2
-            dxdy = hw * QPointF(np.sign(v_in.x()), np.sign(v_in.y()))
-            self.ips[ix_ips] = p1 + dxdy
-            ix_ips += 1
-        # end of for
-
-        p0 = self.cps[2]
-        p1 = self.cps[1]
-        p2 = self.cps[0]
-        v1 = p1 - p0
-        dxdy = -hw * QPointF(np.sign(v1.x()), np.sign(v1.y()))  # dxdy = hw * (-v1)
-        self.ips[ix_ips] = p2 + dxdy
-
-        for i, pos in enumerate(self.ops):
-            print("OPS[%d]: %s" % (i, pos))
-        """
     def _create_elbow_path(self):
         self._identify_elbow_points()
 
         self._path_paint = QPainterPath()
         self._path_paint.setFillRule(Qt.WindingFill)
 
-        # Outer line
+        # Forward line
         self._path_paint.moveTo(self.fps[0])
         for i in range(1, len(self.fps)-1):
             self._path_paint.lineTo(self.fps[i])
         # end of for
-        #self._path_paint.lineTo(self.fps[-1])
 
-        # Transition to the inner line
+        # Transition to the backward line
         if self.header:  # Add the header
             if self.is_straight():
                 StraightLink._identify_header(self)
@@ -508,44 +347,18 @@ class ElbowLink(StraightLink):
             self._path_paint.lineTo(self.fps[-1])
             self._path_paint.lineTo(self.bps[0])
 
-        # Inner line
+        # Backward line
         for i in range(1, len(self.bps)):
             self._path_paint.lineTo(self.bps[i])
         # end of for
-        #self._path_paint.lineTo(self.bps[-1])
-
-
-        """
-        self._path_paint.moveTo(self._qps_top[0])
-        for i in range(len(self._dps_top)):
-            self._path_paint.quadTo(self._dps_top[i], self._qps_top[i + 1])
-
-        if self.header:
-            self._path_paint.connectPath(self._path_header)
-        else:
-            self._path_paint.lineTo(self._qps_bottom[-1])
-
-        for i in range(len(self._dps_bottom) - 1, -1, -1):
-            self._path_paint.quadTo(self._dps_bottom[i],
-                                    self._qps_bottom[i])
-
-        self._path_paint.lineTo(self._qps_top[0])
-        """
-
-
-    # def _identify_pos(self):
-    #     super()._identify_pos()
-
 
     def _create_path(self):
         self._identify_pos()  # Identify the position of this link
         self._identify_connectors_pos()  # Identify the positions of connectors
 
         if self.is_straight():
-            #print("This is Straight!")
             StraightLink._create_path(self)
         else:
-            #print("This is Elbow!")
             self._create_elbow_path()
 
         # try:
