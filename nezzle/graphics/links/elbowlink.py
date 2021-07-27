@@ -245,8 +245,8 @@ class ElbowLink(StraightLink):
         vcon1.setY(self.pos_tgt.y())
 
 
-        for i, pos in enumerate(self.cps):
-            print("CPS[%d]: %s"%(i, pos))
+        # for i, pos in enumerate(self.cps):
+        #     print("CPS[%d]: %s"%(i, pos))
 
         """
         # Vertical Connectors
@@ -368,17 +368,20 @@ class ElbowLink(StraightLink):
         #     self.cps[i+1] = pos
         self.cps[-1] = self.pos_tgt
 
-
         hw = self.width / 2  # The half of width
 
         # Outer line
         p0 = self.cps[0]
         p1 = self.cps[1]
         p2 = self.cps[2]
+        v1 = p1 - p0
         v2 = p2 - p1
 
         ix_ops = 0
-        dxdy = hw * -1 * QPointF(np.sign(v2.x()), np.sign(v2.y()))  # dxdy = hw * (-v2)
+        #dxdy = hw * -1 * QPointF(np.sign(v2.x()), np.sign(v2.y()))  # dxdy = hw * (-v2)
+        dx = +1 * hw * np.abs(np.sign(v1.y()))
+        dy = +1 * hw * np.abs(np.sign(v1.x()))
+        dxdy = QPointF(dx, dy)
         self.ops[ix_ops] = self.pos_src + dxdy
         ix_ops += 1
 
@@ -386,8 +389,14 @@ class ElbowLink(StraightLink):
             p0 = self.cps[i - 1]
             p1 = self.cps[i]
             p2 = self.cps[i + 1]
-            v_out = -p0 + 2 * p1 - p2
-            dxdy = hw * QPointF(np.sign(v_out.x()), np.sign(v_out.y()))
+            #v_out = -p0 + 2 * p1 - p2
+            #dxdy = hw * QPointF(np.sign(v_out.x()), np.sign(v_out.y()))
+            v1 = p1 - p0
+            v2 = p2 - p1
+            v_out = v1 - v2
+            dx = hw * np.sign(v_out.x())
+            dy = hw * np.sign(v_out.y())
+            dxdy = QPointF(dx, dy)
             self.ops[ix_ops] = p1 + dxdy
             ix_ops += 1
         # end of for
@@ -422,6 +431,9 @@ class ElbowLink(StraightLink):
         v1 = p1 - p0
         dxdy = -hw * QPointF(np.sign(v1.x()), np.sign(v1.y()))  # dxdy = hw * (-v1)
         self.ips[ix_ips] = p2 + dxdy
+
+        for i, pos in enumerate(self.ops):
+            print("OPS[%d]: %s" % (i, pos))
 
     def _create_elbow_path(self):
         self._identify_elbow_points()
