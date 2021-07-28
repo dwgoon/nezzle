@@ -246,6 +246,7 @@ class ElbowLink(StraightLink):
         p1 = self._pos_connectors[1]
         p2 = self.pos_tgt
 
+        print("dist(p1, p2) - offset: %f, offset: %f"%(dist(p1, p2) - offset, offset))
         ph = internal_division(p1, p2, dist(p1, p2) - offset, offset)
         self.pos_header.setX(ph.x())
         self.pos_header.setY(ph.y())
