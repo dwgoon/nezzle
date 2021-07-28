@@ -65,6 +65,7 @@ class ElbowLink(StraightLink):
         self._create_subpoints()
         self._create_path()
         self._update_bounding_rect()
+        print("[initialize]", self._bounding_rect)
 
 
     # def boundingRect(self):
@@ -360,6 +361,8 @@ class ElbowLink(StraightLink):
         for i in range(1, len(self.bps)):
             self._path_paint.lineTo(self.bps[i])
         # end of for
+
+        print("[create_elbow_path]", self._bounding_rect)
 
     def _create_path(self):
         self._identify_pos()  # Identify the position of this link
