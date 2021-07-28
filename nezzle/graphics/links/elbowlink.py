@@ -5,7 +5,8 @@ from qtpy.QtCore import QPointF
 from qtpy.QtCore import QLineF
 from qtpy.QtCore import QRectF
 from qtpy.QtGui import QVector2D
-from qtpy.QtGui import QBrush, QColor, QPainterPath
+from qtpy.QtGui import QPen, QBrush, QColor
+from qtpy.QtGui import QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
 from nezzle.graphics.links.straightlink import StraightLink
@@ -64,6 +65,8 @@ class ElbowLink(StraightLink):
         self._create_subpoints()
         self._create_path()
         self._update_bounding_rect()
+
+
     # def boundingRect(self):
     #
     #     # All self.pos_xxxx are relative positions to the this link.
@@ -110,9 +113,10 @@ class ElbowLink(StraightLink):
         super().paint(painter, option, widget)
 
         ## [DEBUG] Draw the bounding rect
-        # rect = self.boundingRect()
-        # painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
-        # painter.drawRect(rect)
+        rect = self.boundingRect()
+        painter.setPen(QPen(QColor(0, 255, 0, 100)))
+        painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
+        painter.drawRect(rect)
         #######################
 
         if self.isSelected():
@@ -189,16 +193,16 @@ class ElbowLink(StraightLink):
         else:
             return False
 
-    def _update_bounding_rect(self):
-        super()._update_bounding_rect()
-
-        rect_cl_src = QRectF(self.pos_ctrl, self.pos_src)
-        rect_cl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
-
-        rect = self._bounding_rect
-        rect = rect.united(rect_cl_src)
-        rect = rect.united(rect_cl_tgt)
-        self._bounding_rect = rect
+    # def _update_bounding_rect(self):
+    #     super()._update_bounding_rect()
+    #
+    #     rect_ctrl_src = QRectF(self.pos_ctrl, self.pos_src)
+    #     rect_ctrl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
+    #
+    #     rect = self._bounding_rect
+    #     rect = rect.united(rect_ctrl_src)
+    #     rect = rect.united(rect_ctrl_tgt)
+    #     self._bounding_rect = rect
 
     def _create_control_items(self):
         mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
@@ -263,10 +267,12 @@ class ElbowLink(StraightLink):
         self._create_header_path()
 
     def _calculate_header_offset(self):
-        if self.is_straight():
-            v = self.pos_tgt - self.pos_src
-        else:
-            v = self.pos_tgt - self._pos_connectors[1]
+        # if self.is_straight():
+        #     v = self.pos_tgt - self.pos_src
+        # else:
+        #     v = self.pos_tgt - self._pos_connectors[1]
+
+        v = self.pos_tgt - self._pos_connectors[1]
 
         try:
             angle_rad = np.arccos(v.x()/length(v))
@@ -338,10 +344,12 @@ class ElbowLink(StraightLink):
 
         # Transition to the backward line
         if self.header:  # Add the header
-            if self.is_straight():
-                StraightLink._identify_header(self)
-            else:
-                self._identify_header()
+            # if self.is_straight():
+            #     StraightLink._identify_header(self)
+            # else:
+            #     self._identify_header()
+
+            self._identify_header()
 
             self._path_paint.connectPath(self._path_header)
         else:
@@ -357,10 +365,12 @@ class ElbowLink(StraightLink):
         self._identify_pos()  # Identify the position of this link
         self._identify_connectors_pos()  # Identify the positions of connectors
 
-        if self.is_straight():
-            StraightLink._create_path(self)
-        else:
-            self._create_elbow_path()
+        # if self.is_straight():
+        #     StraightLink._create_path(self)
+        # else:
+        #     self._create_elbow_path()
+
+        self._create_elbow_path()
 
         # try:
         #     self._create_elbow_path()

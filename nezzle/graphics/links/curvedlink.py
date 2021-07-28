@@ -144,12 +144,12 @@ class CurvedLink(StraightLink):
     def _update_bounding_rect(self):
         super()._update_bounding_rect()
 
-        rect_cl_src = QRectF(self.pos_ctrl, self.pos_src)
-        rect_cl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
+        rect_ctrl_src = QRectF(self.pos_ctrl, self.pos_src)
+        rect_ctrl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
 
         rect = self._bounding_rect
-        rect = rect.united(rect_cl_src)
-        rect = rect.united(rect_cl_tgt)
+        rect = rect.united(rect_ctrl_src)
+        rect = rect.united(rect_ctrl_tgt)
         self._bounding_rect = rect
 
     def _create_control_items(self):
