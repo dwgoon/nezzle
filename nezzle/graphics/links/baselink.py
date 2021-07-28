@@ -300,8 +300,8 @@ class BaseLink(PainterOptionItem):
     def _update_bounding_rect(self):
         rect = self._path_paint.boundingRect()
         if self._pen:
-            wp = self._pen.width()
-            rect.adjust(-wp, -wp, +wp, +wp)
+            pad = 2 * self._pen.width()
+            rect.adjust(-pad, -pad, +pad, +pad)
 
         self._bounding_rect = rect
 

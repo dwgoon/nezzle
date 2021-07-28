@@ -63,7 +63,7 @@ def update(nav, net):
     x1 = 600.0
     y1 = 400.0
 
-    # A single arrow lins with circle nodes
+    # A single arrow links with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
     src = NodeClass('NODE_1', 50, 20, pos=QPoint(x1, y1))
@@ -73,9 +73,12 @@ def update(nav, net):
     tgt['FILL_COLOR'] = Qt.blue
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
+    # HeaderClass = HeaderClassFactory.create('HAMMER')
+    # header = HeaderClass(width=80, height=5, offset=4)
 
-    HeaderClass = HeaderClassFactory.create('HAMMER')
-    header = HeaderClass(width=80, height=5, offset=4)
+    HeaderClass = HeaderClassFactory.create('ARROW')
+    header = HeaderClass(width=10, height=10, offset=4)
+
     curve = LinkClass("ID_LINK_2", src, tgt, width=4, header=header)
     curve['FILL_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(255, 0, 0)

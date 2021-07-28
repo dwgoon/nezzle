@@ -26,7 +26,6 @@ class StraightLink(TwoNodeLink):
 
         super().__init__(*args, **kwargs)
 
-
     def _initialize(self):
         self._identify_pos()
         self._create_path()
