@@ -10,7 +10,8 @@ from qtpy.QtGui import QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
 from nezzle.graphics.links.straightlink import StraightLink
-from .controlpoint import ControlPoint, XaxisControlPoint
+from nezzle.graphics.links.controlpoint import XaxisConnectorControlPoint
+from nezzle.graphics.links.controlpoint import YaxisConnectorControlPoint
 
 from nezzle.utils import angle
 from nezzle.utils import dist
@@ -35,38 +36,38 @@ class ElbowLink(StraightLink):
 
         super().__init__(*args, **kwargs)
 
-        self._attr.set_trigger('CTRL_POS_X',
-                               self._trigger_set_ctrl_pos_x,
-                               when='set')
+        # self._attr.set_trigger('CTRL_POS_X',
+        #                        self._trigger_set_ctrl_pos_x,
+        #                        when='set')
+        #
+        # self._attr.set_trigger('CTRL_POS_Y',
+        #                        self._trigger_set_ctrl_pos_y,
+        #                        when='set')
 
-        self._attr.set_trigger('CTRL_POS_Y',
-                               self._trigger_set_ctrl_pos_y,
-                               when='set')
-
+    # @property
+    # def pos_ctrl(self):
+    #     return self._ctrl_point.pos()
+    #
     @property
-    def pos_ctrl(self):
-        return self._ctrl_point.pos()
+    def ctrl_points(self):
+        return self._ctrl_points
 
-    @property
-    def ctrl_point(self):
-        return self._ctrl_point
-
-    def _trigger_set_ctrl_pos_x(self, key, value):
-        self._ctrl_point.setX(value)
-        return value
-
-    def _trigger_set_ctrl_pos_y(self, key, value):
-        self._ctrl_point.setY(value)
-        return value
+    # def _trigger_set_ctrl_pos_x(self, key, value):
+    #     self._ctrl_point.setX(value)
+    #     return value
+    #
+    # def _trigger_set_ctrl_pos_y(self, key, value):
+    #     self._ctrl_point.setY(value)
+    #     return value
 
     def _initialize(self):
         self._identify_pos()
+        # self._identify_connectors_pos()
+        self._create_connectors()
         self._create_control_items()
         self._create_subpoints()
         self._create_path()
         self._update_bounding_rect()
-        print("[initialize]", self._bounding_rect)
-
 
     # def boundingRect(self):
     #
@@ -89,24 +90,17 @@ class ElbowLink(StraightLink):
     #     rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
     #     return rect
 
-    # def update(self, *args, **kwargs):
-    #
-    #     # TODO: Process multiple control points.
-    #     """
-    #     for cp in ctrl_points:
+    # def update(self):
+    #     print("ElbowLink Update!")
+    #     for cp in self._ctrl_points:
     #         cp.update()
-    #     """
-    #     print("Adjust ctrl point")
-    #     m = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
-    #     self._ctrl_point.setX(self._ctrl_point.x())
-    #     self._ctrl_point.setY(m.y())
-    #     self._ctrl_point.update()
     #
-    #     return super().update(*args, **kwargs)
+    #     return super().update()
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedChange:
-            self._ctrl_point.update()
+            for cp in self._ctrl_points:
+                cp.update()
 
         return super().itemChange(change, value)
 
@@ -205,16 +199,34 @@ class ElbowLink(StraightLink):
     #     rect = rect.united(rect_ctrl_tgt)
     #     self._bounding_rect = rect
 
+    def _create_connectors(self):
+        self._pos_connectors = [QPointF(), QPointF(), QPointF(), QPointF()]
+
     def _create_control_items(self):
-        mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
-        #self._ctrl_point = XaxisControlPoint(parent=self, pos=mid)
-        self._ctrl_point = XaxisControlPoint(parent=self, pos=mid)
+        m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
+        m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
+
+        self._ctrl_points = []
+        cp0 = YaxisConnectorControlPoint(parent=self, pos=m_sm)
+        cp0.append_connector(self._pos_connectors[0])
+        cp0.append_connector(self._pos_connectors[1])
+        self._ctrl_points.append(cp0)
+
+        cp1 = XaxisConnectorControlPoint(parent=self, pos=m_st)
+        cp1.append_connector(self._pos_connectors[1])
+        cp1.append_connector(self._pos_connectors[2])
+        self._ctrl_points.append(cp1)
+
+        cp2 = YaxisConnectorControlPoint(parent=self, pos=m_mt)
+        cp2.append_connector(self._pos_connectors[2])
+        cp2.append_connector(self._pos_connectors[3])
+        self._ctrl_points.append(cp2)
 
     def _create_subpoints(self):
         self.cps = []  # Central points
         self.fps = []  # Forward points
         self.bps = []  # Backward points
-        self._pos_connectors = [QPointF(), QPointF()]
 
         self.cps.append(self.pos_src)  # Dummy point
         self.cps.append(self.pos_src)
@@ -231,18 +243,27 @@ class ElbowLink(StraightLink):
         self.bps.append(QPointF())
 
     def _identify_connectors_pos(self):
-        pos_ctrl = self.ctrl_point.pos()
 
-        vcon0 = self._pos_connectors[0]
-        vcon1 = self._pos_connectors[1]
+        pos_cp0 = self._ctrl_points[0].pos()
+        pos_cp1 = self._ctrl_points[1].pos()
+        pos_cp2 = self._ctrl_points[2].pos()
 
-        # Vertical Connector (0)
-        vcon0.setX(pos_ctrl.x())
-        vcon0.setY(self.pos_src.y())
+        con0 = self._pos_connectors[0]
+        con1 = self._pos_connectors[1]
+        con2 = self._pos_connectors[2]
+        con3 = self._pos_connectors[3]
 
-        # Vertical Connector (1)
-        vcon1.setX(pos_ctrl.x())
-        vcon1.setY(self.pos_tgt.y())
+        con0.setX(self.pos_src.x())
+        con0.setY(pos_cp0.y())
+
+        con1.setX(pos_cp1.x())
+        con1.setY(pos_cp0.y())
+
+        con2.setX(pos_cp1.x())
+        con2.setY(pos_cp2.y())
+
+        con3.setX(self.pos_tgt.x())
+        con3.setY(pos_cp2.y())
 
     def _identify_header_pos(self):
         # The version of StraightLink
@@ -308,6 +329,7 @@ class ElbowLink(StraightLink):
         for i, pos in enumerate(self._pos_connectors):
             self.cps[i + 2] = pos
 
+        """
         # Position of connector[-1] with respect to the position of target
         pos_conn_on_tgt = self._pos_connectors[-1] - self.pos_tgt
         if self.target.contains(pos_conn_on_tgt):
@@ -321,6 +343,10 @@ class ElbowLink(StraightLink):
         else:
             self.cps[-1] = self.pos_tgt
             self.cps[-2] = self.pos_tgt  # Dummy point
+        """
+
+        self.cps[-1] = self.pos_tgt
+        self.cps[-2] = self.pos_tgt  # Dummy point
 
         hw = self.width / 2  # The half of width
 
@@ -378,8 +404,6 @@ class ElbowLink(StraightLink):
         for i in range(1, len(self.bps)):
             self._path_paint.lineTo(self.bps[i])
         # end of for
-
-        print("[create_elbow_path]", self._bounding_rect)
 
     def _create_path(self):
         self._identify_pos()  # Identify the position of this link

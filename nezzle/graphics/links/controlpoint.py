@@ -74,17 +74,22 @@ class BaseControlPoint(QGraphicsItem, Movable):
         if not self.parent.isSelected():
             return
 
-        painter.setPen(QColor(100, 100, 100))
-        painter.drawEllipse(self.rect)
-        painter.setBrush(Qt.white)
-        painter.drawEllipse(self.small_rect)
+        if self.isSelected():
+            painter.setPen(QColor(255, 0, 102, 200))
+            painter.drawEllipse(self.rect)
+            painter.setBrush(QColor(255, 0, 102, 200))
+            painter.drawEllipse(self.small_rect)
+        else:
+            painter.setPen(QColor(100, 100, 100))
+            painter.drawEllipse(self.rect)
+            painter.setBrush(Qt.white)
+            painter.drawEllipse(self.small_rect)
 
         self.scene().invalidate()
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         self.parent.setSelected(True)
-
 
 
 class ControlPoint(BaseControlPoint):
@@ -110,7 +115,77 @@ class ControlPoint(BaseControlPoint):
         return super().mouseReleaseEvent(event)
 
 
-class XaxisControlPoint(BaseControlPoint):
+class ConnectorControlPoint(BaseControlPoint):
+    def __init__(self, connectors=None, *args, **kwargs):
+        self._connectors = []
+        if connectors:
+            for obj in connectors:
+                self.append_connector(obj)
+
+        super().__init__(*args, **kwargs)
+
+    @property
+    def connectors(self):
+        return self._connectors
+
+    def append_connector(self, obj):
+        if len(self._connectors) == 2:
+            raise ValueError("Cannot append connector. The maximum number of connectors is two.")
+
+        if not isinstance(obj, QPointF):
+            raise TypeError("Type of connector should be QPointF, not %s." % (type(obj)))
+
+        self._connectors.append(obj)
+
+    # def itemChange(self, change, value):
+    #     if change == QGraphicsItem.ItemPositionHasChanged:
+    #         for cp in self.parent.ctrl_points:
+    #             if self is cp:
+    #                 continue
+    #             cp.setEnabled(False)
+    #
+    #     return super().itemChange(change, value)
+
+class XaxisConnectorControlPoint(ConnectorControlPoint):
+    def update_pos(self, pos):
+        # Limit the range of y-axis.
+        mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
+        pos.setY(mp_y)
+
+        # Control the x-coordinates of connectors.
+        self.connectors[0].setX(pos.x())
+        self.connectors[1].setX(pos.x())
+
+    def itemChange(self, change, value):
+        if change == QGraphicsItem.ItemPositionChange:
+            if self.parent.is_node_selected():
+                return super().itemChange(change, self.pos())
+
+            pos = value
+            self.update_pos(pos)
+            return super().itemChange(change, value)
+
+        elif change == QGraphicsItem.ItemPositionHasChanged:
+            self.parent.update()
+
+        return super().itemChange(change, value)
+
+    # def mouseReleaseEvent(self, event):
+    #     if length(self.pos()) < self.sticky_radius:
+    #        self.setPos(QPointF(0, 0))
+    #
+    #     return super().mouseReleaseEvent(event)
+
+
+class YaxisConnectorControlPoint(ConnectorControlPoint):
+    def update_pos(self, pos):
+        # Limit the range of x-axis.
+        mp_x = (self.connectors[0].x() + self.connectors[1].x()) / 2  # X-axis midpoint of connectors
+        pos.setX(mp_x)
+
+        # Control the y-coordinates of connectors.
+        self.connectors[0].setY(pos.y())
+        self.connectors[1].setY(pos.y())
 
     def itemChange(self, change, value):
 
@@ -119,18 +194,16 @@ class XaxisControlPoint(BaseControlPoint):
                 return super().itemChange(change, self.pos())
 
             pos = value
-            pos.setY(0)  # Limit the range of y-axis
+            self.update_pos(pos)
+            return super().itemChange(change, value)
 
         elif change == QGraphicsItem.ItemPositionHasChanged:
-            pos = value
-            self.parent['CTRL_POS_X'] = pos.x()
-            self.parent['CTRL_POS_Y'] = pos.y()
             self.parent.update()
 
         return super().itemChange(change, value)
 
-    def mouseReleaseEvent(self, event):
-        if length(self.pos()) < self.sticky_radius:
-           self.setPos(QPointF(0, 0))
-
-        return super().mouseReleaseEvent(event)
+    # def mouseReleaseEvent(self, event):
+    #     if length(self.pos()) < self.sticky_radius:
+    #        self.setPos(QPointF(0, 0))
+    #
+    #     return super().mouseReleaseEvent(event)
