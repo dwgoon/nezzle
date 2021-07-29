@@ -10,10 +10,15 @@ from nezzle.utils import length
 
 
 class BaseControlPoint(QGraphicsItem, Movable):
-    def __init__(self, parent, pos, radius=5):
+    def __init__(self, parent, pos, radius=5, sticky_radius=None):
         super().__init__()
         self.setParentItem(parent)
         self._radius = radius
+
+        if not sticky_radius:
+            sticky_radius = 4 * self.parent.width
+
+        self._sticky_radius = sticky_radius
 
         self.rect = QRectF(-self._radius, -self._radius,
                            2*self._radius, 2*self._radius)
@@ -37,6 +42,10 @@ class BaseControlPoint(QGraphicsItem, Movable):
     @property
     def radius(self):
         return self._radius
+
+    @property
+    def sticky_radius(self):
+        return self._sticky_radius
 
     @property
     def parent(self):
@@ -76,11 +85,6 @@ class BaseControlPoint(QGraphicsItem, Movable):
         super().mousePressEvent(event)
         self.parent.setSelected(True)
 
-    def mouseReleaseEvent(self, event):
-        if self.parent.is_straight() or length(self.pos())<10:
-           self.setPos(QPointF(0, 0))
-
-        return super().mouseReleaseEvent(event)
 
 
 class ControlPoint(BaseControlPoint):
@@ -98,6 +102,12 @@ class ControlPoint(BaseControlPoint):
             self.parent.update()
 
         return super().itemChange(change, value)
+
+    def mouseReleaseEvent(self, event):
+        if self.parent.is_straight() or length(self.pos()) < self.sticky_radius:
+           self.setPos(QPointF(0, 0))
+
+        return super().mouseReleaseEvent(event)
 
 
 class XaxisControlPoint(BaseControlPoint):
@@ -119,3 +129,8 @@ class XaxisControlPoint(BaseControlPoint):
 
         return super().itemChange(change, value)
 
+    def mouseReleaseEvent(self, event):
+        if length(self.pos()) < self.sticky_radius:
+           self.setPos(QPointF(0, 0))
+
+        return super().mouseReleaseEvent(event)

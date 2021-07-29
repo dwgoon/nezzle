@@ -127,8 +127,8 @@ class ElbowLink(StraightLink):
             painter.setPen(QColor(50, 50, 50, 100))
 
             # Draw control lines
-            painter.drawLine(self.pos_ctrl, self.pos_src)
-            painter.drawLine(self.pos_ctrl, self.pos_tgt)
+            #painter.drawLine(self.pos_ctrl, self.pos_src)
+            #painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
             # Draw connectors
             painter.setPen(Qt.red)
@@ -152,13 +152,13 @@ class ElbowLink(StraightLink):
         for elem in self.cps:
             painter.drawEllipse(-0.5+elem.x(), -0.5+elem.y(), 1.5, 1.5)
 
-        # Draw Forward line points
+        # Draw forward line points
         painter.setPen(Qt.yellow)
         painter.setBrush(Qt.yellow)
         for elem in self.fps:
             painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
 
-        # Draw Backward line points
+        # Draw backward line points
         painter.setPen(Qt.cyan)
         painter.setBrush(Qt.cyan)
         for elem in self.bps:
@@ -208,7 +208,7 @@ class ElbowLink(StraightLink):
     def _create_control_items(self):
         mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
         #self._ctrl_point = XaxisControlPoint(parent=self, pos=mid)
-        self._ctrl_point = ControlPoint(parent=self, pos=mid)
+        self._ctrl_point = XaxisControlPoint(parent=self, pos=mid)
 
     def _create_subpoints(self):
         self.cps = []  # Central points
@@ -301,8 +301,14 @@ class ElbowLink(StraightLink):
         self.cps[1] = self.pos_src
         # for i, pos in enumerate(self._pos_connectors):
         #     self.cps[i+1] = pos
-        self.cps[-1] = self.pos_tgt
-        self.cps[-2] = self.pos_tgt # Dummy point
+
+        pos_conn_on_tgt = self._pos_connectors[-1] - self.pos_tgt
+        if self.target.contains(pos_conn_on_tgt):
+            self.cps[-1] = pos_conn_on_tgt
+            self.cps[-2] = pos_conn_on_tgt  # Dummy point
+        else:
+            self.cps[-1] = self.pos_tgt
+            self.cps[-2] = self.pos_tgt  # Dummy point
 
         hw = self.width / 2  # The half of width
 
