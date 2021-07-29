@@ -248,17 +248,21 @@ class ElbowLink(StraightLink):
         # The version of StraightLink
         offset = self._calculate_header_offset()
 
-        p1 = self._pos_connectors[1]
-        p2 = self.pos_tgt
+        #p1 = self._pos_connectors[1]
+        #p2 = self.pos_tgt
 
-        print("dist(p1, p2) - offset: %f, offset: %f"%(dist(p1, p2) - offset, offset))
-        ph = internal_division(p1, p2, dist(p1, p2) - offset, offset)
+        pos_conn = self.cps[-3]
+        pos_end = self.cps[-2]
+
+        #print("dist(p1, p2) - offset: %f, offset: %f"%(dist(p1, p2) - offset, offset))
+        ph = internal_division(pos_conn, pos_end, dist(pos_conn, pos_end) - offset, offset)
         self.pos_header.setX(ph.x())
         self.pos_header.setY(ph.y())
 
     def _calculate_header_angle(self):
-        pos_vc1 = self._pos_connectors[1]
-        self._angle_header = -QLineF(pos_vc1, self.pos_header).angle()
+        # pos_vc1 = self._pos_connectors[1]
+        pos_begin = self.cps[-3]
+        self._angle_header = -QLineF(pos_begin, self.pos_header).angle()
         self._header_transform.angle = self._angle_header
         # print("Header Angle:", self._angle_header)
 
@@ -273,7 +277,8 @@ class ElbowLink(StraightLink):
         # else:
         #     v = self.pos_tgt - self._pos_connectors[1]
 
-        v = self.pos_tgt - self._pos_connectors[1]
+        #v = self.pos_tgt - self._pos_connectors[1]
+        v = self.cps[-2] - self.cps[-3]  # self.cps[-1] is dummy point and cps[-3] is probably the previous connector.
 
         try:
             angle_rad = np.arccos(v.x()/length(v))
@@ -299,13 +304,20 @@ class ElbowLink(StraightLink):
         # Update positions of source and target
         self.cps[0] = self.pos_src  # Dummy point
         self.cps[1] = self.pos_src
-        # for i, pos in enumerate(self._pos_connectors):
-        #     self.cps[i+1] = pos
 
+        for i, pos in enumerate(self._pos_connectors):
+            self.cps[i + 2] = pos
+
+        # Position of connector[-1] with respect to the position of target
         pos_conn_on_tgt = self._pos_connectors[-1] - self.pos_tgt
         if self.target.contains(pos_conn_on_tgt):
-            self.cps[-1] = pos_conn_on_tgt
-            self.cps[-2] = pos_conn_on_tgt  # Dummy point
+            # Make the last connector the end point of the line
+            self.cps[-1] = self._pos_connectors[-1]  # Dummy point
+            self.cps[-2] = self._pos_connectors[-1]  # pos_conn_on_tgt  # Dummy point
+
+            # Make the last second connector the last connector
+            self.cps[-3] = self._pos_connectors[-2]
+            # self.cps[-4] = self._pos_connectors[-1]
         else:
             self.cps[-1] = self.pos_tgt
             self.cps[-2] = self.pos_tgt  # Dummy point
@@ -339,7 +351,6 @@ class ElbowLink(StraightLink):
 
     def _create_elbow_path(self):
         self._identify_elbow_points()
-
         self._path_paint = QPainterPath()
         self._path_paint.setFillRule(Qt.WindingFill)
 
