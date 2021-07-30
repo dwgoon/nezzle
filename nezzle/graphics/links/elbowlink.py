@@ -223,6 +223,10 @@ class ElbowLink(StraightLink):
         cp2.append_connector(self._pos_connectors[3])
         self._ctrl_points.append(cp2)
 
+        cp0.setVisible(False)
+        cp1.setVisible(False)
+        cp2.setVisible(False)
+
     def _create_subpoints(self):
         self.cps = []  # Central points
         self.fps = []  # Forward points
@@ -329,7 +333,7 @@ class ElbowLink(StraightLink):
         for i, pos in enumerate(self._pos_connectors):
             self.cps[i + 2] = pos
 
-        """
+
         # Position of connector[-1] with respect to the position of target
         pos_conn_on_tgt = self._pos_connectors[-1] - self.pos_tgt
         if self.target.contains(pos_conn_on_tgt):
@@ -343,7 +347,7 @@ class ElbowLink(StraightLink):
         else:
             self.cps[-1] = self.pos_tgt
             self.cps[-2] = self.pos_tgt  # Dummy point
-        """
+
 
         self.cps[-1] = self.pos_tgt
         self.cps[-2] = self.pos_tgt  # Dummy point
