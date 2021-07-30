@@ -33,10 +33,6 @@ class ElbowLink(StraightLink):
 
         # To avoid repetitive memory allocation, make this variable as a member.
         self._arr_t = np.arange(1, 0.5, -0.001, dtype=np.float64)
-
-        self._ix_begin = None
-        self._ix_end = None
-
         super().__init__(*args, **kwargs)
 
         # self._attr.set_trigger('CTRL_POS_X',
@@ -330,7 +326,7 @@ class ElbowLink(StraightLink):
 
     def _identify_elbow_points(self):
         # Update positions of source and target
-        self._cps = []
+        self._cps.clear()
         self._cps.append(self.pos_src)  # Dummy point
 
         for i, pos in enumerate(self._pos_connectors):
@@ -338,8 +334,8 @@ class ElbowLink(StraightLink):
 
         self._cps.append(self.pos_tgt)
 
-        self._ix_begin = 0
-        self._ix_end = len(self._cps) - 1
+        ix_begin = 0
+        ix_end = len(self._cps) - 1
 
         # Position of each connector with respect to the position of target
         len_cps = len(self._cps)
@@ -347,26 +343,23 @@ class ElbowLink(StraightLink):
             pos_conn = self._cps[i]
             pos_conn_on_src = pos_conn - self.pos_src
             if self.source.contains(pos_conn_on_src):
-                self._ix_begin = i
+                ix_begin = i
 
         for i in range(len_cps-2, 1, -1):
             pos_conn = self._cps[i]
             pos_conn_on_tgt = pos_conn - self.pos_tgt
             if self.target.contains(pos_conn_on_tgt):
-                self._ix_end = i
+                ix_end = i
 
-        print("CPS Begin=%d, End=%d" % (self._ix_begin, self._ix_end))
-
-
-        self._cps = [self._cps[self._ix_begin]] \
-                    + self._cps[self._ix_begin:self._ix_end+1] \
-                    + [self._cps[self._ix_end]]
+        #print("CPS Begin=%d, End=%d" % (ix_begin, ix_end))
+        self._cps = [self._cps[ix_begin]] + self._cps[ix_begin:ix_end+1] + [self._cps[ix_end]]
 
         print(self._cps)
 
         hw = self.width / 2  # The half of width
         len_cps = len(self._cps)
 
+        self._fps.clear()
         for i in range(1, len_cps-1):
             p0 = self._cps[i - 1]
             p1 = self._cps[i]
@@ -379,6 +372,7 @@ class ElbowLink(StraightLink):
             self._fps.append(p1 + (nv1 + nv2).toPointF())
         # end of for
 
+        self._bps.clear()
         for i in range(len_cps - 2, 0, -1):
             p0 = self._cps[i + 1]
             p1 = self._cps[i]

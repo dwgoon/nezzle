@@ -36,9 +36,9 @@ def update(nav, net):
 
     LinkClass = LinkClassFactory.create("ELBOW_LINK")
 
-    # HeaderClass = HeaderClassFactory.create('ARROW')
-    # header = HeaderClass(width=10, height=10, offset=4)
-    header = None
+    HeaderClass = HeaderClassFactory.create('ARROW')
+    header = HeaderClass(width=10, height=10, offset=4)
+    #header = None
 
     curve = LinkClass("ID_LINK_1", src, tgt, width=4, header=header)
     curve['FILL_COLOR'] = QColor(255, 0, 0)
