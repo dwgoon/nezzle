@@ -146,6 +146,7 @@ class ConnectorControlPoint(BaseControlPoint):
     #
     #     return super().itemChange(change, value)
 
+
 class XaxisConnectorControlPoint(ConnectorControlPoint):
     def update_pos(self, pos):
         # Limit the range of y-axis.
@@ -199,6 +200,16 @@ class YaxisConnectorControlPoint(ConnectorControlPoint):
 
         elif change == QGraphicsItem.ItemPositionHasChanged:
             self.parent.update()
+
+            # if self.parent.is_header_visible():
+            #     pos = value
+            #     self.update_pos(pos)
+            # else:
+            #     self.update_pos(self.parent.pos())
+            #
+            # self.parent.update()
+            # print("[YCP] Is header visible:",  self.parent.is_header_visible())
+            # print("[YCP] %s, %s"%(self.parent.pos(), value))
 
         return super().itemChange(change, value)
 

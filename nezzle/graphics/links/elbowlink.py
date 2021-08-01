@@ -187,6 +187,19 @@ class ElbowLink(StraightLink):
         else:
             return False
 
+    def is_header_visible(self):
+        # if not self._cps:
+        #     print("[IHV] cps:", self._cps)
+        #     return True
+
+        v1 = self._cps[-2] - self._cps[-3]
+        v2 = self.pos_header - self._cps[-3]
+        ip = dot(v1, v2)  # Inner product
+        theta = angle(v1, v2)
+        print("[IHV] ip:%f, angle: %f, cps[-2]: %s, cps[-3]: %s, header:%s"%(ip, theta, self._cps[-2], self._cps[-3], self.pos_header))
+        return ip > 0  # Is v1.v2 = |v1||v2|cos(0) positive?
+
+
     # def _update_bounding_rect(self):
     #     super()._update_bounding_rect()
     #
@@ -288,7 +301,7 @@ class ElbowLink(StraightLink):
         pos_begin = self._cps[-3]
         self._angle_header = -QLineF(pos_begin, self.pos_header).angle()
         self._header_transform.angle = self._angle_header
-        # print("Header Angle:", self._angle_header)
+        print("Header Angle:", self._angle_header)
 
     def _identify_header(self):
         self._identify_header_pos()
@@ -351,10 +364,7 @@ class ElbowLink(StraightLink):
             if self.target.contains(pos_conn_on_tgt):
                 ix_end = i
 
-        #print("CPS Begin=%d, End=%d" % (ix_begin, ix_end))
         self._cps = [self._cps[ix_begin]] + self._cps[ix_begin:ix_end+1] + [self._cps[ix_end]]
-
-        print(self._cps)
 
         hw = self.width / 2  # The half of width
         len_cps = len(self._cps)
@@ -397,6 +407,7 @@ class ElbowLink(StraightLink):
         # end of for
 
         # Transition to the backward line
+        #self.is_header_visible()
         if self.header:  # Add the header
             # if self.is_straight():
             #     StraightLink._identify_header(self)
@@ -404,8 +415,11 @@ class ElbowLink(StraightLink):
             #     self._identify_header()
 
             self._identify_header()
-
-            self._path_paint.connectPath(self._path_header)
+            if self.is_header_visible():
+                self._path_paint.connectPath(self._path_header)
+            else:  # if header is not visible, hide the header.
+                self._path_paint.lineTo(self._fps[-1])
+                self._path_paint.lineTo(self._bps[0])
         else:
             self._path_paint.lineTo(self._fps[-1])
             self._path_paint.lineTo(self._bps[0])
@@ -425,6 +439,7 @@ class ElbowLink(StraightLink):
         #     self._create_elbow_path()
 
         self._create_elbow_path()
+
 
         # try:
         #     self._create_elbow_path()
