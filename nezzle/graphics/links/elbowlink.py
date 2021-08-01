@@ -188,15 +188,14 @@ class ElbowLink(StraightLink):
             return False
 
     def is_header_visible(self):
-        # if not self._cps:
-        #     print("[IHV] cps:", self._cps)
-        #     return True
+        if not self.header:
+            return False
 
         v1 = self._cps[-2] - self._cps[-3]
         v2 = self.pos_header - self._cps[-3]
         ip = dot(v1, v2)  # Inner product
-        theta = angle(v1, v2)
-        print("[IHV] ip:%f, angle: %f, cps[-2]: %s, cps[-3]: %s, header:%s"%(ip, theta, self._cps[-2], self._cps[-3], self.pos_header))
+        #theta = angle(v1, v2)
+        #print("[IHV] ip:%f, angle: %f, cps[-2]: %s, cps[-3]: %s, header:%s"%(ip, theta, self._cps[-2], self._cps[-3], self.pos_header))
         return ip > 0  # Is v1.v2 = |v1||v2|cos(0) positive?
 
 
@@ -406,21 +405,12 @@ class ElbowLink(StraightLink):
             self._path_paint.lineTo(self._fps[i])
         # end of for
 
-        # Transition to the backward line
-        #self.is_header_visible()
         if self.header:  # Add the header
-            # if self.is_straight():
-            #     StraightLink._identify_header(self)
-            # else:
-            #     self._identify_header()
-
             self._identify_header()
-            if self.is_header_visible():
-                self._path_paint.connectPath(self._path_header)
-            else:  # if header is not visible, hide the header.
-                self._path_paint.lineTo(self._fps[-1])
-                self._path_paint.lineTo(self._bps[0])
-        else:
+
+        if self.is_header_visible():
+            self._path_paint.connectPath(self._path_header)
+        else:  # if header is not visible, hide the header.
             self._path_paint.lineTo(self._fps[-1])
             self._path_paint.lineTo(self._bps[0])
 
