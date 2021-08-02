@@ -116,13 +116,18 @@ class ControlPoint(BaseControlPoint):
 
 
 class ConnectorControlPoint(BaseControlPoint):
-    def __init__(self, connectors=None, *args, **kwargs):
+    def __init__(self, iden, connectors=None, *args, **kwargs):
+        self._iden = iden
         self._connectors = []
         if connectors:
             for obj in connectors:
                 self.append_connector(obj)
 
         super().__init__(*args, **kwargs)
+
+    @property
+    def iden(self):
+        return self._iden
 
     @property
     def connectors(self):
@@ -137,14 +142,14 @@ class ConnectorControlPoint(BaseControlPoint):
 
         self._connectors.append(obj)
 
-    # def itemChange(self, change, value):
-    #     if change == QGraphicsItem.ItemPositionHasChanged:
-    #         for cp in self.parent.ctrl_points:
-    #             if self is cp:
-    #                 continue
-    #             cp.setEnabled(False)
-    #
-    #     return super().itemChange(change, value)
+    def itemChange(self, change, value):
+        if change == QGraphicsItem.ItemPositionHasChanged:
+            pos = value
+            self.parent[f'CTRL_{self._iden}_POS_X'] = pos.x()
+            self.parent[f'CTRL_{self._iden}_POS_Y'] = pos.y()
+            self.parent.update()
+
+        return super().itemChange(change, value)
 
 
 class XaxisConnectorControlPoint(ConnectorControlPoint):

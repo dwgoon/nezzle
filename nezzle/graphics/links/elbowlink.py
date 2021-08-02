@@ -89,12 +89,12 @@ class ElbowLink(StraightLink):
     #     rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
     #     return rect
 
-    # def update(self):
-    #     print("ElbowLink Update!")
-    #     for cp in self._ctrl_points:
-    #         cp.update()
-    #
-    #     return super().update()
+    def update(self):
+        # print("ElbowLink Update!")
+        # for cp in self._ctrl_points:
+        #     cp.update()
+
+        return super().update()
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedChange:
@@ -219,17 +219,17 @@ class ElbowLink(StraightLink):
         m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
 
         self._ctrl_points = []
-        cp0 = YaxisConnectorControlPoint(parent=self, pos=m_sm)
+        cp0 = YaxisConnectorControlPoint("CP0", parent=self, pos=m_sm)
         cp0.append_connector(self._pos_connectors[0])
         cp0.append_connector(self._pos_connectors[1])
         self._ctrl_points.append(cp0)
 
-        cp1 = XaxisConnectorControlPoint(parent=self, pos=m_st)
+        cp1 = XaxisConnectorControlPoint("CP1", parent=self, pos=m_st)
         cp1.append_connector(self._pos_connectors[1])
         cp1.append_connector(self._pos_connectors[2])
         self._ctrl_points.append(cp1)
 
-        cp2 = YaxisConnectorControlPoint(parent=self, pos=m_mt)
+        cp2 = YaxisConnectorControlPoint("CP2", parent=self, pos=m_mt)
         cp2.append_connector(self._pos_connectors[2])
         cp2.append_connector(self._pos_connectors[3])
         self._ctrl_points.append(cp2)
