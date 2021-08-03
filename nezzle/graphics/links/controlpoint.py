@@ -51,7 +51,6 @@ class BaseControlPoint(QGraphicsItem, Movable):
     def parent(self):
         return self.parentItem()
 
-
     def boundingRect(self):
         rect = QRectF()
         if not self.parent.isSelected():
@@ -116,6 +115,10 @@ class ControlPoint(BaseControlPoint):
 
 
 class ConnectorControlPoint(BaseControlPoint):
+
+    def is_movable(self):  # inherited from Movable
+        return True
+
     def __init__(self, iden, connectors=None, *args, **kwargs):
         self._iden = iden
         self._connectors = []
@@ -143,13 +146,33 @@ class ConnectorControlPoint(BaseControlPoint):
         self._connectors.append(obj)
 
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemPositionHasChanged:
+
+        if change == QGraphicsItem.ItemPositionChange:
+            if self.parent.is_node_selected():
+                return super().itemChange(change, self.pos())
+
+            if self.isSelected():
+                pos = value
+                self.update_pos(pos)
+
+            return super().itemChange(change, value)
+
+        elif change == QGraphicsItem.ItemPositionHasChanged:
+            if self.isSelected():
+                self.parent.update()
+
             pos = value
-            self.parent[f'CTRL_{self._iden}_POS_X'] = pos.x()
-            self.parent[f'CTRL_{self._iden}_POS_Y'] = pos.y()
-            self.parent.update()
+            self.parent[f'{self._iden}_POS_X'] = pos.x()
+            self.parent[f'{self._iden}_POS_Y'] = pos.y()
+            return
 
         return super().itemChange(change, value)
+
+    def update_pos(self, pos):
+        raise NotImplementedError()
+
+    def update_pos_by_connectors(self):
+        raise NotImplementedError()
 
 
 class XaxisConnectorControlPoint(ConnectorControlPoint):
@@ -157,31 +180,14 @@ class XaxisConnectorControlPoint(ConnectorControlPoint):
         # Limit the range of y-axis.
         mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
         pos.setY(mp_y)
-
-        # Control the x-coordinates of connectors.
         self.connectors[0].setX(pos.x())
         self.connectors[1].setX(pos.x())
 
-    def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemPositionChange:
-            if self.parent.is_node_selected():
-                return super().itemChange(change, self.pos())
-
-            pos = value
-            self.update_pos(pos)
-            return super().itemChange(change, value)
-
-        elif change == QGraphicsItem.ItemPositionHasChanged:
-            self.parent.update()
-
-        return super().itemChange(change, value)
-
-    # def mouseReleaseEvent(self, event):
-    #     if length(self.pos()) < self.sticky_radius:
-    #        self.setPos(QPointF(0, 0))
-    #
-    #     return super().mouseReleaseEvent(event)
-
+    def update_pos_by_connectors(self):
+        mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
+        self.setY(mp_y)
+        self.setX(self.connectors[0].x())
+        # Never call parent.update() here
 
 class YaxisConnectorControlPoint(ConnectorControlPoint):
     def update_pos(self, pos):
@@ -193,33 +199,8 @@ class YaxisConnectorControlPoint(ConnectorControlPoint):
         self.connectors[0].setY(pos.y())
         self.connectors[1].setY(pos.y())
 
-    def itemChange(self, change, value):
-
-        if change == QGraphicsItem.ItemPositionChange:
-            if self.parent.is_node_selected():
-                return super().itemChange(change, self.pos())
-
-            pos = value
-            self.update_pos(pos)
-            return super().itemChange(change, value)
-
-        elif change == QGraphicsItem.ItemPositionHasChanged:
-            self.parent.update()
-
-            # if self.parent.is_header_visible():
-            #     pos = value
-            #     self.update_pos(pos)
-            # else:
-            #     self.update_pos(self.parent.pos())
-            #
-            # self.parent.update()
-            # print("[YCP] Is header visible:",  self.parent.is_header_visible())
-            # print("[YCP] %s, %s"%(self.parent.pos(), value))
-
-        return super().itemChange(change, value)
-
-    # def mouseReleaseEvent(self, event):
-    #     if length(self.pos()) < self.sticky_radius:
-    #        self.setPos(QPointF(0, 0))
-    #
-    #     return super().mouseReleaseEvent(event)
+    def update_pos_by_connectors(self):
+        mp_x = (self.connectors[0].x() + self.connectors[1].x()) / 2  # X-axis midpoint of connectors
+        self.setX(mp_x)
+        self.setY(self.connectors[0].y())
+        # Never call parent.update() here

@@ -1,3 +1,5 @@
+import traceback
+
 import numpy as np
 
 from qtpy.QtCore import Qt
@@ -23,85 +25,89 @@ from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
 from nezzle.graphics.mixins import Lockable
 
+np.seterr('raise')
+
 
 @Lockable
 class ElbowLink(StraightLink):
     ITEM_TYPE = 'ELBOW_LINK'
 
     def __init__(self, *args, **kwargs):
+        self._ctrl_points = []
         self._t_header = 0
 
         # To avoid repetitive memory allocation, make this variable as a member.
         self._arr_t = np.arange(1, 0.5, -0.001, dtype=np.float64)
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)  # initialize() is called in the hieararchy of super().__init__
 
-        # self._attr.set_trigger('CTRL_POS_X',
-        #                        self._trigger_set_ctrl_pos_x,
-        #                        when='set')
-        #
-        # self._attr.set_trigger('CTRL_POS_Y',
-        #                        self._trigger_set_ctrl_pos_y,
-        #                        when='set')
+        for i in range(3):
+            self._attr.set_trigger(f'CP{i}_POS_X',
+                                   self._trigger_set_ctrl_pos_x,
+                                   when='set')
 
-    # @property
-    # def pos_ctrl(self):
-    #     return self._ctrl_point.pos()
-    #
+            self._attr.set_trigger(f'CP{i}_POS_Y',
+                                   self._trigger_set_ctrl_pos_y,
+                                   when='set')
+
+
     @property
     def ctrl_points(self):
         return self._ctrl_points
 
-    # def _trigger_set_ctrl_pos_x(self, key, value):
-    #     self._ctrl_point.setX(value)
-    #     return value
-    #
-    # def _trigger_set_ctrl_pos_y(self, key, value):
-    #     self._ctrl_point.setY(value)
-    #     return value
+    def _trigger_set_ctrl_pos_x(self, key, value):
+        ix = int(key[2])
+        self._ctrl_points[ix].setX(value)
+        return value
+
+    def _trigger_set_ctrl_pos_y(self, key, value):
+        ix = int(key[2])
+        self._ctrl_points[ix].setY(value)
+        return value
 
     def _initialize(self):
         self._identify_pos()
-        # self._identify_connectors_pos()
         self._create_connectors()
         self._create_control_items()
         self._create_subpoints()
         self._create_path()
         self._update_bounding_rect()
 
-    # def boundingRect(self):
-    #
-    #     # All self.pos_xxxx are relative positions to the this link.
-    #     # Thus, the origin of self.pos_xxxx is actually the position of this link.
-    #     if self.is_straight():
-    #         return super().boundingRect()
-    #
-    #     for i in range(self._path_paint.elementCount()):
-    #         print(i, self._path_paint.elementAt(i))
-    #
-    #     pad_x = self.width
-    #     pad_y = 2 * self._ctrl_point.radius  # Padding with the radius of control point
-    #     max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) + pad_x
-    #     max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) + pad_y
-    #
-    #     min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) - pad_x
-    #     min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) - pad_y
-    #
-    #     rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
-    #     return rect
-
-    def update(self):
-        # print("ElbowLink Update!")
-        # for cp in self._ctrl_points:
-        #     cp.update()
-
-        return super().update()
-
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemSelectedChange:
-            for cp in self._ctrl_points:
-                cp.update()
+        # if change == QGraphicsItem.ItemPositionChange:
+        #     print(f"LINK[{self._iden}] QGraphicsItem.ItemPositionChange")
+        #     self.update_ctrl_points()
+
+        if change == QGraphicsItem.ItemSelectedHasChanged:
+            self.update()
+            # if self.is_node_selected():
+            #     visible = False
+            # else:
+            #     visible = True
+            #
+            # for cp in self._ctrl_points:
+            #     cp.setVisible(visible)
 
         return super().itemChange(change, value)
+
+
+        return super().itemChange(change, value)
+
+    def update(self):
+        self.update_ctrl_points()
+        super().update()
+
+    def update_ctrl_points(self):
+        for cp in self._ctrl_points:
+            if not cp.isSelected():
+                cp.update_pos_by_connectors()
+                cp.update()
+
+            if self.is_node_selected():
+                cp.setVisible(False)
+            else:
+                cp.setVisible(True)
+
+        # end of for
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
@@ -194,21 +200,7 @@ class ElbowLink(StraightLink):
         v1 = self._cps[-2] - self._cps[-3]
         v2 = self.pos_header - self._cps[-3]
         ip = dot(v1, v2)  # Inner product
-        #theta = angle(v1, v2)
-        #print("[IHV] ip:%f, angle: %f, cps[-2]: %s, cps[-3]: %s, header:%s"%(ip, theta, self._cps[-2], self._cps[-3], self.pos_header))
         return ip > 0  # Is v1.v2 = |v1||v2|cos(0) positive?
-
-
-    # def _update_bounding_rect(self):
-    #     super()._update_bounding_rect()
-    #
-    #     rect_ctrl_src = QRectF(self.pos_ctrl, self.pos_src)
-    #     rect_ctrl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
-    #
-    #     rect = self._bounding_rect
-    #     rect = rect.united(rect_ctrl_src)
-    #     rect = rect.united(rect_ctrl_tgt)
-    #     self._bounding_rect = rect
 
     def _create_connectors(self):
         self._pos_connectors = [QPointF(), QPointF(), QPointF(), QPointF()]
@@ -218,7 +210,6 @@ class ElbowLink(StraightLink):
         m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
         m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
 
-        self._ctrl_points = []
         cp0 = YaxisConnectorControlPoint("CP0", parent=self, pos=m_sm)
         cp0.append_connector(self._pos_connectors[0])
         cp0.append_connector(self._pos_connectors[1])
@@ -234,28 +225,10 @@ class ElbowLink(StraightLink):
         cp2.append_connector(self._pos_connectors[3])
         self._ctrl_points.append(cp2)
 
-        #cp0.setVisible(False)
-        #cp1.setVisible(False)
-        #cp2.setVisible(False)
-
     def _create_subpoints(self):
         self._cps = []  # Central points
         self._fps = []  # Forward points
         self._bps = []  # Backward points
-
-        #self.cps.append(self.pos_src)  # Dummy point
-        #self.cps.append(self.pos_src)
-        #self.fps.append(QPointF())
-        #self.bps.append(QPointF())
-        #for pos in self._pos_connectors:
-        #    self.cps.append(pos)
-            #self.fps.append(QPointF())
-            #self.bps.append(QPointF())
-
-        #self.cps.append(self.pos_tgt)
-        #self.cps.append(self.pos_tgt)  # Dummy point
-        #self.fps.append(QPointF())
-        #self.bps.append(QPointF())
 
     def _identify_connectors_pos(self):
 
@@ -281,16 +254,11 @@ class ElbowLink(StraightLink):
         con3.setY(pos_cp2.y())
 
     def _identify_header_pos(self):
-        # The version of StraightLink
         offset = self._calculate_header_offset()
-
-        #p1 = self._pos_connectors[1]
-        #p2 = self.pos_tgt
 
         pos_conn = self._cps[-3]
         pos_end = self._cps[-2]
 
-        #print("dist(p1, p2) - offset: %f, offset: %f"%(dist(p1, p2) - offset, offset))
         ph = internal_division(pos_conn, pos_end, dist(pos_conn, pos_end) - offset, offset)
         self.pos_header.setX(ph.x())
         self.pos_header.setY(ph.y())
@@ -300,7 +268,7 @@ class ElbowLink(StraightLink):
         pos_begin = self._cps[-3]
         self._angle_header = -QLineF(pos_begin, self.pos_header).angle()
         self._header_transform.angle = self._angle_header
-        print("Header Angle:", self._angle_header)
+        # print("Header Angle:", self._angle_header)
 
     def _identify_header(self):
         self._identify_header_pos()
@@ -308,17 +276,20 @@ class ElbowLink(StraightLink):
         self._create_header_path()
 
     def _calculate_header_offset(self):
-        # if self.is_straight():
-        #     v = self.pos_tgt - self.pos_src
-        # else:
-        #     v = self.pos_tgt - self._pos_connectors[1]
+        """
+        self._cps[-1]: dummy point
+        self._cps[-2]: real point (the end of node)
+        self._cps[-3]: previous connector (the tail of header)
+        """
 
-        #v = self.pos_tgt - self._pos_connectors[1]
-        v = self._cps[-2] - self._cps[-3]  # self.cps[-1] is dummy point and cps[-3] is probably the previous connector.
+        v = self._cps[-2] - self._cps[-3]
 
         try:
             angle_rad = np.arccos(v.x()/length(v))
         except ZeroDivisionError:
+            return 0
+        except Exception as err:
+            print(err)
             return 0
 
         radius = self.target.calculate_radius(angle_rad)
@@ -399,6 +370,9 @@ class ElbowLink(StraightLink):
         self._path_paint = QPainterPath()
         self._path_paint.setFillRule(Qt.WindingFill)
 
+        if not self._fps or not self._bps:
+            return
+
         # Forward line
         self._path_paint.moveTo(self._fps[0])
         for i in range(1, len(self._fps) - 1):
@@ -422,17 +396,11 @@ class ElbowLink(StraightLink):
     def _create_path(self):
         self._identify_pos()  # Identify the position of this link
         self._identify_connectors_pos()  # Identify the positions of connectors
-
-        # if self.is_straight():
-        #     StraightLink._create_path(self)
-        # else:
-        #     self._create_elbow_path()
-
-        self._create_elbow_path()
+        try:
+            self._create_elbow_path()
+        except Exception as err:
+            traceback.print_exc()
+            print(err)
 
 
-        # try:
-        #     self._create_elbow_path()
-        # except FloatingPointError:
-        #     super(StraightLink, self)._create_path()
 

@@ -73,6 +73,8 @@ class BaseNode(PainterOptionItem):
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
             self.update()
+        elif change == QGraphicsItem.ItemSelectedHasChanged:
+            self.update()
 
         return super().itemChange(change, value)
 
