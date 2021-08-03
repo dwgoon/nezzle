@@ -1,0 +1,6 @@
+mkdocs
+mkdocstrings
+mkdocs-material
+lib3to6
+markdown
+markdown-katex

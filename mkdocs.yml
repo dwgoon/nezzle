@@ -14,7 +14,10 @@ theme:
   name: material
   logo: assets/images/favicon.png
   favicon: assets/images/favicon.png
-
+  palette:
+    primary: black
+    accent: pink
+    
 # Plugins
 plugins:
   - search
