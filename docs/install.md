@@ -1,12 +1,4 @@
 
-
-```
-git clone https://github.com/cislab/nezzle.git
-cd nezzle
-python setup.py install
-``` 
-
-
 Currently, we recommend installing from the GitHub repository.
 First, download a recent version of the repository.
 
