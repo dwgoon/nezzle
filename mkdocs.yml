@@ -54,8 +54,8 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - Home: index.md
-  - Installation: install.md
+  - Home: "index.md"
+  - Installation: "install.md"
   - Tutorial:
     - Data: network_data.md    
     - Codes:
