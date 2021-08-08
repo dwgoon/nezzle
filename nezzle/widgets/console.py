@@ -1,6 +1,9 @@
-# -*- coding: utf-8 -*-
-
 # [REF] http://stackoverflow.com/a/41070191
+
+import os
+import sys
+import tornado
+
 
 from threading import Thread
 
@@ -20,26 +23,21 @@ from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole import console_widget
 
 
-
-
-def background(f):
-    """
-    Call a function in a simple thread, to prevent blocking
-
-    Taken from the Jupyter Qtconsole project
-    """
-    t = Thread(target=f)
-    t.start()
-    return t
+# def background(f):
+#     """
+#     Call a function in a simple thread, to prevent blocking
+#
+#     Taken from the Jupyter Qtconsole project
+#     """
+#     t = Thread(target=f)
+#     t.start()
+#     return t
 
 
 class ConsoleWidget(RichJupyterWidget):
 
     def __init__(self, *args,  **kwargs):
-        #super(ConsoleWidget, self).__init__(*args, **kwargs)
         super().__init__(*args, **kwargs)
-        #super(RichJupyterWidget, self).setParent(kwargs['parent'])
-        #super(ConsoleWidget, self).__init__(*args, **kwargs)
 
         # if banner:
         #     self.banner = banner
@@ -81,8 +79,6 @@ class ConsoleWidget(RichJupyterWidget):
 
         self.kernel_client.stop_channels()
         self.kernel_manager.shutdown_kernel()
-
-        #self.kernel_manager.stop_channels()
 
         self.close()
         self.deleteLater()
