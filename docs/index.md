@@ -1,4 +1,10 @@
-# Nezzle
+#
+
+
+<p align="left">
+	<img src="images/assets/logo.png" alt="Drawing" width="500px"/>
+</p>
+</br>
 
 Nezzle is a programmable and interactive visualization software
 for creating high-quality figures of small-scale networks.

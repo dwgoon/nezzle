@@ -101,22 +101,22 @@ class CurvedLink(StraightLink):
             painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
         ## [DEBUG]
-        if self.header:
-            painter.setPen(Qt.black)
-            painter.setBrush(Qt.white)
-            painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
-
-            painter.setPen(Qt.green)
-            painter.setBrush(Qt.green)
-            for i in range(0, 3):
-                elem = self._path_header.elementAt(i)
-                painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
-
-            painter.setPen(Qt.blue)
-            painter.setBrush(Qt.blue)
-            for i in range(3, self._path_header.elementCount()):
-                elem = self._path_header.elementAt(i)
-                painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
+        # if self.header:
+        #     painter.setPen(Qt.black)
+        #     painter.setBrush(Qt.white)
+        #     painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
+        #
+        #     painter.setPen(Qt.green)
+        #     painter.setBrush(Qt.green)
+        #     for i in range(0, 3):
+        #         elem = self._path_header.elementAt(i)
+        #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
+        #
+        #     painter.setPen(Qt.blue)
+        #     painter.setBrush(Qt.blue)
+        #     for i in range(3, self._path_header.elementCount()):
+        #         elem = self._path_header.elementAt(i)
+        #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
         ##########################################################
 
     def is_straight(self):

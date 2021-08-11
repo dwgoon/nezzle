@@ -98,6 +98,18 @@ class TextLabel(PainterOptionItem):
     def text(self, val):
         self._attr['TEXT'] = val
 
+    @property
+    def text(self):
+        return self._attr['TEXT']
+
+    @text.setter
+    def text(self, val):
+        self._attr['TEXT'] = val
+
+    @property
+    def text_item(self):
+        return self._text_item
+
     def _trigger_set_x(self, key, value):
         self.setX(value)
         self._text_item.setX(value)
@@ -122,7 +134,7 @@ class TextLabel(PainterOptionItem):
             raise ValueError(fstr)
 
         # Synchronize the properties related to the font.
-        self._attr.set('FONT_SIZE', self._font.pointSizeF(), trigger=False)
+        self._attr.set('FONT_SIZE', self._font.pixelSize(), trigger=False)
         self._attr.set('FONT_FAMILY', self._font.family(), trigger=False)
         self._attr.set('FONT_BOLD', self._font.bold(), trigger=False)
         self._attr.set('FONT_ITALIC', self._font.italic(), trigger=False)
@@ -144,7 +156,7 @@ class TextLabel(PainterOptionItem):
         return color.name(QColor.HexArgb)
 
     def _trigger_set_font_size(self, key, value):
-        self.font.setPointSizeF(value)
+        self.font.setPixelSize(value)
         self.update()
         return value
 
@@ -241,6 +253,12 @@ class TextLabel(PainterOptionItem):
         obj = cls(parent, text, font)
         obj._attr.update(attr)
         return obj
+
+    def align(self, pos="center"):
+        rect = self._text_item.boundingRect()
+        if pos == "center":
+            self.setPos(-rect.width() / 2, -rect.height() / 2)
+
 
 
 # @Lockable

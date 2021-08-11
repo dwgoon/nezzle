@@ -118,6 +118,7 @@ class BaseHeader(object):
                            offset=offset)
 
 
+
 class Arrow(BaseHeader):
 
     TYPE = 'ARROW'
@@ -125,7 +126,6 @@ class Arrow(BaseHeader):
     def __init__(self, width=10, height=10, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
 
-    #def identify_pos(self, head, link_body_width, angle=None):
     def identify_points(self, head, link_body_width, transform=None):
 
         neck1 = head + QPointF(0, -link_body_width/2)
@@ -136,11 +136,7 @@ class Arrow(BaseHeader):
         top = head + QPointF(self.height, 0)
 
         points = [neck1, face1, top, face2, neck2]
-        # if angle:
-        #     for i, pt in enumerate(points):
-        #         points[i] = rotate(head, pt, angle)
 
-        # TODO: Apply transform objects to header points to generalize the header point adjustment.
         # transform is a callable object, which defines its own transformation in __call__.
         if transform:
             for i, pt in enumerate(points):

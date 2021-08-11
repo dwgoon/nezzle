@@ -12,8 +12,8 @@ repo_name: dwgoon/nezzle
 # Theme
 theme:
   name: material
-  logo: assets/images/favicon.png
-  favicon: assets/images/favicon.png
+  logo: images/assets/favicon.png
+  favicon: images/assets/favicon.png
   palette:
     primary: black
     accent: pink
@@ -51,6 +51,13 @@ markdown_extensions:
   #    no_inline_svg: True
   #    insert_fonts_css: True
   #    macro-file: macros.tex
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.extra
+  - toc:
+      toc_depth: "1-1"
 
 # Page tree
 nav:
@@ -64,7 +71,7 @@ nav:
     - Console: console.md
     - Graphics:
       - Aligning Items: align_items.md
-    
+  - Gallery: gallery.md
   - API:
     - graphics:      
       - nodes: nezzle/grpahics/nodes/nodes.md
