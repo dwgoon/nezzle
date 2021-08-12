@@ -182,16 +182,28 @@ class ElbowLink(StraightLink):
 
         #########################################################
 
-    def is_straight(self):
-        td = 0.75 * self.width
+    # def is_straight(self):
+    #     td = 0.75 * self.width
+    #     #
+    #     # sx, sy = self.pos_src.x(), self.pos_src.y()
+    #     # tx, ty = self.pos_tgt.x(), self.pos_tgt.y()
+    #     #
+    #     # if (abs(sx - tx) < td) or (abs(sy - ty) < td):
+    #     #     return True
+    #     # else:
+    #     #     return False
+    #
+    #     if len(self._cps) <= 1:
+    #         return False
+    #
+    #     dist_x01 = np.abs(self.ctrl_points[0].x() - self.ctrl_points[1].x())
+    #     dist_x12 = np.abs(self.ctrl_points[1].x() - self.ctrl_points[2].x())
+    #
+    #     dist_y01 = np.abs(self.ctrl_points[0].y() - self.ctrl_points[1].y())
+    #     dist_y12 = np.abs(self.ctrl_points[1].y() - self.ctrl_points[2].y())
+    #
+    #     return (dist_x01 < td and dist_x12) or (dist_y01 < td and dist_y12)
 
-        sx, sy = self.pos_src.x(), self.pos_src.y()
-        tx, ty = self.pos_tgt.x(), self.pos_tgt.y()
-
-        if (abs(sx - tx) < td) or (abs(sy - ty) < td):
-            return True
-        else:
-            return False
 
     def is_header_visible(self):
         if not self.header:
@@ -397,6 +409,9 @@ class ElbowLink(StraightLink):
         self._identify_pos()  # Identify the position of this link
         self._identify_connectors_pos()  # Identify the positions of connectors
         try:
+            # if self.is_straight():
+            #     return super()._create_path()
+
             self._create_elbow_path()
         except Exception as err:
             traceback.print_exc()

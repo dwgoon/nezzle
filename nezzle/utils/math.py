@@ -9,6 +9,7 @@ from qtpy.QtCore import QPointF
 from qtpy.QtGui import QTransform
 from qtpy.QtGui import QVector2D
 
+
 def dot(v1, v2):
     """Calculate the dot product of two vectors.
 
@@ -17,29 +18,26 @@ def dot(v1, v2):
     This function is a simple wrapper of
     QPointF.dotProduct(v1, v2).
 
-    Parameters
-    ----------
-    v1 : QPointF
-        First vector from the origin.
-    v2 : QPointF
-        Second vector from the origin.
+    Args:
+        v1 : QPointF
+            First vector from the origin.
+        v2 : QPointF
+            Second vector from the origin.
 
-    Returns
-    -------
-    dp : float
-        Dot product of the two vectors.
+    Returns:
+        dp : float
+            Dot product of the two vectors.
 
-    Examples
-    --------
-    >>> v1 = QPointF(1, 2)
-    >>> v2 = QPointF(2, 4)
-    >>> dot(v1, v2)
-    10.0
+    Examples:
+        >>> v1 = QPointF(1, 2)
+        >>> v2 = QPointF(2, 4)
+        >>> dot(v1, v2)
+        10.0
 
-    >>> v1 = QPointF(1, 1)
-    >>> v2 = QPointF(10, 10)
-    >>> dot(v1, v2)
-    20.0
+        >>> v1 = QPointF(1, 1)
+        >>> v2 = QPointF(10, 10)
+        >>> dot(v1, v2)
+        20.0
     """
     return QPointF.dotProduct(v1, v2)
 
@@ -47,29 +45,26 @@ def dot(v1, v2):
 def length(v):
     """Calculate the length of a vector.
 
-    Parameters
-    ----------
-    v : QPointF
-        A vector from the origin.
+    Args:
+        v : QPointF
+            A vector from the origin.
 
-    Returns
-    -------
-    len : float
-        Length of the vector, v.
+    Returns:
+        len : float
+            Length of the vector, v.
 
-    Examples
-    --------
-    >>> v1 = QPointF(1, 0)
-    >>> length(v1)
-    1.0
+    Examples:
+        >>> v1 = QPointF(1, 0)
+        >>> length(v1)
+        1.0
 
-    >>> v1 = QPointF(1, 1)
-    >>> length(v1)
-    1.4142135623730951
+        >>> v1 = QPointF(1, 1)
+        >>> length(v1)
+        1.4142135623730951
 
-    >>> import math
-    >>> length(v1) == np.sqrt(2)
-    True
+        >>> import math
+        >>> length(v1) == np.sqrt(2)
+        True
     """
     return np.sqrt(v.x()**2 + v.y()**2)
 
@@ -77,24 +72,21 @@ def length(v):
 def dist(p1, p2):
     """Calculate the distance between two points.
 
-    Parameters
-    ----------
-    p1 : QPointF
-        First point
-    p2 : QPointF
-        Second point
+    Args:
+        p1 : QPointF
+            First point
+        p2 : QPointF
+            Second point
 
-    Returns
-    -------
-    distance : float
-        Distance between the two points.
+    Returns:
+        distance : float
+            Distance between the two points.
 
-    Examples
-    --------
-    >>> a = QPointF(0, 10)
-    >>> b = QPointF(10, 0)
-    >>> dist(a, b)  # square root of 2
-    14.142135623730951
+    Examples:
+        >>> a = QPointF(0, 10)
+        >>> b = QPointF(10, 0)
+        >>> dist(a, b)  # square root of 2
+        14.142135623730951
 
     """
     diff = p1 - p2
@@ -161,35 +153,32 @@ def internal_division(p1, p2, r1, r2):
     (p1)---<r1>---(ip)---<r2>---(p2)
 
 
-    Parameters
-    ----------
-    p1 : QPointF
-        First point.
-    p2 : QPointF
-        Second point.
-    r1 : float
-        Ratio from the p1.
-    r2 : float
-        Ratio from the p2.
+    Args:
+        p1 : QPointF
+            First point.
+        p2 : QPointF
+            Second point.
+        r1 : float
+            Ratio from the p1.
+        r2 : float
+            Ratio from the p2.
 
-    Returns
-    -------
-    ip : QPointF
-        Internal point of the two points.
+    Returns:
+        ip : QPointF
+            Internal point of the two points.
 
-    Examples
-    --------
-    >>> a = QPointF(0, 0)
-    >>> b = QPointF(2, 0)
-    >>> internal_division(a, b, 1, 1)
-    PyQt5.QtCore.QPointF(1.0, 0.0)
+    Examples:
+        >>> a = QPointF(0, 0)
+        >>> b = QPointF(2, 0)
+        >>> internal_division(a, b, 1, 1)
+        PyQt5.QtCore.QPointF(1.0, 0.0)
 
-    >>> c = QPointF(1, 1)
-    >>> internal_division(a, c, 0.3, 0.7)
-    PyQt5.QtCore.QPointF(0.3, 0.3)
+        >>> c = QPointF(1, 1)
+        >>> internal_division(a, c, 0.3, 0.7)
+        PyQt5.QtCore.QPointF(0.3, 0.3)
 
-    >>> internal_division(a, b, 2, 8)
-    PyQt5.QtCore.QPointF(0.4, 0.0)
+        >>> internal_division(a, b, 2, 8)
+        PyQt5.QtCore.QPointF(0.4, 0.0)
     """
     sum_r = r1+r2
     return (r2/sum_r*p1) + (r1/sum_r*p2)
@@ -200,44 +189,40 @@ def solve_cubic(a, b, c, d):
 
     This is a Python version of the cubic equation solver [#F1]_.
 
-    Parameters
-    ----------
-    a : float
-        Coefficient of x^3.
-    b : float
-        Coefficient of x^2.
-    c : float
-        Coefficient of x.
-    d : float
-        Constant term.
+    Args:
+        a : float
+            Coefficient of x^3.
+        b : float
+            Coefficient of x^2.
+        c : float
+            Coefficient of x.
+        d : float
+            Constant term.
 
-    Returns
-    -------
-    x : list
-        Solutions of the cubic equation.
-        The number of solutions is three at most.
+    Returns:
+        x : list
+            Solutions of the cubic equation.
+            The number of solutions is three at most.
 
-    Examples
-    --------
-    >>> solve_cubic(1, 0, 0, -1)
-    [1.0]
+    Examples:
+        >>> solve_cubic(1, 0, 0, -1)
+        [1.0]
 
-    >>> solve_cubic(1, 0, 0, 1)
-    [-1.0]
+        >>> solve_cubic(1, 0, 0, 1)
+        [-1.0]
 
-    >>> solve_cubic(1, -1, -4, 4)
-    [1.9999999999999993, 1.0, -1.9999999999999998]
+        >>> solve_cubic(1, -1, -4, 4)
+        [1.9999999999999993, 1.0, -1.9999999999999998]
 
-    >>> solve_cubic(3, -1, 1, 2)
-    [-0.6666666666666663]
+        >>> solve_cubic(3, -1, 1, 2)
+        [-0.6666666666666663]
 
-    >>> solve_cubic(1, -4, 3, 0)
-    [3.0, 0.9999999999999997, 0.0]
+        >>> solve_cubic(1, -4, 3, 0)
+        [3.0, 0.9999999999999997, 0.0]
 
-    References
-    ----------
-    .. [#F1] Glassner, "Graphics Gems", 1993, Chapter 8.1,
-       pp. 404-407.
+    References:
+         .. [#F1] Glassner, "Graphics Gems", 1993, Chapter 8.1,
+           pp. 404-407.
     """
 
     sols = []
