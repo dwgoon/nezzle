@@ -158,7 +158,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QTreeView" name="ui_navigationTree">
+          <widget class="NavigationTreeView" name="ui_navigationTree">
            <property name="selectionMode">
             <enum>QAbstractItemView::ExtendedSelection</enum>
            </property>
@@ -539,6 +539,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>NavigationTreeView</class>
+   <extends>QTreeView</extends>
+   <header>nezzle/widgets/navigationtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

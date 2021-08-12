@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from qtpy.QtGui import QStandardItem
 from qtpy.QtGui import QStandardItemModel
 from qtpy.QtCore import QObject

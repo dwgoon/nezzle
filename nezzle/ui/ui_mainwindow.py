@@ -67,7 +67,7 @@ class Ui_MainWindow(object):
         self.ui_groupNavigation.setObjectName("ui_groupNavigation")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.ui_groupNavigation)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.ui_navigationTree = QtWidgets.QTreeView(self.ui_groupNavigation)
+        self.ui_navigationTree = NavigationTreeView(self.ui_groupNavigation)
         self.ui_navigationTree.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.ui_navigationTree.setObjectName("ui_navigationTree")
         self.verticalLayout_4.addWidget(self.ui_navigationTree)
@@ -318,3 +318,4 @@ class Ui_MainWindow(object):
         self.ui_actionDistributeVertically.setText(_translate("MainWindow", "Distribute Vertically"))
         self.ui_actionSelectAll.setText(_translate("MainWindow", "Select All"))
 
+from nezzle.widgets.navigationtreeview import NavigationTreeView

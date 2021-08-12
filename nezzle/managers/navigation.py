@@ -1,6 +1,8 @@
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QObject
+#from qtpy.QtWidgets import QWidget
+from qtpy.QtCore import QEvent
 from qtpy.QtCore import QVariant
 from qtpy.QtCore import Slot
 from qtpy.QtCore import QItemSelection
@@ -28,6 +30,9 @@ class NavigationTreeManager(QObject):
             selection_model = self.tree_view.selectionModel()
             selection_model.currentChanged.connect(self.on_current_changed)
             selection_model.selectionChanged.connect(self.on_selection_changed)
+
+
+        self.tree_view.keyPressed.connect(self.keyPressEvent)
 
         # Create context menu
         self.tree_view.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -63,6 +68,13 @@ class NavigationTreeManager(QObject):
             return item
 
         return None
+
+    @Slot(QEvent)
+    def keyPressEvent(self, event):
+        print("KeyPressEvent in navigation")
+        if event.key() == Qt.Key_Delete:
+            self.remove_selected_items()
+
 
     @Slot(QModelIndex, QModelIndex)
     def on_current_changed(self, current, previous):
