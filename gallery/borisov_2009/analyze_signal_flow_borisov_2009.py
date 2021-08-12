@@ -10,18 +10,10 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QFont
 
-
 import sfa
-#from sfa.analysis import analyze_perturb
-
-sys.path.append(abspath(pjoin(dirname(__file__))))
-import sfv
-from sfv import visualize_signal_flow
-import importlib
-importlib.reload(sfv)
 
 from nezzle.fileio import write_image
-
+from sfv import visualize_signal_flow
 
 dpath = os.path.dirname(__file__)
 fpath = os.path.join(dpath, 'borisov_2009_activity_label_pos.csv')

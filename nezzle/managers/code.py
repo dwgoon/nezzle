@@ -13,7 +13,8 @@ from qtpy.QtWidgets import QMessageBox
 from qtpy.QtWidgets import QDialog, QFileDialog
 from qtpy.QtWidgets import QProgressBar
 
-
+#import nezzle.utils
+from nezzle.utils import reload_modules
 from nezzle.utils import extract_name_and_ext
 from nezzle.dialogs.progressdialog import ProgressDialog
 
@@ -120,22 +121,17 @@ class CodeManager(QObject):
         if not fname:
             raise RuntimeError("The path for the Python module is not valid.")
 
+        reload_modules(fpath)
+
         # [REF] https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
         spec = importlib.util.spec_from_file_location(fname, fpath)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
 
-        # if not hasattr(mod, 'execute'):
-        #     raise AttributeError("The given Python module should have "
-        #                          "'execute(nav, net)' method.")
-
         if self.mw.nt_manager.current_item:
             net = self.mw.nt_manager.current_item.data()
         else:
             net = None
-
-        #if not net:
-        #    raise RuntimeError("There is no network selected.")
 
         if hasattr(mod, 'create'):
             self._worker.set_job(mod.create, net.copy())
