@@ -144,7 +144,6 @@ class GraphicsView(QGraphicsView):
         elif direction == 'right':
             self._set_items_pos_x(items, max)
         elif direction == 'center':
-            print(items)
             self._set_items_pos_x(items, np.average)
         elif direction == 'top':
             self._set_items_pos_y(items, min)

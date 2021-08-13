@@ -87,6 +87,7 @@ class ElbowLink(StraightLink):
             # for cp in self._ctrl_points:
             #     cp.setVisible(visible)
 
+
         return super().itemChange(change, value)
 
 
@@ -340,13 +341,23 @@ class ElbowLink(StraightLink):
             if self.source.contains(pos_conn_on_src):
                 ix_begin = i
 
+            break
+
         for i in range(len_cps-2, 1, -1):
             pos_conn = self._cps[i]
             pos_conn_on_tgt = pos_conn - self.pos_tgt
             if self.target.contains(pos_conn_on_tgt):
                 ix_end = i
 
-        self._cps = [self._cps[ix_begin]] + self._cps[ix_begin:ix_end+1] + [self._cps[ix_end]]
+            break
+
+        if ix_end - ix_begin <= 1:
+            self._cps = [self._cps[0], self._cps[0], self._cps[1], self._cps[-2], self._cps[-1], self._cps[-1]]
+        else:
+            self._cps = [self._cps[ix_begin]] + self._cps[ix_begin:ix_end + 1] + [self._cps[ix_end]]
+
+        print(f"(ix_begin, ix_end)=({ix_begin}, {ix_end})")
+
 
         hw = self.width / 2  # The half of width
         len_cps = len(self._cps)
@@ -418,4 +429,6 @@ class ElbowLink(StraightLink):
             print(err)
 
 
+        if self._cps:
+            print(self._cps)
 
