@@ -28,7 +28,6 @@ from nezzle.graphics.mixins import Lockable
 np.seterr('raise')
 
 
-@Lockable
 class ElbowLink(StraightLink):
     ITEM_TYPE = 'ELBOW_LINK'
 
@@ -73,23 +72,8 @@ class ElbowLink(StraightLink):
         self._update_bounding_rect()
 
     def itemChange(self, change, value):
-        # if change == QGraphicsItem.ItemPositionChange:
-        #     print(f"LINK[{self._iden}] QGraphicsItem.ItemPositionChange")
-        #     self.update_ctrl_points()
-
         if change == QGraphicsItem.ItemSelectedHasChanged:
             self.update()
-            # if self.is_node_selected():
-            #     visible = False
-            # else:
-            #     visible = True
-            #
-            # for cp in self._ctrl_points:
-            #     cp.setVisible(visible)
-
-
-        return super().itemChange(change, value)
-
 
         return super().itemChange(change, value)
 
@@ -181,31 +165,6 @@ class ElbowLink(StraightLink):
                 elem = self._path_header.elementAt(i)
                 painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
 
-        #########################################################
-
-    # def is_straight(self):
-    #     td = 0.75 * self.width
-    #     #
-    #     # sx, sy = self.pos_src.x(), self.pos_src.y()
-    #     # tx, ty = self.pos_tgt.x(), self.pos_tgt.y()
-    #     #
-    #     # if (abs(sx - tx) < td) or (abs(sy - ty) < td):
-    #     #     return True
-    #     # else:
-    #     #     return False
-    #
-    #     if len(self._cps) <= 1:
-    #         return False
-    #
-    #     dist_x01 = np.abs(self.ctrl_points[0].x() - self.ctrl_points[1].x())
-    #     dist_x12 = np.abs(self.ctrl_points[1].x() - self.ctrl_points[2].x())
-    #
-    #     dist_y01 = np.abs(self.ctrl_points[0].y() - self.ctrl_points[1].y())
-    #     dist_y12 = np.abs(self.ctrl_points[1].y() - self.ctrl_points[2].y())
-    #
-    #     return (dist_x01 < td and dist_x12) or (dist_y01 < td and dist_y12)
-
-
     def is_header_visible(self):
         if not self.header:
             return False
@@ -218,53 +177,16 @@ class ElbowLink(StraightLink):
     def _create_connectors(self):
         self._pos_connectors = [QPointF(), QPointF(), QPointF(), QPointF()]
 
-    def _create_control_items(self):
-        m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
-        m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
-        m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
-
-        cp0 = YaxisConnectorControlPoint("CP0", parent=self, pos=m_sm)
-        cp0.append_connector(self._pos_connectors[0])
-        cp0.append_connector(self._pos_connectors[1])
-        self._ctrl_points.append(cp0)
-
-        cp1 = XaxisConnectorControlPoint("CP1", parent=self, pos=m_st)
-        cp1.append_connector(self._pos_connectors[1])
-        cp1.append_connector(self._pos_connectors[2])
-        self._ctrl_points.append(cp1)
-
-        cp2 = YaxisConnectorControlPoint("CP2", parent=self, pos=m_mt)
-        cp2.append_connector(self._pos_connectors[2])
-        cp2.append_connector(self._pos_connectors[3])
-        self._ctrl_points.append(cp2)
-
     def _create_subpoints(self):
         self._cps = []  # Central points
         self._fps = []  # Forward points
         self._bps = []  # Backward points
 
+    def _create_control_items(self):
+        raise NotImplementedError()
+
     def _identify_connectors_pos(self):
-
-        pos_cp0 = self._ctrl_points[0].pos()
-        pos_cp1 = self._ctrl_points[1].pos()
-        pos_cp2 = self._ctrl_points[2].pos()
-
-        con0 = self._pos_connectors[0]
-        con1 = self._pos_connectors[1]
-        con2 = self._pos_connectors[2]
-        con3 = self._pos_connectors[3]
-
-        con0.setX(self.pos_src.x())
-        con0.setY(pos_cp0.y())
-
-        con1.setX(pos_cp1.x())
-        con1.setY(pos_cp0.y())
-
-        con2.setX(pos_cp1.x())
-        con2.setY(pos_cp2.y())
-
-        con3.setX(self.pos_tgt.x())
-        con3.setY(pos_cp2.y())
+        raise NotImplementedError()
 
     def _identify_header_pos(self):
         offset = self._calculate_header_offset()
@@ -428,7 +350,100 @@ class ElbowLink(StraightLink):
             traceback.print_exc()
             print(err)
 
-
         if self._cps:
             print(self._cps)
 
+
+
+
+
+@Lockable
+class VerticalElbowLink(ElbowLink):
+
+    def _create_control_items(self):
+        m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
+        m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
+
+        cp0 = YaxisConnectorControlPoint("CP0", parent=self, pos=m_sm)
+        cp0.append_connector(self._pos_connectors[0])
+        cp0.append_connector(self._pos_connectors[1])
+        self._ctrl_points.append(cp0)
+
+        cp1 = XaxisConnectorControlPoint("CP1", parent=self, pos=m_st)
+        cp1.append_connector(self._pos_connectors[1])
+        cp1.append_connector(self._pos_connectors[2])
+        self._ctrl_points.append(cp1)
+
+        cp2 = YaxisConnectorControlPoint("CP2", parent=self, pos=m_mt)
+        cp2.append_connector(self._pos_connectors[2])
+        cp2.append_connector(self._pos_connectors[3])
+        self._ctrl_points.append(cp2)
+
+    def _identify_connectors_pos(self):
+        pos_cp0 = self._ctrl_points[0].pos()
+        pos_cp1 = self._ctrl_points[1].pos()
+        pos_cp2 = self._ctrl_points[2].pos()
+
+        con0 = self._pos_connectors[0]
+        con1 = self._pos_connectors[1]
+        con2 = self._pos_connectors[2]
+        con3 = self._pos_connectors[3]
+
+        con0.setX(self.pos_src.x())
+        con0.setY(pos_cp0.y())
+
+        con1.setX(pos_cp1.x())
+        con1.setY(pos_cp0.y())
+
+        con2.setX(pos_cp1.x())
+        con2.setY(pos_cp2.y())
+
+        con3.setX(self.pos_tgt.x())
+        con3.setY(pos_cp2.y())
+
+
+@Lockable
+class HorizontalElbowLink(ElbowLink):
+
+    def _create_control_items(self):
+        m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
+        m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
+
+        cp0 = XaxisConnectorControlPoint("CP0", parent=self, pos=m_sm)
+        cp0.append_connector(self._pos_connectors[0])
+        cp0.append_connector(self._pos_connectors[1])
+        self._ctrl_points.append(cp0)
+
+        cp1 = YaxisConnectorControlPoint("CP1", parent=self, pos=m_st)
+        cp1.append_connector(self._pos_connectors[1])
+        cp1.append_connector(self._pos_connectors[2])
+        self._ctrl_points.append(cp1)
+
+        cp2 = XaxisConnectorControlPoint("CP2", parent=self, pos=m_mt)
+        cp2.append_connector(self._pos_connectors[2])
+        cp2.append_connector(self._pos_connectors[3])
+        self._ctrl_points.append(cp2)
+
+    def _identify_connectors_pos(self):
+        pos_cp0 = self._ctrl_points[0].pos()
+        pos_cp1 = self._ctrl_points[1].pos()
+        pos_cp2 = self._ctrl_points[2].pos()
+
+        con0 = self._pos_connectors[0]
+        con1 = self._pos_connectors[1]
+        con2 = self._pos_connectors[2]
+        con3 = self._pos_connectors[3]
+
+        con0.setX(pos_cp0.x())
+        con0.setY(self.pos_src.y())
+
+        con1.setX(pos_cp0.x())
+        con1.setY(pos_cp1.y())
+
+        con2.setX(pos_cp2.x())
+        con2.setY(pos_cp1.y())
+
+        con3.setX(pos_cp2.x())
+        con3.setY(self.pos_tgt.y())

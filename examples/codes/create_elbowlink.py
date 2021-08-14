@@ -34,16 +34,16 @@ def update(nav, net):
     src['FILL_COLOR'] = QColor(0, 0, 200, 100) #Qt.cyan
     tgt['FILL_COLOR'] = QColor(0, 0, 200, 100) #Qt.cyan
 
-    LinkClass = LinkClassFactory.create("ELBOW_LINK")
+    LinkClass = LinkClassFactory.create("VERTICAL_ELBOW_LINK")
 
     HeaderClass = HeaderClassFactory.create('ARROW')
     header = HeaderClass(width=10, height=10, offset=4)
     #header = None
 
-    curve = LinkClass("ID_LINK_1", src, tgt, width=4, header=header)
-    curve['FILL_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_WIDTH'] = 2
+    elbow = LinkClass("LINK_1", src, tgt, width=4, header=header)
+    elbow['FILL_COLOR'] = QColor(255, 0, 0)
+    elbow['BORDER_COLOR'] = QColor(255, 0, 0)
+    elbow['BORDER_WIDTH'] = 2
 
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
 
@@ -54,7 +54,7 @@ def update(nav, net):
         label.setPos(-rect.width()/2, -rect.height()/2)
         _net.add_label(label)
         
-    _net.add_link(curve)
+    _net.add_link(elbow)
     _net.add_node(src)
     _net.add_node(tgt)
         
@@ -64,30 +64,38 @@ def update(nav, net):
     x1 = 600.0
     y1 = 400.0
 
-    # A single arrow links with circle nodes
+    # A single arrow lins with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
-    src = NodeClass('NODE_1', 50, 20, pos=QPoint(x1, y1))
-    tgt = NodeClass('NODE_2', 50, 20, pos=QPoint(x0, y0))
+    src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
+    tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.blue
-    tgt['FILL_COLOR'] = Qt.blue
+    src['FILL_COLOR'] = QColor(0, 0, 200, 100)  # Qt.cyan
+    tgt['FILL_COLOR'] = QColor(0, 0, 200, 100)  # Qt.cyan
 
-    LinkClass = LinkClassFactory.create("CURVED_LINK")
-    # HeaderClass = HeaderClassFactory.create('HAMMER')
-    # header = HeaderClass(width=80, height=5, offset=4)
+    LinkClass = LinkClassFactory.create("HORIZONTAL_ELBOW_LINK")
 
     HeaderClass = HeaderClassFactory.create('ARROW')
     header = HeaderClass(width=10, height=10, offset=4)
+    # header = None
 
-    curve = LinkClass("ID_LINK_2", src, tgt, width=4, header=header)
-    curve['FILL_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_WIDTH'] = 2
+    elbow = LinkClass("LINK_2", src, tgt, width=4, header=header)
+    elbow['FILL_COLOR'] = QColor(255, 0, 0)
+    elbow['BORDER_COLOR'] = QColor(255, 0, 0)
+    elbow['BORDER_WIDTH'] = 2
 
-    _net.add_link(curve)
+    LabelClass = LabelClassFactory.create("TEXT_LABEL")
+
+    for (node, name) in [(src, "Source"), (tgt, "Target")]:
+        label = LabelClass(node, name)
+        label["FONT_SIZE"] = 10
+        rect = label.boundingRect()
+        label.setPos(-rect.width() / 2, -rect.height() / 2)
+        _net.add_label(label)
+
+    _net.add_link(elbow)
     _net.add_node(src)
-    _net.add_node(tgt)    
-        
+    _net.add_node(tgt)
+
     nav.append_item(_net)
     
