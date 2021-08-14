@@ -176,7 +176,7 @@ class ConnectorControlPoint(BaseControlPoint):
         raise NotImplementedError()
 
 
-class XaxisConnectorControlPoint(ConnectorControlPoint):
+class HorizontalConnectorControlPoint(ConnectorControlPoint):
     def update_pos(self, pos):
         # Limit the range of y-axis.
         mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
@@ -186,24 +186,31 @@ class XaxisConnectorControlPoint(ConnectorControlPoint):
         self.connectors[1].setX(pos.x())
 
     def update_pos_by_connectors(self):
+        # if np.abs(self.connectors[0].y() - self.connectors[1].y()) < self.parent.width:
+        #     return
+
         mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
         self.setY(mp_y)
         self.setX(self.connectors[0].x())
         # Never call parent.update() here
 
     def mouseReleaseEvent(self, event):
+        hwp = 0.5 * self.parent.width  # The half of width of parent
         for cp in self.parent.ctrl_points:
-            if cp.isSelected():
+            if cp.isSelected() or isinstance(cp, HorizontalConnectorControlPoint):
                 continue
 
-            if np.abs(cp.x() - self.x()) < 0.5*self.parent.width:
-                self.setX(cp.x())
+            conn1, conn2 = cp.connectors
+            dist_conns = np.abs(conn1.x() - conn2.x())
+            if dist_conns < hwp:
+                self.setX(conn1.x() + conn2.x() - self.x())
+                self.parent.update()
                 break
 
         return super().mouseReleaseEvent(event)
 
 
-class YaxisConnectorControlPoint(ConnectorControlPoint):
+class VerticalConnectorControlPoint(ConnectorControlPoint):
     def update_pos(self, pos):
         # Limit the range of x-axis.
         mp_x = (self.connectors[0].x() + self.connectors[1].x()) / 2  # X-axis midpoint of connectors
@@ -214,17 +221,26 @@ class YaxisConnectorControlPoint(ConnectorControlPoint):
         self.connectors[1].setY(pos.y())
 
     def update_pos_by_connectors(self):
+        # if np.abs(self.connectors[0].x() - self.connectors[1].x()) < self.parent.width:
+        #     return
+
         mp_x = (self.connectors[0].x() + self.connectors[1].x()) / 2  # X-axis midpoint of connectors
         self.setX(mp_x)
         self.setY(self.connectors[0].y())
         # Never call parent.update() here
 
     def mouseReleaseEvent(self, event):
+        hwp = 0.5 * self.parent.width  # The half of width of parent
         for cp in self.parent.ctrl_points:
-            if cp.isSelected():
+            if cp.isSelected() or isinstance(cp, VerticalConnectorControlPoint):
                 continue
 
-            if np.abs(cp.y() - self.y()) < 0.5*self.parent.width:
-                self.setY(cp.y())
+            conn1, conn2 = cp.connectors
+            dist_conns = np.abs(conn1.y() - conn2.y())
+            if dist_conns < hwp:
+                print("[Conns y-coords]", [conn1.y(), conn2.y(), self.y()])
+                self.setY(conn1.y() + conn2.y() - self.y())
+                self.parent.update()
                 break
+
         return super().mouseReleaseEvent(event)
