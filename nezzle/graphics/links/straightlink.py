@@ -12,6 +12,7 @@ from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.links.baselink import TwoNodeLink
 from nezzle.graphics.header.transform import Rotate
 
+
 @Lockable
 class StraightLink(TwoNodeLink):
     """

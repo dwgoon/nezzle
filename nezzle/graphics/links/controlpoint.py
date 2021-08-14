@@ -1,3 +1,4 @@
+import numpy as np
 from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtCore import QRectF
 from qtpy.QtCore import QPointF
@@ -180,6 +181,7 @@ class XaxisConnectorControlPoint(ConnectorControlPoint):
         # Limit the range of y-axis.
         mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
         pos.setY(mp_y)
+
         self.connectors[0].setX(pos.x())
         self.connectors[1].setX(pos.x())
 
@@ -188,6 +190,18 @@ class XaxisConnectorControlPoint(ConnectorControlPoint):
         self.setY(mp_y)
         self.setX(self.connectors[0].x())
         # Never call parent.update() here
+
+    def mouseReleaseEvent(self, event):
+        for cp in self.parent.ctrl_points:
+            if cp.isSelected():
+                continue
+
+            if np.abs(cp.x() - self.x()) < 0.5*self.parent.width:
+                self.setX(cp.x())
+                break
+
+        return super().mouseReleaseEvent(event)
+
 
 class YaxisConnectorControlPoint(ConnectorControlPoint):
     def update_pos(self, pos):
@@ -204,3 +218,13 @@ class YaxisConnectorControlPoint(ConnectorControlPoint):
         self.setX(mp_x)
         self.setY(self.connectors[0].y())
         # Never call parent.update() here
+
+    def mouseReleaseEvent(self, event):
+        for cp in self.parent.ctrl_points:
+            if cp.isSelected():
+                continue
+
+            if np.abs(cp.y() - self.y()) < 0.5*self.parent.width:
+                self.setY(cp.y())
+                break
+        return super().mouseReleaseEvent(event)
