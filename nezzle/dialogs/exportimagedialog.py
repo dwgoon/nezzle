@@ -1,5 +1,6 @@
 import os
 
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QDialog, QFileDialog
 from qtpy.QtWidgets import QMessageBox
 from qtpy.QtGui import QDoubleValidator
@@ -17,6 +18,8 @@ class ExportImageDialog(QDialog, Ui_ExportImageDialog):
         self.setupUi(self)
 
         self.setWindowTitle("Export an image")
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+
         self.setFixedSize(self.width(), self.height())
 
         validator_int_percent = QIntValidator(0, 100)
