@@ -17,6 +17,7 @@ class Ui_OpenNetworkDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(OpenNetworkDialog.sizePolicy().hasHeightForWidth())
         OpenNetworkDialog.setSizePolicy(sizePolicy)
+        OpenNetworkDialog.setWindowOpacity(2.0)
         OpenNetworkDialog.setSizeGripEnabled(True)
         self.verticalLayout = QtWidgets.QVBoxLayout(OpenNetworkDialog)
         self.verticalLayout.setObjectName("verticalLayout")
