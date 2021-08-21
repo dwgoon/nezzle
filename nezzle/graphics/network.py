@@ -324,7 +324,7 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
     nodes_cache = {}
     net_new = Network(name)
     # net_new.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
-    net_new.scene.setBackgroundBrush(Qt.transparent)
+    net_new.scene.setBackgroundBrush(Qt.white) #transparent)
     for i in range(ir.size):
         itgt, isrc = ir[i], ic[i]
         tgt, src = i2n[itgt], i2n[isrc]

@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1127, 741)
+        MainWindow.resize(1127, 785)
         MainWindow.setDockNestingEnabled(True)
         self.ui_centralWidget = QtWidgets.QWidget(MainWindow)
         self.ui_centralWidget.setObjectName("ui_centralWidget")
@@ -268,6 +268,7 @@ class Ui_MainWindow(object):
         self.ui_menuConvert.addAction(self.ui_actionToHorizontalElbowLink)
         self.ui_menuSelect.addAction(self.ui_menuLock.menuAction())
         self.ui_menuSelect.addAction(self.ui_menuConvert.menuAction())
+        self.ui_menuSelect.addSeparator()
         self.ui_menuSelect.addAction(self.ui_actionSelectAll)
         self.ui_menuAlign.addAction(self.ui_actionAlignLeft)
         self.ui_menuAlign.addAction(self.ui_actionAlignCenter)
@@ -289,7 +290,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.ui_mainTabWidget.setCurrentIndex(-1)
         self.ui_consoleTabWidget.setCurrentIndex(-1)
-        self.ui_styleTabWidget.setCurrentIndex(0)
+        self.ui_styleTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

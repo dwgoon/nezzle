@@ -95,7 +95,7 @@ def read_sif(fpath, link_map=None):
     fname = os.path.basename(fpath)
     net = Network(fname)
     #net.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
-    net.scene.setBackgroundBrush(Qt.transparent)
+    net.scene.setBackgroundBrush(Qt.white)  #(Qt.transparent)
 
     with codecs.open(fpath, "r", encoding="utf-8-sig") as fin:
         NodeClass = NodeClassFactory.create("ELLIPSE_NODE")

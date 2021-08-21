@@ -6,6 +6,8 @@ from os.path import join as pjoin
 import sys
 
 from qtpy import QtCore
+from qtpy.QtCore import QFile
+from qtpy.QtCore import QTextStream
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtWidgets import QStyleFactory
@@ -17,10 +19,11 @@ from nezzle.mainwindow import MainWindow
 base_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(base_dir)
 
+
 def main(args=None):
     libpaths = QtWidgets.QApplication.libraryPaths()
     libpaths.append(os.getcwd())
-    #libpaths.append("C:/Users/dwlee/Envs/calc/Lib/site-packages/qtpy/Qt/plugins")
+    #libpaths.append(".../site-packages/qtpy/Qt/plugins")
     QtWidgets.QApplication.setLibraryPaths(libpaths)
 
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
@@ -28,28 +31,21 @@ def main(args=None):
     app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
     # It is possible to choose the theme of GUI
-    QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
+    #QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
 
     mw = MainWindow()
     
     mw.setWindowTitle("Nezzle")
-    #dpath = QFileInfo(__file__).absolutePath()
     droot_resources = pjoin(os.path.dirname(__file__), "resources")
     print(droot_resources)
     
     icon = QIcon(pjoin(droot_resources, "icon.png"))
-    # icon.addFile(pjoin(droot_resources, "icon16x16.png"), QSize(16, 16))
-    # icon.addFile(pjoin(droot_resources, "icon24x24.png"), QSize(24, 24))
-    # icon.addFile(pjoin(droot_resources, "icon32x32.png"), QSize(32, 32))
-    # icon.addFile(pjoin(droot_resources, "icon48x48.png"), QSize(48, 48))
-    # icon.addFile(pjoin(droot_resources, "icon256x256.png"), QSize(256, 256))
         
     print(icon.isNull())
     print(icon.name(), icon.themeName())
     mw.setWindowIcon(icon)
 
     # Before showing the main window, process arguments.
-
     if args:
         if not args.fpath_code:
             pass

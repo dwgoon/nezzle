@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1127</width>
-    <height>741</height>
+    <height>785</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,6 +118,7 @@
     </widget>
     <addaction name="ui_menuLock"/>
     <addaction name="ui_menuConvert"/>
+    <addaction name="separator"/>
     <addaction name="ui_actionSelectAll"/>
    </widget>
    <widget class="QMenu" name="ui_menuLayout">
@@ -357,7 +358,7 @@
         <enum>QTabWidget::North</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="movable">
         <bool>true</bool>
