@@ -20,4 +20,4 @@ class LinkClassFactory(object):
         elif link_type.upper() == 'SELFLOOP_LINK':
             return SelfloopLink
         else:
-            raise TypeError("Undefined lins type: %s" % (link_type))
+            raise TypeError("Undefined link type: %s" % (link_type))

@@ -13,7 +13,7 @@ import networkx as nx
 from .nodes.nodefactory import NodeClassFactory
 from .links.linkfactory import LinkClassFactory
 from .labels.labelfactory import LabelClassFactory
-from nezzle.graphics.header.header import HeaderClassFactory
+from nezzle.graphics.headers.headerclassfactory import HeaderClassFactory
 
 from .links.baselink import BaseLink
 from .labels.textlabel import TextLabel
@@ -78,6 +78,7 @@ class Network(MappableItem):
         return value
 
     def add_node(self, node):
+        node.setZValue(0)
         self.nodes[node.iden] = node
         self.scene.addItem(node)
         self.nxdg.add_node(node.iden)
@@ -110,6 +111,8 @@ class Network(MappableItem):
         None
 
         """
+
+        link.setZValue(-1)
         self.links[link.iden] = link
         self.scene.addItem(link)
 
@@ -173,6 +176,7 @@ class Network(MappableItem):
     def to_dict(self):
         dict_net = {}
 
+        # TODO: Use a global variable for setting the version
         dict_net["NEZZLE_VERSION"] = (0, 0, 1)
         dict_net["NAME"] = self.name
 

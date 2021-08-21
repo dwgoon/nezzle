@@ -25,7 +25,7 @@ def update(nav, net):
     x1 = 600.0
     y1 = 200.0
 
-    # A single arrow lins with circle nodes
+    # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
     src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
@@ -62,7 +62,7 @@ def update(nav, net):
     x1 = 600.0
     y1 = 400.0
 
-    # A single arrow lins with circle nodes
+    # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
     src = NodeClass('NODE_1', 50, 20, pos=QPoint(x1, y1))

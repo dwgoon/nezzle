@@ -10,7 +10,7 @@ from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.links.baselink import TwoNodeLink
-from nezzle.graphics.header.transform import Rotate
+from nezzle.graphics.headers.transform import Rotate
 
 
 @Lockable
@@ -23,11 +23,9 @@ class StraightLink(TwoNodeLink):
     def __init__(self, *args, **kwargs):
         self._angle_header = None
         self._header_transform = Rotate()
-        #print(self._header_transform, self._header_transform.angle)
-
         super().__init__(*args, **kwargs)
 
-    def _initialize(self):
+    def initialize(self):
         self._identify_pos()
         self._create_path()
         self._update_bounding_rect()

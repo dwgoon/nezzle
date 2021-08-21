@@ -1,17 +1,5 @@
 from qtpy.QtCore import QPointF
-from nezzle.utils import rotate
 from nezzle.utils import TriggerDict
-
-
-class HeaderClassFactory(object):
-    @staticmethod
-    def create(header_type):
-        if header_type.upper() == 'ARROW':
-            return Arrow
-        elif header_type.upper() == 'HAMMER':
-            return Hammer
-        else:
-            raise TypeError("Undefined lins type: %s" % (header_type))
 
 
 class BaseHeader(object):
@@ -112,11 +100,9 @@ class BaseHeader(object):
         width = dict_header['WIDTH']
         height = dict_header['HEIGHT']
         offset = dict_header['OFFSET']
-        header_type = dict_header['TYPE']
-        HeaderClass = HeaderClassFactory.create(header_type)
-        return HeaderClass(width, height,
-                           offset=offset)
-
+        #header_type = dict_header['TYPE']
+        #HeaderClass = HeaderClassFactory.create(header_type)
+        return cls(width, height, offset=offset)
 
 
 class Arrow(BaseHeader):

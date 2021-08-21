@@ -34,7 +34,7 @@ def add_curve(view):
     x1 = 600.0
     y1 = 200.0
 
-    # A single arrow lins with circle nodes
+    # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
@@ -131,7 +131,7 @@ def add_curve(view):
     # labels['FONT_FAMILY'] = 'Tahoma'
     # net.add_label(labels)
     #
-    # # Create arrow headed selfloop lins for a circle nodes
+    # # Create arrow headed selfloop link for a circle nodes
     # nodes = NodeClass('ID_NODE_7', 100, 100, pos=QPoint(x0, y0 - 100))
     # nodes['FILL_COLOR'] = QColor(100, 150, 150, 100)
     #
@@ -139,14 +139,14 @@ def add_curve(view):
     # header = HeaderClass(width=10, height=10, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # lins = LinkClass('ID_LINK_6', nodes, width=6, header=header)
-    # #lins['BORDER_WIDTH'] = 2
-    # #lins['BORDER_COLOR'] = QColor(255, 100, 100, 200)
-    # lins['FILL_COLOR'] = QColor(100, 100, 255, 100)
-    # net.add_link(lins)
+    # link = LinkClass('ID_LINK_6', nodes, width=6, header=header)
+    # #link['BORDER_WIDTH'] = 2
+    # #link['BORDER_COLOR'] = QColor(255, 100, 100, 200)
+    # link['FILL_COLOR'] = QColor(100, 100, 255, 100)
+    # net.add_link(link)
     # net.add_node(nodes)
     #
-    # # Create hammer headed selfloop lins for ellipse nodes (width-major)
+    # # Create hammer headed selfloop link for ellipse nodes (width-major)
     # nodes = NodeClass('ID_NODE_7', 100, 80, pos=QPoint(x0-20, y0-100))
     # nodes['FILL_COLOR'] = QColor(200, 200, 255, 100)
     #
@@ -154,14 +154,14 @@ def add_curve(view):
     # header = HeaderClass(width=14, height=4, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # lins = LinkClass('ID_LINK_7', nodes, width=6, header=header)
-    # #lins['BORDER_WIDTH'] = 2
-    # #lins['BORDER_COLOR'] = QColor(200, 200, 255, 150)
-    # lins['FILL_COLOR'] = QColor(255, 100, 100, 250)
-    # net.add_link(lins)
+    # link = LinkClass('ID_LINK_7', nodes, width=6, header=header)
+    # #link['BORDER_WIDTH'] = 2
+    # #link['BORDER_COLOR'] = QColor(200, 200, 255, 150)
+    # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
+    # net.add_link(link)
     # net.add_node(nodes)
     #
-    # # Create arrow headed selfloop lins for ellipse nodes (width-major)
+    # # Create arrow headed selfloop link for ellipse nodes (width-major)
     # nodes = NodeClass('ID_NODE_8', 40, 30, pos=QPoint(x0 - 40, y0 - 150))
     # nodes['FILL_COLOR'] = QColor(100, 255, 100, 200)
     #
@@ -169,15 +169,15 @@ def add_curve(view):
     # header = HeaderClass(width=5, height=5, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # lins = LinkClass('ID_LINK_8', nodes, width=2, header=header)
-    # #lins['BORDER_WIDTH'] = 1
-    # #lins['BORDER_COLOR'] = QColor(200, 200, 255, 150)
-    # lins['FILL_COLOR'] = QColor(255, 100, 100, 250)
-    # net.add_link(lins)
+    # link = LinkClass('ID_LINK_8', nodes, width=2, header=header)
+    # #link['BORDER_WIDTH'] = 1
+    # #link['BORDER_COLOR'] = QColor(200, 200, 255, 150)
+    # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
+    # net.add_link(link)
     # net.add_node(nodes)
     #
     #
-    # # Create hammer headed selfloop lins for ellipse nodes (height-major)
+    # # Create hammer headed selfloop link for ellipse nodes (height-major)
     # nodes = NodeClass('ID_NODE_9', 80, 100, pos=QPoint(x0-40, y0-120))
     # nodes['FILL_COLOR'] = QColor(200, 200, 255, 100)
     #
@@ -185,13 +185,13 @@ def add_curve(view):
     # header = HeaderClass(width=14, height=4, offset=2)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # lins = LinkClass('ID_LINK_10', nodes, width=6, header=header)
+    # link = LinkClass('ID_LINK_10', nodes, width=6, header=header)
     #
-    # lins['FILL_COLOR'] = QColor(255, 150, 150, 250)
-    # net.add_link(lins)
+    # link['FILL_COLOR'] = QColor(255, 150, 150, 250)
+    # net.add_link(link)
     # net.add_node(nodes)
     #
-    # # Create arrow headed selfloop lins for ellipse nodes (height-major)
+    # # Create arrow headed selfloop link for ellipse nodes (height-major)
     # nodes = NodeClass('ID_NODE_10', 20, 40, pos=QPoint(x0 - 80, y0 - 180))
     # nodes['FILL_COLOR'] = QColor(200, 255, 200, 200)
     #
@@ -199,10 +199,10 @@ def add_curve(view):
     # header = HeaderClass(width=5, height=5, offset=2)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # lins = LinkClass('ID_LINK_11', nodes, width=2, header=header)
+    # link = LinkClass('ID_LINK_11', nodes, width=2, header=header)
     #
-    # lins['FILL_COLOR'] = QColor(255, 100, 100, 250)
-    # net.add_link(lins)
+    # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
+    # net.add_link(link)
     # net.add_node(nodes)
 
 if __name__ == '__main__':

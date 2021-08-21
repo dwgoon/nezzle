@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
-
-"""
-@author: Daewon Lee (dwl@kaist.ac.kr)
-"""
 
 __author__ = "Daewon Lee"
-__copyright__ = "Copyright 2016, KAIST SBi, Daewon Lee"
+__copyright__ = "Copyright 2016-2021, Daewon Lee, All Rights Reserved."
 __credits__ = ["Daewon Lee",]
-__license__ = "MIT" # GPL, LGPL, MIT, Apache 2.0
+__license__ = "MIT"
 __version__ = "0.0.1"
 __maintainer__ = "Daewon Lee (daewon4you@gmail.com)"
 __email__ = "daewon4you@gmail.com"

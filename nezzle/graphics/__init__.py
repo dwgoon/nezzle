@@ -8,7 +8,7 @@ from .nodes.basenode import BaseNode
 from .nodes.ellipsenode import EllipseNode
 from .nodes.ellipsenode import CircleNode
 
-from nezzle.graphics.header.header import HeaderClassFactory
+from nezzle.graphics.headers.headerclassfactory import HeaderClassFactory
 
 from .links.linkfactory import LinkClassFactory
 from .links.baselink import BaseLink

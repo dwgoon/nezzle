@@ -134,7 +134,7 @@ class CurvedLink(StraightLink):
         return np.isclose(control_angle, 0, atol=0.1) \
                or np.isclose(control_angle, np.pi, atol=1e-1)
 
-    def _initialize(self):
+    def initialize(self):
         self._identify_pos()
         self._create_control_items()
         self._create_subpoints()
@@ -262,4 +262,3 @@ class CurvedLink(StraightLink):
             self._create_curve_path()
         except FloatingPointError:
             super(StraightLink, self)._create_path()
-

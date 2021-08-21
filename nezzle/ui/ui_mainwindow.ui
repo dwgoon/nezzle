@@ -63,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>1127</width>
-     <height>36</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="ui_menuFile">
@@ -104,7 +104,20 @@
      <addaction name="ui_actionLockLinks"/>
      <addaction name="ui_actionLockLabels"/>
     </widget>
+    <widget class="QMenu" name="ui_menuConvert">
+     <property name="title">
+      <string>Convert</string>
+     </property>
+     <addaction name="ui_actionToEllipseNode"/>
+     <addaction name="ui_actionToRectangleNode"/>
+     <addaction name="separator"/>
+     <addaction name="ui_actionToStraightLink"/>
+     <addaction name="ui_actionToCurvedLink"/>
+     <addaction name="ui_actionToVerticalElbowLink"/>
+     <addaction name="ui_actionToHorizontalElbowLink"/>
+    </widget>
     <addaction name="ui_menuLock"/>
+    <addaction name="ui_menuConvert"/>
     <addaction name="ui_actionSelectAll"/>
    </widget>
    <widget class="QMenu" name="ui_menuLayout">
@@ -536,6 +549,36 @@
   <action name="ui_actionSelectAll">
    <property name="text">
     <string>Select All</string>
+   </property>
+  </action>
+  <action name="ui_actionToCurvedLink">
+   <property name="text">
+    <string>To Curved Link</string>
+   </property>
+  </action>
+  <action name="ui_actionToStraightLink">
+   <property name="text">
+    <string>To Straight Link</string>
+   </property>
+  </action>
+  <action name="ui_actionToVerticalElbowLink">
+   <property name="text">
+    <string>To Vertical Elbow Link</string>
+   </property>
+  </action>
+  <action name="ui_actionToHorizontalElbowLink">
+   <property name="text">
+    <string>To Horizontal Elbow Link</string>
+   </property>
+  </action>
+  <action name="ui_actionToEllipseNode">
+   <property name="text">
+    <string>To Ellipse Node</string>
+   </property>
+  </action>
+  <action name="ui_actionToRectangleNode">
+   <property name="text">
+    <string>To Rectangle Node</string>
    </property>
   </action>
  </widget>

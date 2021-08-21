@@ -25,14 +25,14 @@ def update(nav, net):
     x1 = 600.0
     y1 = 200.0
 
-    # A single arrow lins with circle nodes
+    # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
     src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
     tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = QColor(0, 0, 200, 100) #Qt.cyan
-    tgt['FILL_COLOR'] = QColor(0, 0, 200, 100) #Qt.cyan
+    src['FILL_COLOR'] = QColor(0, 0, 200) #, 100) #Qt.cyan
+    tgt['FILL_COLOR'] = QColor(0, 0, 200) #, 100) #Qt.cyan
 
     LinkClass = LinkClassFactory.create("VERTICAL_ELBOW_LINK")
 
@@ -64,14 +64,14 @@ def update(nav, net):
     x1 = 600.0
     y1 = 400.0
 
-    # A single arrow lins with circle nodes
+    # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
     src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
     tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = QColor(0, 0, 200, 100)  # Qt.cyan
-    tgt['FILL_COLOR'] = QColor(0, 0, 200, 100)  # Qt.cyan
+    src['FILL_COLOR'] = QColor(0, 0, 200) #, 100)  # Qt.cyan
+    tgt['FILL_COLOR'] = QColor(0, 0, 200) #, 100)  # Qt.cyan
 
     LinkClass = LinkClassFactory.create("HORIZONTAL_ELBOW_LINK")
 

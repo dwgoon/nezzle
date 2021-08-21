@@ -84,7 +84,7 @@ class ExportImageDialog(QDialog, Ui_ExportImageDialog):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setWindowTitle("Open a network file")
-            msg.setText("An inappropriate file type for network data.")
+            msg.setText("An invalid file type for image.")
             msg.exec()
         # end of except
 

@@ -63,7 +63,7 @@ class ElbowLink(StraightLink):
         self._ctrl_points[ix].setY(value)
         return value
 
-    def _initialize(self):
+    def initialize(self):
         self._identify_pos()
         self._create_connectors()
         self._create_control_items()
@@ -98,10 +98,10 @@ class ElbowLink(StraightLink):
         super().paint(painter, option, widget)
 
         ## [DEBUG] Draw the bounding rect
-        rect = self.boundingRect()
-        painter.setPen(QPen(QColor(0, 255, 0, 100)))
-        painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
-        painter.drawRect(rect)
+        # rect = self.boundingRect()
+        # painter.setPen(QPen(QColor(0, 255, 0, 100)))
+        # painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
+        # painter.drawRect(rect)
         #######################
 
         if self.isSelected():
@@ -115,9 +115,9 @@ class ElbowLink(StraightLink):
             #painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
             # Draw connectors
-            painter.setPen(Qt.red)
-            for con in self._pos_connectors:
-                painter.drawEllipse(con, 2, 2)
+            # painter.setPen(Qt.red)
+            # for con in self._pos_connectors:
+            #     painter.drawEllipse(con, 2, 2)
 
             # painter.setPen(Qt.blue)
             # for con in self._pos_horizontal_connectors:
@@ -130,40 +130,41 @@ class ElbowLink(StraightLink):
         #     elem = self._path_paint.elementAt(i)
         #     painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
 
-        # Draw central points
-        painter.setPen(Qt.black)
-        painter.setBrush(Qt.blue)
-        for elem in self._cps:
-            painter.drawEllipse(-0.5+elem.x(), -0.5+elem.y(), 1.5, 1.5)
+        # # Draw central points
+        # painter.setPen(Qt.black)
+        # painter.setBrush(Qt.blue)
+        # for elem in self._cps:
+        #     painter.drawEllipse(-0.5+elem.x(), -0.5+elem.y(), 1.5, 1.5)
+        #
+        # # Draw forward line points
+        # painter.setPen(Qt.yellow)
+        # painter.setBrush(Qt.yellow)
+        # for elem in self._fps:
+        #     painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
+        #
+        # # Draw backward line points
+        # painter.setPen(Qt.cyan)
+        # painter.setBrush(Qt.cyan)
+        # for elem in self._bps:
+        #     painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
 
-        # Draw forward line points
-        painter.setPen(Qt.yellow)
-        painter.setBrush(Qt.yellow)
-        for elem in self._fps:
-            painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
-
-        # Draw backward line points
-        painter.setPen(Qt.cyan)
-        painter.setBrush(Qt.cyan)
-        for elem in self._bps:
-            painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
-
-        if self.header:
-#            painter.setPen(Qt.black)
-#            painter.setBrush(Qt.white)
-#            painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
-
-            painter.setPen(Qt.green)
-            painter.setBrush(Qt.green)
-            for i in range(0, 3):
-                elem = self._path_header.elementAt(i)
-                painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
-
-            painter.setPen(Qt.blue)
-            painter.setBrush(Qt.blue)
-            for i in range(3, self._path_header.elementCount()):
-                elem = self._path_header.elementAt(i)
-                painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
+        # [DEBUG]
+        # if self.header:
+        #    painter.setPen(Qt.black)
+        #    painter.setBrush(Qt.white)
+        #    painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
+        #
+        #     painter.setPen(Qt.green)
+        #     painter.setBrush(Qt.green)
+        #     for i in range(0, 3):
+        #         elem = self._path_header.elementAt(i)
+        #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
+        #
+        #     painter.setPen(Qt.blue)
+        #     painter.setBrush(Qt.blue)
+        #     for i in range(3, self._path_header.elementCount()):
+        #         elem = self._path_header.elementAt(i)
+        #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
 
     def is_header_visible(self):
         if not self.header:
@@ -354,6 +355,8 @@ class ElbowLink(StraightLink):
 @Lockable
 class VerticalElbowLink(ElbowLink):
 
+    ITEM_TYPE = 'VERTICAL_ELBOW_LINK'
+
     def _create_control_items(self):
         m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
         m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
@@ -399,6 +402,8 @@ class VerticalElbowLink(ElbowLink):
 
 @Lockable
 class HorizontalElbowLink(ElbowLink):
+
+    ITEM_TYPE = 'HORIZONTAL_ELBOW_LINK'
 
     def _create_control_items(self):
         m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)

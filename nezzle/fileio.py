@@ -2,6 +2,7 @@ import os
 import random
 import json
 import codecs
+from collections import defaultdict
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
@@ -23,6 +24,53 @@ import math
 from nezzle.utils.math import rotate, dist, internal_division
 
 
+def read_metadata_from_sif(fpath):
+    metadata = {}
+    interactions = defaultdict(int)
+    with codecs.open(fpath, "r", encoding="utf-8-sig") as fin:
+        for i, line in enumerate(fin):
+            if line.isspace():
+                continue
+
+            items = line.split()
+            str_src, str_link_type, str_tgt = items[:3]
+            interactions[str_link_type.strip()] += 1
+
+    metadata["NETWORK_NAME"] = os.path.basename(fpath)
+    metadata["INTERACTIONS"] = interactions
+    return metadata
+
+
+def read_metadata_from_json(fpath):
+    metadata = {}
+    interactions = defaultdict(int)
+    with codecs.open(fpath, "r", encoding="utf-8") as fin:
+        dict_net = json.loads(fin.read())
+
+    for link in dict_net["LINKS"]:
+        str_header_type = link["HEADER"]["TYPE"].title()
+        interactions[str_header_type] += 1
+
+    metadata["NETWORK_NAME"] = dict_net["NAME"]
+    metadata["INTERACTIONS"] = interactions
+    return metadata
+
+def read_metadata(fpath):
+    if not fpath:
+        raise ValueError("Invalid file path: %s"%(fpath))
+
+    file_name_ext = os.path.basename(fpath)
+    fname, fext = os.path.splitext(file_name_ext)
+
+    if file_name_ext.endswith('.sif'):
+        return read_metadata_from_sif(fpath)
+    elif file_name_ext.endswith('.json'):
+        return read_metadata_from_json(fpath)
+
+    else:
+        raise ValueError("Unsupported file type: %s"%(fext))
+
+
 def read_network(fpath, link_map=None):
     if not fpath:
         raise ValueError("Invalid file path: %s"%(fpath))
@@ -32,7 +80,7 @@ def read_network(fpath, link_map=None):
     if file_name_ext.endswith('.sif'):
         return read_sif(fpath, link_map)
     elif file_name_ext.endswith('.json'):
-        return read_json(fpath)
+        return read_json(fpath, link_map)
 
     else:
         raise ValueError("Unsupported file type: %s"%(fext))
@@ -116,7 +164,7 @@ def read_sif(fpath, link_map=None):
             if HeaderClass:
                 header = HeaderClass()
 
-            if str_src == str_tgt: # Self-loop lins
+            if str_src == str_tgt: # Self-loop link
                 LinkClass = LinkClassFactory.create('SELFLOOP_LINK')
                 iden = "%s%s%s" % (str_src, str_link_type, str_src)
                 link = LinkClass(iden=iden,
@@ -142,14 +190,16 @@ def read_sif(fpath, link_map=None):
         # end of for: reading each line of SIF file
 
         # Add nodes and labels in network
-        font = QFont()
-        font.setFamily("Tahoma")
-        font.setPointSize(10)
+        # font = QFont()
+        # font.setFamily("Tahoma")
+        # font.setPointSize(10)
         LabelClass = LabelClassFactory.create("TEXT_LABEL")
         for str_name, node in nodes.items():
             net.add_node(node)
             label = LabelClass(node, str_name)
-            label.font = font
+            #label.font = font
+            label["FONT_FAMILY"] = "Tahoma"
+            label["FONT_SIZE"] = 10
             rect = label.boundingRect()
             label.setPos(-rect.width()/2, -rect.height()/2)
             net.add_label(label)
@@ -172,10 +222,21 @@ def read_sif(fpath, link_map=None):
 # end of def
 
 
-def read_json(fpath):
+def read_json(fpath, link_map):
     with codecs.open(fpath, "r", encoding="utf-8") as fin:
-        d = json.loads(fin.read())
-    return Network.from_dict(d)
+        dict_net = json.loads(fin.read())
+
+        for link in dict_net["LINKS"]:
+            header_type_ori = link["HEADER"]["TYPE"].title()
+            header_type_new = link_map[header_type_ori]
+            link["HEADER"]["TYPE"] = header_type_new.upper()
+
+
+    print(dict_net)
+    return Network.from_dict(dict_net)
+
+
+
 
 
 def write_network(net, fpath):

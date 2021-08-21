@@ -75,11 +75,11 @@ def to_graphics(dg, iden, no_link_type=False):
                 elif sign_link < 0:
                     str_link_type = str_inh
                 else:
-                    raise ValueError("Undefined lins sign: %s"%(sign_link))
+                    raise ValueError("Undefined link sign: %s"%(sign_link))
 
         if not header and not no_link_type \
            and (str_link_type not in (str_act, str_inh)):
-            raise ValueError("Undefined lins type: %s"%(str_link_type))
+            raise ValueError("Undefined link type: %s"%(str_link_type))
 
         if 'POS_X' in dg.nodes[str_src]:
             sx = dg.nodes[str_src]['POS_X']
@@ -153,8 +153,8 @@ def to_graphics(dg, iden, no_link_type=False):
             if HeaderClass:
                 header = HeaderClass()
 
-        # Add lins with header
-        if str_src == str_tgt:  # Self-loop lins
+        # Add link with header
+        if str_src == str_tgt:  # Self-loop link
             LinkClass = LinkClassFactory.create('SELFLOOP_LINK')
             iden = "%s%s%s" % (str_src, str_link_type, str_src)
             link = LinkClass(iden=iden,

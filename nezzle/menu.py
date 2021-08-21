@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import gc
 from traceback import format_exc
 
 from qtpy.QtWidgets import QWidget
@@ -34,6 +35,11 @@ from nezzle import fileio
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
 
+from nezzle.graphics.links.linkconverter import LinkConverter
+from nezzle.graphics.links.baselink import BaseLink
+from nezzle.graphics.links.straightlink import StraightLink
+from nezzle.graphics.links.curvedlink import CurvedLink
+from nezzle.graphics.links.elbowlink import VerticalElbowLink, HorizontalElbowLink
 
 class MenuActionHandler(QWidget):
     """
@@ -45,7 +51,7 @@ class MenuActionHandler(QWidget):
         super().__init__()
         self.mw = mainWindow
         self.initialize_actions()
-        #self.openNetworkDialog = OpenNetworkDialog(parent=self.mw)
+        self.openNetworkDialog = OpenNetworkDialog(parent=self.mw)
         self.exportImageDialog = ExportImageDialog(parent=self.mw)
         
         
@@ -89,6 +95,27 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionLockLabels.triggered.connect(
             self.process_lock_labels
         )
+
+        # Select -> Convert -> To
+        self.mw.ui_actionToEllipseNode.triggered.connect(
+            self.process_convert_to_ellipse_node
+        )
+        self.mw.ui_actionToRectangleNode.triggered.connect(
+            self.process_convert_to_rectangle_node
+        )
+        self.mw.ui_actionToStraightLink.triggered.connect(
+            self.process_convert_to_straight_link
+        )
+        self.mw.ui_actionToCurvedLink.triggered.connect(
+            self.process_convert_to_curved_link
+        )
+        self.mw.ui_actionToVerticalElbowLink.triggered.connect(
+            self.process_convert_to_vertical_elbow_link
+        )
+        self.mw.ui_actionToHorizontalElbowLink.triggered.connect(
+            self.process_convert_to_horizontal_elbow_link
+        )
+
 
         # Select -> Select All
         self.mw.ui_actionSelectAll.triggered.connect(
@@ -228,13 +255,13 @@ class MenuActionHandler(QWidget):
     def process_open_network(self):
 
         while True:
-            # self.openNetworkDialog.exec()
-            #
-            # if self.openNetworkDialog.result() == QDialog.Rejected:
-            #     return
-            #
-            # fpath = self.openNetworkDialog.fpath
-            # networkName = self.openNetworkDialog.network_name
+            self.openNetworkDialog.exec()
+            choice = self.openNetworkDialog.result()
+            if choice == QDialog.Rejected:
+                 return
+
+            fpath = self.openNetworkDialog.fpath
+            # network_name = self.openNetworkDialog.network_name
             # actSym = self.openNetworkDialog.act_sym
             # inhSym = self.openNetworkDialog.inh_sym
             #
@@ -268,26 +295,33 @@ class MenuActionHandler(QWidget):
             #     actSym = None
             #     inhSym = None
 
+            """
             dialog = QFileDialog(self)
             dialog.setWindowTitle("Open a network file")
             dialog.setAcceptMode(QFileDialog.AcceptOpen)
             dialog.setNameFilters([self.tr("Text files (*.sif *.json)")])
             dialog.setFileMode(QFileDialog.ExistingFile)
             choice = dialog.exec()
-            print("choice:", choice)
+            """
+
             if choice == QDialog.Rejected:
                 break
             elif choice == QDialog.Accepted:
-                fpath = dialog.selectedFiles()[0]
+                # fpath = dialog.selectedFiles()[0]
                 fpath = fpath.strip()
                 try:
-                    net = fileio.read_network(fpath)
+                    net = fileio.read_network(fpath, self.openNetworkDialog.link_map)
                 except Exception as err:
                     err_msg = "An error has occurred during opening the file.\n%s"
                     self.show_error("Open a network file", err_msg % format_exc())
                     continue
 
-                net.name = os.path.basename(fpath)
+                network_name = self.openNetworkDialog.network_name
+                if network_name:
+                    net.name = network_name
+                else:
+                    net.name = os.path.basename(fpath)
+
                 self.mw.sv_manager.set_current_view_scene(net.scene, net.name)
                 self.mw.nt_manager.append_item(net)
                 # self.mw.ct_manager.update_console_variables()
@@ -381,6 +415,54 @@ class MenuActionHandler(QWidget):
     def process_lock_links(self, checked):
         ss = get_system_state()
         ss.set_locked(Lock.LINKS, checked)
+
+    def process_convert_to_ellipse_node(self):
+        pass
+
+    def process_convert_to_rectangle_node(self):
+        pass
+
+    def _process_convert_to_link(self, linkclass):
+        item = self.mw.nt_manager.current_item
+        if not item:
+            return
+
+        net = item.data()
+        scene = net.scene
+        for obj in scene.selectedItems():
+            if not isinstance(obj, BaseLink):
+                continue
+
+            if type(obj) == linkclass:
+                continue
+
+            # link = linkclass.from_dict(attr=obj.to_dict(),
+            #                            source=obj.source,
+            #                            target=obj.target)
+
+            new_link = LinkConverter.to_link(obj, linkclass)
+
+            net.remove_link(obj)
+            net.add_link(new_link)
+        # end of for
+
+        gc.collect()  # Collect garbage objects, which were removed from the network.
+
+    @Slot()
+    def process_convert_to_straight_link(self):
+        self._process_convert_to_link(StraightLink)
+
+    @Slot()
+    def process_convert_to_curved_link(self):
+        self._process_convert_to_link(CurvedLink)
+
+    @Slot()
+    def process_convert_to_vertical_elbow_link(self):
+        self._process_convert_to_link(VerticalElbowLink)
+
+    def process_convert_to_horizontal_elbow_link(self):
+        self._process_convert_to_link(HorizontalElbowLink)
+
 
     @Slot(bool)
     def process_select_all(self):

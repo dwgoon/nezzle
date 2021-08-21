@@ -50,7 +50,7 @@ class SelfloopLink(BaseLink):
     #     self._angle_offset = value
     #     return value
 
-    def _initialize(self):
+    def initialize(self):
         self._create_path()
 
     def _identify_pos(self):

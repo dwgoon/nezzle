@@ -154,7 +154,7 @@ class BaseLink(PainterOptionItem):
         if header:
             self._header.parent = self
 
-        self._initialize()
+        self.initialize()
 
     def __str__(self):
         return 'Link(%s)'%(self._iden)
@@ -282,7 +282,7 @@ class BaseLink(PainterOptionItem):
     def copy(self):
         return self.from_dict(self.to_dict())
 
-    def _initialize(self):
+    def initialize(self):
         pass
 
     def _identify_pos(self):
@@ -319,7 +319,9 @@ class TwoNodeLink(BaseLink):
         super().__init__(iden, *args, **kwargs)
 
     def __str__(self):
-        return 'Link(%s, %s)'%(self.source.name, self.target.name)
+        #return 'Link(%s, %s)'%(self.source.name, self.target.name)
+        str_link_type = self.ITEM_TYPE.replace('_', '').title()
+        return "%s(%s, %s)"%(str_link_type, self.source.name, self.target.name)
 
     # Read-only properties
     @property
@@ -333,14 +335,14 @@ class TwoNodeLink(BaseLink):
     @property
     def pos_src(self):
         """
-        The position of source relative to its parent lins
+        The position of source relative to its parent link
         """
         return self._source.pos() - self.pos()
 
     @property
     def pos_tgt(self):
         """
-        The position of target relative to its parent lins
+        The position of target relative to its parent link
         """
         return self._target.pos() - self.pos()
 
@@ -349,7 +351,7 @@ class TwoNodeLink(BaseLink):
 
     def are_nodes_close(self):
         """Decide whether the two nodes are overlapped
-        to show the graphics of lins appropriately.
+        to show the graphics of link appropriately.
         """
         v = self.pos_tgt - self.pos_src
         angle_rad = np.arccos(v.x() / length(v))

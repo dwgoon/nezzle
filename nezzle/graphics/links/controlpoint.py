@@ -85,7 +85,9 @@ class BaseControlPoint(QGraphicsItem, Movable):
             painter.setBrush(Qt.white)
             painter.drawEllipse(self.small_rect)
 
-        self.scene().invalidate()
+        scene = self.scene()
+        if scene:
+            scene.invalidate()
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
