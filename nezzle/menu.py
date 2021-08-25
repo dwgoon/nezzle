@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 import os
-import gc
 from traceback import format_exc
 
 from qtpy.QtWidgets import QWidget
@@ -35,11 +33,18 @@ from nezzle import fileio
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
 
+from nezzle.graphics.nodes.nodeconverter import NodeConverter
+from nezzle.graphics.nodes.basenode import BaseNode
+from nezzle.graphics.nodes.ellipsenode import EllipseNode
+from nezzle.graphics.nodes.rectangleenode import RectangleNode
+
 from nezzle.graphics.links.linkconverter import LinkConverter
 from nezzle.graphics.links.baselink import BaseLink
+from nezzle.graphics.links.selflooplink import SelfloopLink
 from nezzle.graphics.links.straightlink import StraightLink
 from nezzle.graphics.links.curvedlink import CurvedLink
 from nezzle.graphics.links.elbowlink import VerticalElbowLink, HorizontalElbowLink
+
 
 class MenuActionHandler(QWidget):
     """
@@ -393,12 +398,10 @@ class MenuActionHandler(QWidget):
 
     @Slot(bool)
     def process_view_networks_dock(self, checked):
-        print("View Networks Dock!")
         self.mw.ui_netDock.setVisible(checked)
 
     @Slot(bool)
     def process_view_console_dock(self, checked):
-        print("View Console Dock!")
         self.mw.ui_consoleDock.setVisible(checked)
 
     @Slot(bool)
@@ -416,11 +419,30 @@ class MenuActionHandler(QWidget):
         ss = get_system_state()
         ss.set_locked(Lock.LINKS, checked)
 
+    def _process_convert_to_node(self, nodeclass):
+        item = self.mw.nt_manager.current_item
+        if not item:
+            return
+
+        net = item.data()
+        scene = net.scene
+        for obj in scene.selectedItems():
+            if not isinstance(obj, BaseNode):
+                continue
+
+            if type(obj) == nodeclass:
+                continue
+
+            new_node = NodeConverter.to_node(obj, nodeclass)
+            net.replace_node(obj, new_node)
+            #net.add_node(new_node)
+        # end of for
+
     def process_convert_to_ellipse_node(self):
-        pass
+        self._process_convert_to_node(EllipseNode)
 
     def process_convert_to_rectangle_node(self):
-        pass
+        self._process_convert_to_node(RectangleNode)
 
     def _process_convert_to_link(self, linkclass):
         item = self.mw.nt_manager.current_item
@@ -436,17 +458,10 @@ class MenuActionHandler(QWidget):
             if type(obj) == linkclass:
                 continue
 
-            # link = linkclass.from_dict(attr=obj.to_dict(),
-            #                            source=obj.source,
-            #                            target=obj.target)
-
             new_link = LinkConverter.to_link(obj, linkclass)
-
             net.remove_link(obj)
             net.add_link(new_link)
         # end of for
-
-        gc.collect()  # Collect garbage objects, which were removed from the network.
 
     @Slot()
     def process_convert_to_straight_link(self):

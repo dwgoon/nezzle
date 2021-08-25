@@ -240,7 +240,6 @@ class VerticalConnectorControlPoint(ConnectorControlPoint):
             conn1, conn2 = cp.connectors
             dist_conns = np.abs(conn1.y() - conn2.y())
             if dist_conns < hwp:
-                print("[Conns y-coords]", [conn1.y(), conn2.y(), self.y()])
                 self.setY(conn1.y() + conn2.y() - self.y())
                 self.parent.update()
                 break

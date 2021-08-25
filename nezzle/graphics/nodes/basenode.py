@@ -78,7 +78,12 @@ class BaseNode(PainterOptionItem):
 
         return super().itemChange(change, value)
 
+    def has_link(self, link):
+        return link in self._links
+
     def add_link(self, link):
+        if self.has_link(link):
+            return
         self._links.append(link)
 
     def remove_link(self, link):

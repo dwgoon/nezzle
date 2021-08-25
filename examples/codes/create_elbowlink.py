@@ -28,11 +28,11 @@ def update(nav, net):
     # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
-    src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
-    tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
+    src = NodeClass('source1', 80, 40, pos=QPoint(x1, y1))
+    tgt = NodeClass('target1', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = QColor(0, 0, 200) #, 100) #Qt.cyan
-    tgt['FILL_COLOR'] = QColor(0, 0, 200) #, 100) #Qt.cyan
+    src['FILL_COLOR'] = QColor(100, 100, 200) #, 100) #Qt.cyan
+    tgt['FILL_COLOR'] = QColor(100, 100, 200) #, 100) #Qt.cyan
 
     LinkClass = LinkClassFactory.create("VERTICAL_ELBOW_LINK")
 
@@ -47,7 +47,7 @@ def update(nav, net):
 
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
 
-    for (node, name) in [(src, "Source"), (tgt, "Target")]:
+    for (node, name) in [(src, "Source1"), (tgt, "Target1")]:
         label = LabelClass(node, name)
         label["FONT_SIZE"] = 10
         rect = label.boundingRect()
@@ -67,11 +67,11 @@ def update(nav, net):
     # A single arrow link with circle nodes
     NodeClass = NodeClassFactory.create("RECT_NODE")
 
-    src = NodeClass('source', 80, 40, pos=QPoint(x1, y1))
-    tgt = NodeClass('target', 80, 40, pos=QPoint(x0, y0))
+    src = NodeClass('source2', 80, 40, pos=QPoint(x1, y1))
+    tgt = NodeClass('target2', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = QColor(0, 0, 200) #, 100)  # Qt.cyan
-    tgt['FILL_COLOR'] = QColor(0, 0, 200) #, 100)  # Qt.cyan
+    src['FILL_COLOR'] = QColor(100, 150, 100) #, 100)  # Qt.cyan
+    tgt['FILL_COLOR'] = QColor(100, 150, 100) #, 100)  # Qt.cyan
 
     LinkClass = LinkClassFactory.create("HORIZONTAL_ELBOW_LINK")
 
@@ -86,7 +86,7 @@ def update(nav, net):
 
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
 
-    for (node, name) in [(src, "Source"), (tgt, "Target")]:
+    for (node, name) in [(src, "Source2"), (tgt, "Target2")]:
         label = LabelClass(node, name)
         label["FONT_SIZE"] = 10
         rect = label.boundingRect()

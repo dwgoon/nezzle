@@ -9,6 +9,7 @@ from qtpy.QtWidgets import QMenu
 from qtpy.QtWidgets import QAction
 
 from qtpy import QtGui
+from qtpy.QtGui import QPixmapCache
 from qtpy.QtGui import QPainter
 from qtpy.QtGui import QPainterPath
 from qtpy.QtGui import QTransform
@@ -33,7 +34,9 @@ class GraphicsView(QGraphicsView):
         #self.dragOver = False
 
         # The default of cache mode is no cache (0)
-        #self.setCacheMode(QGraphicsView.CacheBackground)
+        self.setCacheMode(QGraphicsView.CacheBackground)
+
+        QPixmapCache.setCacheLimit(102400)
         self.scale(1.0, 1.0)
 
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
@@ -47,7 +50,7 @@ class GraphicsView(QGraphicsView):
         if self.mw:
             self.pop_menu = QMenu(self)
             self.pop_menu.addMenu(self.mw.ui_menuAlign)  # Use the existing one.
-            self.pop_menu.addMenu(self.mw.ui_menuSelect)
+            self.pop_menu.addMenu(self.mw.ui_menuGraphics)
 
     def on_context_menu(self, event):
         self.pop_menu.exec_(self.mapToGlobal(event.pos()))
@@ -183,6 +186,8 @@ class GraphicsScene(QGraphicsScene):
         super().__init__(*args, parent, **kwargs)
         self.selectionChanged.connect(self.on_selection_changed)
         self.setBackgroundBrush(Qt.transparent)
+
+        self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
     def selected_movable_items(self):
         items_selected = self.selectedItems()

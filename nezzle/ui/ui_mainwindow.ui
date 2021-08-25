@@ -63,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>1127</width>
-     <height>26</height>
+     <height>36</height>
     </rect>
    </property>
    <widget class="QMenu" name="ui_menuFile">
@@ -92,9 +92,9 @@
     <addaction name="ui_actionCopy"/>
     <addaction name="ui_actionPaste"/>
    </widget>
-   <widget class="QMenu" name="ui_menuSelect">
+   <widget class="QMenu" name="ui_menuGraphics">
     <property name="title">
-     <string>Select</string>
+     <string>Graphics</string>
     </property>
     <widget class="QMenu" name="ui_menuLock">
      <property name="title">
@@ -145,7 +145,7 @@
    <addaction name="ui_menuFile"/>
    <addaction name="ui_menuEdit"/>
    <addaction name="ui_menuView"/>
-   <addaction name="ui_menuSelect"/>
+   <addaction name="ui_menuGraphics"/>
    <addaction name="ui_menuLayout"/>
   </widget>
   <widget class="QStatusBar" name="ui_statusbar"/>

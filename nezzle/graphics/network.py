@@ -98,18 +98,39 @@ class Network(MappableItem):
         self.scene.removeItem(node)
         del self.nodes[iden]
 
+    def replace_node(self, old_node, new_node):
+        while old_node.links:
+            link = old_node.links.pop()  # Remove all links from old node,
+            if id(link.source) == id(old_node):
+                link.source = new_node
+                new_node.add_link(link)
+            elif id(link.target) == id(old_node):
+                link.target = new_node
+                new_node.add_link(link)
+            else:
+                raise RuntimeError("[SYSTEM] this point should not be reached!")
+        # end of while
+
+        # Add the new node.
+        self.add_node(new_node)
+
+        # Re-organize children.
+        for child in old_node.childItems():
+            child.setParentItem(new_node)
+
+        # Remove the old node from the scene.
+        self.scene.removeItem(old_node)
+
+
     def add_link(self, link):
         """Add a links object.
 
-        Parameters
-        ----------
-        link : nezzle.graphics.BaseLink
-            Link object derived from nezzle.graphics.BaseLink.
+        Args:
+            link : nezzle.graphics.BaseLink
+                Link object derived from nezzle.graphics.BaseLink.
 
-        Returns
-        -------
-        None
-
+        Returns:
+            None
         """
 
         link.setZValue(-1)

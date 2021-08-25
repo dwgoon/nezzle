@@ -20,6 +20,7 @@ from nezzle.graphics import quadbezier
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics.nodes.basenode import BaseNode
 
 
 class BaseLink(PainterOptionItem):
@@ -319,19 +320,34 @@ class TwoNodeLink(BaseLink):
         super().__init__(iden, *args, **kwargs)
 
     def __str__(self):
-        #return 'Link(%s, %s)'%(self.source.name, self.target.name)
         str_link_type = self.ITEM_TYPE.replace('_', '').title()
         return "%s(%s, %s)"%(str_link_type, self.source.name, self.target.name)
 
-    # Read-only properties
+    def __eq__(self, other):
+        return id(other) == id(self)
+
+
     @property
     def source(self):
         return self._source
+
+    @source.setter
+    def source(self, obj: BaseNode):
+        if not obj.has_link(self):
+            obj.add_link(self)
+        self._source = obj
 
     @property
     def target(self):
         return self._target
 
+    @target.setter
+    def target(self, obj: BaseNode):
+        if not obj.has_link(self):
+            obj.add_link(self)
+        self._target = obj
+
+    # Read-only properties
     @property
     def pos_src(self):
         """
