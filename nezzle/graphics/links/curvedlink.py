@@ -54,32 +54,23 @@ class CurvedLink(StraightLink):
         self._ctrl_point.setY(value)
         return value
 
-    # def boundingRect(self):
-    #
-    #     # All self.pos_xxxx are relative positions to the this link.
-    #     # Thus, the origin of self.pos_xxxx is actually the position of this link.
-    #     if self.is_straight():
-    #         return super().boundingRect()
-    #
-    #     for i in range(self._path_paint.elementCount()):
-    #         print(i, self._path_paint.elementAt(i))
-    #
-    #     pad_x = self.width
-    #     pad_y = 2 * self._ctrl_point.radius  # Padding with the radius of control point
-    #     max_x = max([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) + pad_x
-    #     max_y = max([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) + pad_y
-    #
-    #     min_x = min([self.pos_ctrl.x(), self.pos_src.x(), self.pos_tgt.x()]) - pad_x
-    #     min_y = min([self.pos_ctrl.y(), self.pos_src.y(), self.pos_tgt.y()]) - pad_y
-    #
-    #     rect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y)
-    #     return rect
-
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedChange:
             self._ctrl_point.update()
 
         return super().itemChange(change, value)
+
+    def update(self):
+        self.update_ctrl_points()
+        super().update()
+
+    def update_ctrl_points(self):
+        cp = self._ctrl_point
+        if self.is_node_selected():
+            cp.setVisible(False)
+        else:
+            cp.setVisible(True)
+
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
@@ -96,9 +87,10 @@ class CurvedLink(StraightLink):
             painter.drawEllipse(-2.5, -2.5, 5, 5)
             painter.setPen(QColor(50, 50, 50, 100))
 
-            # Draw control lines
-            painter.drawLine(self.pos_ctrl, self.pos_src)
-            painter.drawLine(self.pos_ctrl, self.pos_tgt)
+            if not self.is_node_selected():
+                # Draw control lines
+                painter.drawLine(self.pos_ctrl, self.pos_src)
+                painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
         ## [DEBUG]
         # if self.header:
@@ -188,7 +180,6 @@ class CurvedLink(StraightLink):
         ix = np.argmax(rchange < 5e-2)
         t = self._arr_t[ix]
         self._t_header = t
-        #print("t: %f"%(t))
 
         ph = (1-t)**2*p1 + 2*(1-t)*t*pc + t**2*p2
         self.pos_header.setX(ph.x())

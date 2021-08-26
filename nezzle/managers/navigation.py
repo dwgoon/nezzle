@@ -71,10 +71,8 @@ class NavigationTreeManager(QObject):
 
     @Slot(QEvent)
     def keyPressEvent(self, event):
-        print("KeyPressEvent in navigation")
         if event.key() == Qt.Key_Delete:
             self.remove_selected_items()
-
 
     @Slot(QModelIndex, QModelIndex)
     def on_current_changed(self, current, previous):
@@ -83,7 +81,6 @@ class NavigationTreeManager(QObject):
             self.mw.ct_manager.update_console_variables()
             return
 
-        #print("current ind: ", current.row())
         model = self.tree_view.model()
         item = model.itemFromIndex(current)
         net = item.data()
@@ -93,39 +90,7 @@ class NavigationTreeManager(QObject):
 
     @Slot(QItemSelection, QItemSelection)
     def on_selection_changed(self, selected, deselected):
-        if selected:
-            print("[NAV] selected: ", [ind.row() for ind in selected.indexes()])
-
-        if deselected:
-            print("[NAV] deselected: ", [ind.row() for ind in deselected.indexes()])
-
-
         self.mw.sv_manager.current_view.enable_menu_align()
-        # scene_selected = self.mw.sv_manager.current_view.scene()
-        # if len(scene_selected.selectedItems()) > 1:
-        #     self.mw.ui_menuAlign.setEnabled(True)
-        # else:
-        #     self.mw.ui_menuAlign.setEnabled(False)
-
-
-        #ind_selected = self.tree_view.selectedIndexes()
-        # if len(ind_selected) >= 1:
-        #     pass
-            # idx = ind_selected[-1]
-            # model = self.tree_view.model()
-            # item = model.itemFromIndex(idx)
-            # net = item.data()
-            #net = self.current_item.data()
-            #ind = self.tree_view.currentIndex()
-            #model = self.tree_view.model()
-            #item = model.itemFromIndex(ind)
-            # print("current ind: ", ind.row())
-            # if item:
-            #     net = item.data()
-            #     self.action_remove_selected.setEnabled(True)
-            #     self.mw.sv_manager.set_current_view_scene(net.scene, net.name)
-            #     self.mw.ct_manager.update_console_variables()
-            #     print("%s is selected."%(net))
 
     def append_item(self, net):
         item = QStandardItem(net.name)

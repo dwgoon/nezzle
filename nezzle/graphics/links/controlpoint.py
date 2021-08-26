@@ -96,6 +96,9 @@ class BaseControlPoint(QGraphicsItem, Movable):
 
 class ControlPoint(BaseControlPoint):
 
+    def is_movable(self):  # inherited from Movable
+        return True
+
     def itemChange(self, change, value):
 
         if change == QGraphicsItem.ItemPositionChange:

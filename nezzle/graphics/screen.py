@@ -1,24 +1,19 @@
-# -*- coding:utf-8 -*-
-
 from qtpy import QtWidgets
-from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtWidgets import QGraphicsScene
 from qtpy.QtWidgets import QGraphicsView
 from qtpy.QtWidgets import QRubberBand
 from qtpy.QtWidgets import QMenu
-from qtpy.QtWidgets import QAction
 
-from qtpy import QtGui
+
+
+from qtpy.QtCore import Qt
+from qtpy.QtGui import QKeyEvent
 from qtpy.QtGui import QPixmapCache
 from qtpy.QtGui import QPainter
-from qtpy.QtGui import QPainterPath
 from qtpy.QtGui import QTransform
-from qtpy.QtGui import QPen
 
 from qtpy import QtCore
 from qtpy.QtCore import Qt
-from qtpy.QtCore import QRect, QRectF
-from qtpy.QtCore import QSize
 
 import numpy as np
 
@@ -31,7 +26,6 @@ class GraphicsView(QGraphicsView):
         self.setRenderHint(QPainter.Antialiasing)
         self.setRenderHint(QPainter.TextAntialiasing)
         self.rubberBand = QRubberBand(QRubberBand.Rectangle, self)
-        #self.dragOver = False
 
         # The default of cache mode is no cache (0)
         self.setCacheMode(QGraphicsView.CacheBackground)
@@ -43,8 +37,7 @@ class GraphicsView(QGraphicsView):
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.SmartViewportUpdate)
 
         self.setAcceptDrops(True)
-        #self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        #self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
 
         # Create context menu
         if self.mw:
@@ -71,8 +64,6 @@ class GraphicsView(QGraphicsView):
             item_clicked = self.scene().itemAt(self.mapToScene(event.pos()),
                                                QTransform())
 
-            #print("Item under mouse: %s"%item_clicked)
-
             # Process the context menu actions such as alignment.
             if event.button() == Qt.RightButton:
                 self.enable_menu_align()
@@ -95,30 +86,38 @@ class GraphicsView(QGraphicsView):
 
     def wheelEvent(self, event):
         ad = -event.angleDelta().y()
-        #factor = 1.41 ** (-ad / 240.0)
-
+        # factor = 1.41 ** (-ad / 240.0)
         if ad < 0:
             factor = 0.9
         else:
             factor = 1.1
 
         self.scale(factor, factor)
-        #print("Zoom factor: %s (angle: %s)"%(factor, ad))
-
-        transform = self.transform()
-        #print("Transform: %.3f, %.3f"%(transform.m11(), transform.m22()))
-        #print( "angleDelta: %s"%( event.angleDelta() ) )
 
     def keyPressEvent(self, event):
-        if type(event) == QtGui.QKeyEvent:
+        if type(event) == QKeyEvent:
             if event.key() == QtCore.Qt.Key_Space:
                 self.setInteractive(False)  # Not to select any item
                 self.setDragMode(QGraphicsView.ScrollHandDrag)
+                return
 
-                # print("Key pressed!!")
+            items = self.scene().selected_movable_items()
+
+            if event.key() == Qt.Key_Up:
+                for item in items:
+                    item.setY(item.y() - 1)
+            elif event.key() == Qt.Key_Down:
+                for item in items:
+                    item.setY(item.y() + 1)
+            elif event.key() == Qt.Key_Left:
+                for item in items:
+                    item.setX(item.x() - 1)
+            elif event.key() == Qt.Key_Right:
+                for item in items:
+                    item.setX(item.x() + 1)
 
     def keyReleaseEvent(self, event):
-        if type(event) == QtGui.QKeyEvent:
+        if type(event) == QKeyEvent:
             if event.key() == QtCore.Qt.Key_Space:
                 self.setDragMode(QGraphicsView.RubberBandDrag)
                 self.setInteractive(True)
@@ -129,13 +128,13 @@ class GraphicsView(QGraphicsView):
     def _list_pos_y(self, items):
         return [item.y() for item in items]
 
-    def _set_items_pos_x(self, items, func):
-        pos_x = func(self._list_pos_x(items))
+    def _set_items_pos_x(self, items, aggfunc):
+        pos_x = aggfunc(self._list_pos_x(items))
         for item in items:
             item.setX(pos_x)
 
-    def _set_items_pos_y(self, items, func):
-        pos_y = func(self._list_pos_y(items))
+    def _set_items_pos_y(self, items, aggfunc):
+        pos_y = aggfunc(self._list_pos_y(items))
         for item in items:
             item.setY(pos_y)
 
