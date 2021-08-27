@@ -8,10 +8,10 @@ from nezzle.widgets.console import ConsoleWidget
 
 
 class ConsoleTabManager(QObject):
-    def __init__(self, mainWindow):
-        super().__init__(parent=mainWindow)
+    def __init__(self, mw):
+        super().__init__(parent=mw)
 
-        self.mw = mainWindow
+        self.mw = mw  # Main Window
         self._tab_widget = self.mw.ui_consoleTabWidget
         self._console_widget = ConsoleWidget(parent=self.tab_widget)
 

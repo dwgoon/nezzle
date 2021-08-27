@@ -89,6 +89,9 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="ui_actionUndo"/>
+    <addaction name="ui_actionRedo"/>
+    <addaction name="separator"/>
     <addaction name="ui_actionCopy"/>
     <addaction name="ui_actionPaste"/>
    </widget>
@@ -580,6 +583,16 @@
   <action name="ui_actionToRectangleNode">
    <property name="text">
     <string>To Rectangle Node</string>
+   </property>
+  </action>
+  <action name="ui_actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="ui_actionRedo">
+   <property name="text">
+    <string>Redo</string>
    </property>
   </action>
  </widget>

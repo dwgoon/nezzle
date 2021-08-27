@@ -1,24 +1,26 @@
+from typing import List
+
+# from qtpy import QtCore
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 from qtpy import QtWidgets
 from qtpy.QtWidgets import QGraphicsScene
 from qtpy.QtWidgets import QGraphicsView
 from qtpy.QtWidgets import QRubberBand
 from qtpy.QtWidgets import QMenu
-
-
-
-from qtpy.QtCore import Qt
 from qtpy.QtGui import QKeyEvent
 from qtpy.QtGui import QPixmapCache
 from qtpy.QtGui import QPainter
 from qtpy.QtGui import QTransform
 
-from qtpy import QtCore
-from qtpy.QtCore import Qt
-
 import numpy as np
 
 
 class GraphicsView(QGraphicsView):
+
+    items_moved = Signal(list, list)
+    items_removed = Signal(list)
+
     def __init__(self, main_window=None, parent=None):
         super().__init__(parent)
         self.mw = main_window
@@ -37,7 +39,6 @@ class GraphicsView(QGraphicsView):
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.SmartViewportUpdate)
 
         self.setAcceptDrops(True)
-
 
         # Create context menu
         if self.mw:
@@ -61,9 +62,10 @@ class GraphicsView(QGraphicsView):
     def mousePressEvent(self, event):
         if self.dragMode() == QGraphicsView.RubberBandDrag:
 
-            item_clicked = self.scene().itemAt(self.mapToScene(event.pos()),
-                                               QTransform())
-
+            # item_clicked = self.scene().itemAt(self.mapToScene(event.pos()),
+            #                                    QTransform())
+            #
+            # print("item_clicked:", item_clicked)
             # Process the context menu actions such as alignment.
             if event.button() == Qt.RightButton:
                 self.enable_menu_align()
@@ -71,6 +73,13 @@ class GraphicsView(QGraphicsView):
                 # Should not return super().mousePressEvent(event) here.
                 # Otherwise, the press event is processed under the drag mode.
                 return
+
+            # elif event.button() == Qt.LeftButton:
+            items = self.scene().selected_movable_items()
+            self._old_positions_selected_items = [item.pos() for item in items]
+            if len(items) != 0:
+                print("[Old positions of selected items]", self._old_positions_selected_items)
+                #self._old_positions_selected_items = [item.pos() for item in items]
 
         return super().mousePressEvent(event)
 
@@ -82,6 +91,11 @@ class GraphicsView(QGraphicsView):
         return super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
+        items = self.scene().selected_movable_items()
+        if len(items) != 0:
+            #print("[Old positions of selected items]", self._old_positions_selected_items)
+            self.items_moved.emit(items, self._old_positions_selected_items)
+
         return super().mouseReleaseEvent(event)
 
     def wheelEvent(self, event):
@@ -96,37 +110,47 @@ class GraphicsView(QGraphicsView):
 
     def keyPressEvent(self, event):
         if type(event) == QKeyEvent:
-            if event.key() == QtCore.Qt.Key_Space:
+            if event.key() == Qt.Key_Space:
                 self.setInteractive(False)  # Not to select any item
                 self.setDragMode(QGraphicsView.ScrollHandDrag)
                 return
 
-            items = self.scene().selected_movable_items()
-
-            if event.key() == Qt.Key_Up:
-                for item in items:
-                    item.setY(item.y() - 1)
-            elif event.key() == Qt.Key_Down:
-                for item in items:
-                    item.setY(item.y() + 1)
-            elif event.key() == Qt.Key_Left:
-                for item in items:
-                    item.setX(item.x() - 1)
-            elif event.key() == Qt.Key_Right:
-                for item in items:
-                    item.setX(item.x() + 1)
+            # Move the selected items with arrow keys
+            if event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
+                items = self.scene().selected_movable_items()
+                if event.key() == Qt.Key_Up:
+                    for item in items:
+                        item.setY(item.y() - 1)
+                elif event.key() == Qt.Key_Down:
+                    for item in items:
+                        item.setY(item.y() + 1)
+                elif event.key() == Qt.Key_Left:
+                    for item in items:
+                        item.setX(item.x() - 1)
+                elif event.key() == Qt.Key_Right:
+                    for item in items:
+                        item.setX(item.x() + 1)
 
     def keyReleaseEvent(self, event):
         if type(event) == QKeyEvent:
-            if event.key() == QtCore.Qt.Key_Space:
+            print("KeyRelease:", event, event.key())
+            if event.key() == Qt.Key_Space:
                 self.setDragMode(QGraphicsView.RubberBandDrag)
                 self.setInteractive(True)
+
+            if event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
+                items = self.scene().selected_movable_items()
+                positions = self._list_pos(items)
+                self.items_moved.emit(items, positions)
 
     def _list_pos_x(self, items):
         return [item.x() for item in items]
 
     def _list_pos_y(self, items):
         return [item.y() for item in items]
+
+    def _list_pos(self, items):
+        return [item.pos() for item in items]
 
     def _set_items_pos_x(self, items, aggfunc):
         pos_x = aggfunc(self._list_pos_x(items))
@@ -154,8 +178,7 @@ class GraphicsView(QGraphicsView):
         elif direction == 'middle':
             self._set_items_pos_y(items, np.average)
         else:
-            raise ValueError("Unknown direction for alignment: %s"
-                             %(direction))
+            raise ValueError("Unknown direction for alignment: %s"%(direction))
 
     def distribute_objects(self, direction):
         items_movable = self.scene().selected_movable_items()
@@ -176,16 +199,15 @@ class GraphicsView(QGraphicsView):
             for i, item in enumerate(items_movable):
                 item.setY(y_min + i*gap_y)
         else:
-            raise ValueError("Unknown direction for distribution: %s"
-                             %(direction))
+            raise ValueError("Unknown direction for distribution: %s"%(direction))
 
 
 class GraphicsScene(QGraphicsScene):
+
     def __init__(self, *args, parent=None, **kwargs):
         super().__init__(*args, parent, **kwargs)
         self.selectionChanged.connect(self.on_selection_changed)
         self.setBackgroundBrush(Qt.transparent)
-
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
     def selected_movable_items(self):

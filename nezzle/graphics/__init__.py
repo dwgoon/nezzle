@@ -1,30 +1,20 @@
-# -*- coding: utf-8 -*-
-
-from .baseitem import MappableGraphicsItem
-from .baseitem import PainterOptionItem
-
-from .nodes.nodefactory import NodeClassFactory
-from .nodes.basenode import BaseNode
-from .nodes.ellipsenode import EllipseNode
-from .nodes.ellipsenode import CircleNode
-
+from nezzle.graphics.baseitem import MappableGraphicsItem
+from nezzle.graphics.baseitem import PainterOptionItem
+from nezzle.graphics.nodes.nodefactory import NodeClassFactory
+from nezzle.graphics.nodes.basenode import BaseNode
+from nezzle.graphics.nodes.ellipsenode import EllipseNode
+from nezzle.graphics.nodes.ellipsenode import CircleNode
 from nezzle.graphics.headers.headerclassfactory import HeaderClassFactory
-
-from .links.linkfactory import LinkClassFactory
-from .links.baselink import BaseLink
-from .links.straightlink import StraightLink
-from .links.curvedlink import CurvedLink
-from .links.selflooplink import SelfloopLink
-
-from .labels.labelfactory import LabelClassFactory
-from .labels.textlabel import TextLabel
-
-
-from .network import Network
-from .network import from_adj_to_net
-
-from .screen import GraphicsScene
-from .screen import GraphicsView
-
-
-
+from nezzle.graphics.headers.baseheader import Arrow
+from nezzle.graphics.headers.baseheader import Hammer
+from nezzle.graphics.links.linkfactory import LinkClassFactory
+from nezzle.graphics.links.baselink import BaseLink
+from nezzle.graphics.links.straightlink import StraightLink
+from nezzle.graphics.links.curvedlink import CurvedLink
+from nezzle.graphics.links.selflooplink import SelfloopLink
+from nezzle.graphics.labels.labelfactory import LabelClassFactory
+from nezzle.graphics.labels.textlabel import TextLabel
+from nezzle.graphics.network import Network
+from nezzle.graphics.network import from_adj_to_net
+from nezzle.graphics.screen import GraphicsScene
+from nezzle.graphics.screen import GraphicsView

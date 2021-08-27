@@ -5,6 +5,7 @@ from nezzle.managers.navigation import NavigationTreeManager
 from nezzle.managers.console import ConsoleTabManager
 from nezzle.managers.networkmodel import NetworkModelManager
 from nezzle.managers.code import CodeManager
+from nezzle.command.history import HistoryManager
 from nezzle.menu import MenuActionHandler
 from nezzle.ui.ui_mainwindow import Ui_MainWindow
 
@@ -17,13 +18,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)   # GUI parts
         self.ui_visStyleDock.close()
 
-        self.ma_handler = MenuActionHandler(self)
         self.sv_manager = SingleViewManager(self)
         self.nm_manager = NetworkModelManager(self)
         self.nt_manager = NavigationTreeManager(self)
         self.ct_manager = ConsoleTabManager(self)
         self.code_manager = CodeManager(self)
+        self.history_manager = HistoryManager(self)
 
+        # The MenuActionHandler object should be created after creating all managers.
+        self.ma_handler = MenuActionHandler(self)
     # end of __init__
 
 

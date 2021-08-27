@@ -52,18 +52,14 @@ class MenuActionHandler(QWidget):
     otherwise @Slot decorator does not work for the instance methods.
     """
 
-    def __init__(self, mainWindow):
+    def __init__(self, mw):
         super().__init__()
-        self.mw = mainWindow
+        self.mw = mw
         self.initialize_actions()
         self.openNetworkDialog = OpenNetworkDialog(parent=self.mw)
         self.exportImageDialog = ExportImageDialog(parent=self.mw)
-        
-        
+
     def initialize_actions(self):
-        #self.mw.ui_actionNewView.triggered.connect(self.processNewView)
-
-
         # File
         self.mw.ui_actionOpenNetwork.triggered.connect(
             self.process_open_network)
@@ -72,14 +68,21 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionExportImage.triggered.connect(
             self.process_export_image)
 
-
         # Edit
+        # self.mw.history_manager.actionUndo.triggered.connect(self.procees_undo)
+        # self.mw.history_manager.actionRedo.triggered.connect(self.process_redo)
+
+        # self.mw.ui_actionUndo.triggered.connect(self.process_undo)
+        # self.mw.ui_actionRedo.triggered.connect(self.process_redo)
+
+        self.mw.sv_manager.view.items_moved.connect(self.mw.history_manager.on_items_moved)
+        #self.mw.view.item_removed.connect(self.mw.history_manager.on_item_removed)
+
         self.mw.ui_actionCopy.triggered.connect(self.process_copy)
         self.mw.ui_actionCopy.setShortcut(QKeySequence('Ctrl+C'))
 
         self.mw.ui_actionPaste.triggered.connect(self.process_paste)
         self.mw.ui_actionPaste.setShortcut(QKeySequence('Ctrl+V'))
-
 
         # View
         self.mw.ui_actionViewNetworksDock.triggered.connect(
@@ -88,7 +91,6 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionViewConsoleDock.triggered.connect(
             self.process_view_console_dock
         )
-
 
         # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
         self.mw.ui_actionLockNodes.triggered.connect(
@@ -136,7 +138,6 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionLockLabels.setChecked(True)
         self.process_lock_labels(True)
 
-
         # Layout -> Align
         self.mw.ui_actionAlignLeft.triggered.connect(
             self.process_align_left)
@@ -158,25 +159,19 @@ class MenuActionHandler(QWidget):
             self.process_distribute_vertically)
 
         self.mw.ui_menuAlign.setEnabled(False)
-    #
-    # @Slot(bool)
-    # def processNewView(self):
-    #     view = GraphicsView()
-    #     net = self.mw.nt_manager.currentItemData
-    #     if net:
-    #         view.set_current_view_scene(net.scene)
-    #         labels = net.name
-    #     else:
-    #         labels = "<Not selected>"
-    #
-    #     self.mw.sv_manager.appendView(view, labels)
 
+    # @Slot()
+    # def process_undo(self):
+    #     self.mw.history_manager.undo()
+    #
+    # @Slot()
+    # def process_redo(self):
+    #     self.mw.history_manager.redo()
 
     # TODO: Implement Copy & Paste QGraphicsItem to the clipboard
-
     @Slot()
     def process_copy(self):
-        print("Copy!")
+        # TODO: Implement copy function for copying inside the scene.
         item = self.mw.nt_manager.current_item
         if not item:
             return
@@ -187,8 +182,8 @@ class MenuActionHandler(QWidget):
         brect = scene.itemsBoundingRect()
         brect.adjust(-5, -5, +10, +10)
 
-        width = brect.width() #int(brect.width() / 1.25)
-        height = brect.height() #int(brect.height() / 1.25)
+        width = brect.width()
+        height = brect.height()
 
         # Create a buffer
         data = QByteArray()
@@ -198,62 +193,23 @@ class MenuActionHandler(QWidget):
         # Create SVG
         svgGen = QSvgGenerator()
         svgGen.setOutputDevice(b)
-        # svgGen.setSize(brect.size().toSize())
-        # svgGen.setViewBox(QRectF(0.0, 0.0, brect.width(), brect.height()))
         svgGen.setSize(QSize(width, height))
         svgGen.setViewBox(QRectF(0.0, 0.0, width, height))
-        #svgGen.setResolution(100)
-        print("SVG resolution:", svgGen.resolution())
 
         painter = QPainter()
         painter.begin(svgGen)
         painter.setBackgroundMode(Qt.TransparentMode)  # Added
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
-
         scene.render(painter)
-        #self.mw.sv_manager.view.render(painter)
-
         painter.end()
+
         mimeData = QMimeData()
         mimeData.setData("image/svg+xml", b.buffer())
         QApplication.clipboard().setMimeData(mimeData, QClipboard.Clipboard)
 
-
-
-        # image = QImage(brect.width(),
-        #                brect.height(),
-        #                QImage.Format_ARGB32)
-        # # dpm = 600 / 0.0254
-        # # image.setDotsPerMeterX(dpm)
-        # # image.setDotsPerMeterY(dpm)
-        #
-        # print(image.dotsPerMeterX())
-        #
-        # image.fill(Qt.transparent)
-        # #image.fill(Qt.white)
-        #
-        # painter = QPainter(image)
-        # #painter.setBackgroundMode(Qt.TransparentMode)
-        # painter.setRenderHint(QPainter.Antialiasing)
-        # #painter.setRenderHint(QPainter.SmoothPixmapTransform)
-        # scene.render(painter, source=brect)
-        # painter.end()
-        #
-        # image.save(b, "PNG")
-        #
-        # clipboard = QApplication.clipboard()
-        # mimeData = QMimeData()
-        # mimeData.setImageData(image)
-        # #mimeData.setData("image/png", data)
-        # clipboard.setMimeData(mimeData)
-        #
-        # #QApplication.clipboard().setImage(image, QClipboard.Clipboard)
-        # b.close()
-        pass
-
     @Slot()
     def process_paste(self):
-        print("Paste!")
+        #TODO: Implement paste function
         pass
 
     @Slot(bool)
@@ -266,48 +222,6 @@ class MenuActionHandler(QWidget):
                  return
 
             fpath = self.openNetworkDialog.fpath
-            # network_name = self.openNetworkDialog.network_name
-            # actSym = self.openNetworkDialog.act_sym
-            # inhSym = self.openNetworkDialog.inh_sym
-            #
-            #
-            # # TODO: Remove setting scene rect.
-            # # which prevents the automatic resizing of scene
-            #
-            # """
-            # [Qt Documentation: http://doc.qt.io/qt-5/qgraphicsscene.html]
-            #
-            # The scene's bounding rect is set by calling setSceneRect().
-            # Items can be placed at any position on the scene,
-            # and the size of the scene is by default unlimited.
-            #
-            # The scene rect is used only for internal bookkeeping,
-            # maintaining the scene's item index. If the scene rect is unset,
-            # QGraphicsScene will use the bounding area of all items,
-            # as returned by itemsBoundingRect(), as the scene rect.
-            #
-            # However, itemsBoundingRect() is a relatively time consuming
-            # function, as it operates by collecting positional information
-            # for every item on the scene. Because of this, you should always
-            # set the scene rect when operating on large scenes.
-            # """
-            #
-            # sceneWidth = self.openNetworkDialog.scene_width
-            # sceneHeight = self.openNetworkDialog.scene_height
-            # noLinkType = self.openNetworkDialog.no_link_type
-            #
-            # if noLinkType:
-            #     actSym = None
-            #     inhSym = None
-
-            """
-            dialog = QFileDialog(self)
-            dialog.setWindowTitle("Open a network file")
-            dialog.setAcceptMode(QFileDialog.AcceptOpen)
-            dialog.setNameFilters([self.tr("Text files (*.sif *.json)")])
-            dialog.setFileMode(QFileDialog.ExistingFile)
-            choice = dialog.exec()
-            """
 
             if choice == QDialog.Rejected:
                 break
@@ -438,9 +352,11 @@ class MenuActionHandler(QWidget):
             #net.add_node(new_node)
         # end of for
 
+    @Slot()
     def process_convert_to_ellipse_node(self):
         self._process_convert_to_node(EllipseNode)
 
+    @Slot()
     def process_convert_to_rectangle_node(self):
         self._process_convert_to_node(RectangleNode)
 
@@ -475,9 +391,9 @@ class MenuActionHandler(QWidget):
     def process_convert_to_vertical_elbow_link(self):
         self._process_convert_to_link(VerticalElbowLink)
 
+    @Slot()
     def process_convert_to_horizontal_elbow_link(self):
         self._process_convert_to_link(HorizontalElbowLink)
-
 
     @Slot(bool)
     def process_select_all(self):
@@ -490,11 +406,9 @@ class MenuActionHandler(QWidget):
         for graphics_item in scene.items():
             graphics_item.setSelected(True)
 
-
     @Slot()
     def process_align_left(self):
         self.mw.sv_manager.view.align_objects('left')
-
 
     @Slot()
     def process_align_center(self):

@@ -245,6 +245,10 @@ class Ui_MainWindow(object):
         self.ui_actionToEllipseNode.setObjectName("ui_actionToEllipseNode")
         self.ui_actionToRectangleNode = QtWidgets.QAction(MainWindow)
         self.ui_actionToRectangleNode.setObjectName("ui_actionToRectangleNode")
+        self.ui_actionUndo = QtWidgets.QAction(MainWindow)
+        self.ui_actionUndo.setObjectName("ui_actionUndo")
+        self.ui_actionRedo = QtWidgets.QAction(MainWindow)
+        self.ui_actionRedo.setObjectName("ui_actionRedo")
         self.ui_menuFile.addAction(self.ui_actionOpenNetwork)
         self.ui_menuFile.addSeparator()
         self.ui_menuFile.addAction(self.ui_actionSaveNetwork)
@@ -254,6 +258,9 @@ class Ui_MainWindow(object):
         self.ui_menuFile.addAction(self.ui_actionExit)
         self.ui_menuView.addAction(self.ui_actionViewNetworksDock)
         self.ui_menuView.addAction(self.ui_actionViewConsoleDock)
+        self.ui_menuEdit.addAction(self.ui_actionUndo)
+        self.ui_menuEdit.addAction(self.ui_actionRedo)
+        self.ui_menuEdit.addSeparator()
         self.ui_menuEdit.addAction(self.ui_actionCopy)
         self.ui_menuEdit.addAction(self.ui_actionPaste)
         self.ui_menuLock.addAction(self.ui_actionLockNodes)
@@ -347,5 +354,7 @@ class Ui_MainWindow(object):
         self.ui_actionToHorizontalElbowLink.setText(_translate("MainWindow", "To Horizontal Elbow Link"))
         self.ui_actionToEllipseNode.setText(_translate("MainWindow", "To Ellipse Node"))
         self.ui_actionToRectangleNode.setText(_translate("MainWindow", "To Rectangle Node"))
+        self.ui_actionUndo.setText(_translate("MainWindow", "Undo"))
+        self.ui_actionRedo.setText(_translate("MainWindow", "Redo"))
 
 from nezzle.widgets.navigationtreeview import NavigationTreeView
