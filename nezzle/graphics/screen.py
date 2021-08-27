@@ -4,6 +4,7 @@ from typing import List
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 from qtpy import QtWidgets
+from qtpy.QtWidgets import QApplication
 from qtpy.QtWidgets import QGraphicsScene
 from qtpy.QtWidgets import QGraphicsView
 from qtpy.QtWidgets import QRubberBand
@@ -46,6 +47,11 @@ class GraphicsView(QGraphicsView):
             self.pop_menu.addMenu(self.mw.ui_menuAlign)  # Use the existing one.
             self.pop_menu.addMenu(self.mw.ui_menuGraphics)
 
+        self._pos_drag_start = None
+        self._is_dragged = False
+        self._item_clicked = None
+        self._moved_by_key = False
+
     def on_context_menu(self, event):
         self.pop_menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -60,12 +66,9 @@ class GraphicsView(QGraphicsView):
             self.mw.ui_menuAlign.setEnabled(False)
 
     def mousePressEvent(self, event):
-        if self.dragMode() == QGraphicsView.RubberBandDrag:
+        self._item_clicked = self.scene().itemAt(self.mapToScene(event.pos()), QTransform())
 
-            # item_clicked = self.scene().itemAt(self.mapToScene(event.pos()),
-            #                                    QTransform())
-            #
-            # print("item_clicked:", item_clicked)
+        if self.dragMode() == QGraphicsView.RubberBandDrag:
             # Process the context menu actions such as alignment.
             if event.button() == Qt.RightButton:
                 self.enable_menu_align()
@@ -74,28 +77,42 @@ class GraphicsView(QGraphicsView):
                 # Otherwise, the press event is processed under the drag mode.
                 return
 
-            # elif event.button() == Qt.LeftButton:
-            items = self.scene().selected_movable_items()
-            self._old_positions_selected_items = [item.pos() for item in items]
-            if len(items) != 0:
-                print("[Old positions of selected items]", self._old_positions_selected_items)
-                #self._old_positions_selected_items = [item.pos() for item in items]
+            if event.button() == Qt.LeftButton:
+                self._pos_drag_start = event.pos()
+                # items = self.scene().selected_movable_items()
+                # self._old_positions_selected_items = [item.pos() for item in items]
+                # if len(items) != 0:
+                #     print("[Old positions of selected items]", self._old_positions_selected_items)
 
         return super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
-        if self.dragMode() == QGraphicsView.RubberBandDrag:
-            item_under_mouse = self.scene().itemAt(
-                self.mapToScene(event.pos()), QTransform())
+        # if self.dragMode() == QGraphicsView.RubberBandDrag:
+            # item_under_mouse = self.scene().itemAt(
+            #     self.mapToScene(event.pos()), QTransform())
 
+        if event.buttons() != Qt.LeftButton:
+            return
+
+        if (event.pos() - self._pos_drag_start).manhattanLength() >= QApplication.startDragDistance():
+            self._is_dragged = True
+
+        #print("Dragged!")
         return super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        items = self.scene().selected_movable_items()
-        if len(items) != 0:
-            #print("[Old positions of selected items]", self._old_positions_selected_items)
-            self.items_moved.emit(items, self._old_positions_selected_items)
+        if self._item_clicked and self._is_dragged:
+            items = self.scene().selected_movable_items()
+            if len(items) != 0:
+                self.items_moved.emit(items, self._old_positions_selected_items)
+                print("Emit items moved signal")
 
+        # Updating the old positions should be done after emitting the signal to History object.
+        if self.dragMode() == QGraphicsView.RubberBandDrag:
+            self.mw.ct_manager.update_console_vars()
+            self.update_old_positions_selected_items()
+
+        self._is_dragged = False
         return super().mouseReleaseEvent(event)
 
     def wheelEvent(self, event):
@@ -118,6 +135,8 @@ class GraphicsView(QGraphicsView):
             # Move the selected items with arrow keys
             if event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
                 items = self.scene().selected_movable_items()
+                if len(items) <= 0:
+                    return
                 if event.key() == Qt.Key_Up:
                     for item in items:
                         item.setY(item.y() - 1)
@@ -131,17 +150,22 @@ class GraphicsView(QGraphicsView):
                     for item in items:
                         item.setX(item.x() + 1)
 
+                self._moved_by_key = True
+            # end of if
+
     def keyReleaseEvent(self, event):
         if type(event) == QKeyEvent:
-            print("KeyRelease:", event, event.key())
             if event.key() == Qt.Key_Space:
                 self.setDragMode(QGraphicsView.RubberBandDrag)
                 self.setInteractive(True)
 
             if event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
                 items = self.scene().selected_movable_items()
-                positions = self._list_pos(items)
-                self.items_moved.emit(items, positions)
+                if self._moved_by_key and len(items) > 0:
+                    positions = self._list_pos(items)
+                    self.items_moved.emit(items, positions)
+                    self._moved_by_key = False
+
 
     def _list_pos_x(self, items):
         return [item.x() for item in items]
@@ -200,6 +224,11 @@ class GraphicsView(QGraphicsView):
                 item.setY(y_min + i*gap_y)
         else:
             raise ValueError("Unknown direction for distribution: %s"%(direction))
+
+    def update_old_positions_selected_items(self):
+        items = self.scene().selected_movable_items()
+        self._old_positions_selected_items = [item.pos() for item in items]
+        print("[Old positions of selected items]", self._old_positions_selected_items)
 
 
 class GraphicsScene(QGraphicsScene):

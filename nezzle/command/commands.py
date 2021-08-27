@@ -46,18 +46,21 @@ class MoveCommand(QUndoCommand):
     """
 
     def undo(self):
+        if not self._old_positions:
+            return
+
         for i, item in enumerate(self._items):
             item.setPos(self._old_positions[i])
 
         item.scene().update()
-        #self.setText("Move %s" % createCommandString(self.myDiagramItem, self.newPos))
+        self.setText("Moving to new positions")
 
     def redo(self):
         for i, item in enumerate(self._items):
             item.setPos(self._new_positions[i])
 
         item.scene().update()
-        #self.setText("Move %s" % createCommandString(self.myDiagramItem, self.newPos))
+        self.setText("Moving to new positions")
 
 
 # class DeleteCommand(QUndoCommand):

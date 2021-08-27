@@ -226,7 +226,6 @@ class MenuActionHandler(QWidget):
             if choice == QDialog.Rejected:
                 break
             elif choice == QDialog.Accepted:
-                # fpath = dialog.selectedFiles()[0]
                 fpath = fpath.strip()
                 try:
                     net = fileio.read_network(fpath, self.openNetworkDialog.link_map)
@@ -349,7 +348,6 @@ class MenuActionHandler(QWidget):
 
             new_node = NodeConverter.to_node(obj, nodeclass)
             net.replace_node(obj, new_node)
-            #net.add_node(new_node)
         # end of for
 
     @Slot()

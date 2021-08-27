@@ -117,7 +117,6 @@ class ConsoleWidget(RichJupyterWidget):
         super().reset(clear)
 
 
-
 class ConsoleTabWidget(QTabWidget):
 
         def __init__(self, *args, **kwargs):
@@ -151,7 +150,7 @@ class ConsoleTabWidget(QTabWidget):
                 self.actionNewConsole.setEnabled(True)
             else:
                 raise RuntimeError("An illegal state of the ConsoleTabWidget object "
-                                               "has been detected.")
+                                    "has been detected.")
             
             selectedAction = self.popMenu.exec_(self.mapToGlobal(point))
             if selectedAction == self.actionNewConsole:

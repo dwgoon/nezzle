@@ -20,6 +20,11 @@ class HistoryManager(QObject):
         self.mw.ui_actionRedo = self.undo_stack.createRedoAction(self, "&Redo")
         self.mw.ui_actionRedo.setShortcuts(QKeySequence.Redo)
 
+        self.mw.ui_menuEdit.insertAction(self.mw.ui_actionCopy, self.mw.ui_actionRedo)
+        self.mw.ui_menuEdit.insertAction(self.mw.ui_actionRedo, self.mw.ui_actionUndo)
+        self.mw.ui_menuEdit.insertSeparator(self.mw.ui_actionCopy)
+
+
         #self.mw.ui_actionUndo.triggered.connect(self.process_undo)
         #self.mw.ui_actionRedo.triggered.connect(self.process_redo)
 

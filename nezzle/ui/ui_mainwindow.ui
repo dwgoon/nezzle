@@ -63,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>1127</width>
-     <height>36</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="ui_menuFile">
@@ -89,9 +89,6 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="ui_actionUndo"/>
-    <addaction name="ui_actionRedo"/>
-    <addaction name="separator"/>
     <addaction name="ui_actionCopy"/>
     <addaction name="ui_actionPaste"/>
    </widget>

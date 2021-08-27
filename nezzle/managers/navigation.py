@@ -78,7 +78,7 @@ class NavigationTreeManager(QObject):
     def on_current_changed(self, current, previous):
         if current.row()<0:
             self.mw.sv_manager.clear()
-            self.mw.ct_manager.update_console_variables()
+            self.mw.ct_manager.update_console_vars()
             return
 
         model = self.tree_view.model()
@@ -86,7 +86,7 @@ class NavigationTreeManager(QObject):
         net = item.data()
         self.action_remove_selected.setEnabled(True)
         self.mw.sv_manager.set_current_view_scene(net.scene, net.name)
-        self.mw.ct_manager.update_console_variables()
+        self.mw.ct_manager.update_console_vars()
 
     @Slot(QItemSelection, QItemSelection)
     def on_selection_changed(self, selected, deselected):
