@@ -150,6 +150,9 @@ class GraphicsView(QGraphicsView):
                     for item in items:
                         item.setX(item.x() + 1)
 
+                # if not self._moved_by_key:
+                #     self.update_old_positions_selected_items()
+
                 self._moved_by_key = True
             # end of if
 
@@ -159,12 +162,13 @@ class GraphicsView(QGraphicsView):
                 self.setDragMode(QGraphicsView.RubberBandDrag)
                 self.setInteractive(True)
 
-            if event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
+            if not event.isAutoRepeat() and event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
                 items = self.scene().selected_movable_items()
                 if self._moved_by_key and len(items) > 0:
-                    positions = self._list_pos(items)
-                    self.items_moved.emit(items, positions)
+                    self.items_moved.emit(items, self._old_positions_selected_items)
+                    print("Emit items moved signal")
                     self._moved_by_key = False
+                    self.update_old_positions_selected_items()
 
 
     def _list_pos_x(self, items):
