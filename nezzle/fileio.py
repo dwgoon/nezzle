@@ -15,7 +15,7 @@ from qtpy.QtGui import QPainter
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import LabelClassFactory
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import Network
 from nezzle.constants import DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
 from nezzle.utils import extract_name_and_ext
@@ -48,8 +48,8 @@ def read_metadata_from_json(fpath):
         dict_net = json.loads(fin.read())
 
     for link in dict_net["LINKS"]:
-        str_header_type = link["HEADER"]["TYPE"].title()
-        interactions[str_header_type] += 1
+        str_head_type = link["HEAD"]["TYPE"].title()
+        interactions[str_head_type] += 1
 
     metadata["NETWORK_NAME"] = dict_net["NAME"]
     metadata["INTERACTIONS"] = interactions
@@ -154,15 +154,15 @@ def read_sif(fpath, link_map=None):
 
             counter_link += 1
 
-            header = None
-            HeaderClass = None
+            head = None
+            ArrowClass = None
 
             if link_map:
-                header_type = link_map[str_link_type]
-                HeaderClass = HeaderClassFactory.create(header_type)
+                head_type = link_map[str_link_type]
+                ArrowClass = ArrowClassFactory.create(head_type)
 
-            if HeaderClass:
-                header = HeaderClass()
+            if ArrowClass:
+                head = ArrowClass()
 
             if str_src == str_tgt: # Self-loop link
                 LinkClass = LinkClassFactory.create('SELFLOOP_LINK')
@@ -170,7 +170,7 @@ def read_sif(fpath, link_map=None):
                 link = LinkClass(iden=iden,
                                  name=str_link_type,
                                  node=src,
-                                 header=header)
+                                 head=head)
 
                 link['FILL_COLOR'] = QColor(100, 100, 100, 100)
 
@@ -180,7 +180,7 @@ def read_sif(fpath, link_map=None):
                 link = LinkClass(iden=iden,
                                  name= str_link_type,
                                  source=src, target=tgt,
-                                 header=header)
+                                 head=head)
 
                 link['FILL_COLOR'] = Qt.black
 
@@ -227,9 +227,9 @@ def read_json(fpath, link_map):
         dict_net = json.loads(fin.read())
 
         for link in dict_net["LINKS"]:
-            header_type_ori = link["HEADER"]["TYPE"].title()
-            header_type_new = link_map[header_type_ori]
-            link["HEADER"]["TYPE"] = header_type_new.upper()
+            head_type_ori = link["HEAD"]["TYPE"].title()
+            head_type_new = link_map[head_type_ori]
+            link["HEAD"]["TYPE"] = head_type_new.upper()
 
 
     print(dict_net)

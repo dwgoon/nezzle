@@ -2,9 +2,9 @@ from qtpy.QtCore import QPointF
 from nezzle.utils import TriggerDict
 
 
-class BaseHeader(object):
+class BaseArrow(object):
 
-    TYPE = 'BASE_HEADER'
+    TYPE = 'BASE_HEAD'
 
     def __init__(self, width, height, offset=4):
 
@@ -86,28 +86,28 @@ class BaseHeader(object):
         raise NotImplementedError("identify_pos should be implemented!")
 
     def to_dict(self):
-        dict_header = {}
-        dict_header['TYPE'] = self.TYPE
-        dict_header['WIDTH'] = self.width
-        dict_header['HEIGHT'] = self.height
-        dict_header['OFFSET'] = self.offset
-        dict_header.update(self._attr)
+        dict_head = {}
+        dict_head['TYPE'] = self.TYPE
+        dict_head['WIDTH'] = self.width
+        dict_head['HEIGHT'] = self.height
+        dict_head['OFFSET'] = self.offset
+        dict_head.update(self._attr)
 
-        return dict_header
+        return dict_head
 
     @classmethod
-    def from_dict(cls, dict_header):
-        width = dict_header['WIDTH']
-        height = dict_header['HEIGHT']
-        offset = dict_header['OFFSET']
-        #header_type = dict_header['TYPE']
-        #HeaderClass = HeaderClassFactory.create(header_type)
+    def from_dict(cls, dict_head):
+        width = dict_head['WIDTH']
+        height = dict_head['HEIGHT']
+        offset = dict_head['OFFSET']
+        #head_type = dict_head['TYPE']
+        #ArrowClass = ArrowClassFactory.create(head_type)
         return cls(width, height, offset=offset)
 
 
-class Arrow(BaseHeader):
+class Triangle(BaseArrow):
 
-    TYPE = 'ARROW'
+    TYPE = 'TRIANGLE'
 
     def __init__(self, width=10, height=10, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
@@ -137,7 +137,7 @@ class Arrow(BaseHeader):
         self.parent.update()
 
 
-class Hammer(BaseHeader):
+class Hammer(BaseArrow):
 
     TYPE = 'HAMMER'
 

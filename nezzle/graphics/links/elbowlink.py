@@ -33,7 +33,7 @@ class ElbowLink(StraightLink):
 
     def __init__(self, *args, **kwargs):
         self._ctrl_points = []
-        self._t_header = 0
+        self._t_head = 0
 
         # To avoid repetitive memory allocation, make this variable as a member.
         self._arr_t = np.arange(1, 0.5, -0.001, dtype=np.float64)
@@ -149,29 +149,29 @@ class ElbowLink(StraightLink):
         #     painter.drawEllipse(-0.5 + elem.x(), -0.5 + elem.y(), 1.5, 1.5)
 
         # [DEBUG]
-        # if self.header:
+        # if self.head:
         #    painter.setPen(Qt.black)
         #    painter.setBrush(Qt.white)
-        #    painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
+        #    painter.drawEllipse(-0.5 + self.pos_head.x(), -0.5 + self.pos_head.y(), 1, 1)
         #
         #     painter.setPen(Qt.green)
         #     painter.setBrush(Qt.green)
         #     for i in range(0, 3):
-        #         elem = self._path_header.elementAt(i)
+        #         elem = self._path_head.elementAt(i)
         #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
         #
         #     painter.setPen(Qt.blue)
         #     painter.setBrush(Qt.blue)
-        #     for i in range(3, self._path_header.elementCount()):
-        #         elem = self._path_header.elementAt(i)
+        #     for i in range(3, self._path_head.elementCount()):
+        #         elem = self._path_head.elementAt(i)
         #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
 
-    def is_header_visible(self):
-        if not self.header:
+    def is_head_visible(self):
+        if not self.head:
             return False
 
         v1 = self._cps[-2] - self._cps[-3]
-        v2 = self.pos_header - self._cps[-3]
+        v2 = self.pos_head - self._cps[-3]
         ip = dot(v1, v2)  # Inner product
         return ip > 0  # Is v1.v2 = |v1||v2|cos(0) positive?
 
@@ -189,33 +189,33 @@ class ElbowLink(StraightLink):
     def _identify_connectors_pos(self):
         raise NotImplementedError()
 
-    def _identify_header_pos(self):
-        offset = self._calculate_header_offset()
+    def _identify_head_pos(self):
+        offset = self._calculate_head_offset()
 
         pos_conn = self._cps[-3]
         pos_end = self._cps[-2]
 
         ph = internal_division(pos_conn, pos_end, dist(pos_conn, pos_end) - offset, offset)
-        self.pos_header.setX(ph.x())
-        self.pos_header.setY(ph.y())
+        self.pos_head.setX(ph.x())
+        self.pos_head.setY(ph.y())
 
-    def _calculate_header_angle(self):
+    def _calculate_head_angle(self):
         # pos_vc1 = self._pos_connectors[1]
         pos_begin = self._cps[-3]
-        self._angle_header = -QLineF(pos_begin, self.pos_header).angle()
-        self._header_transform.angle = self._angle_header
-        # print("Header Angle:", self._angle_header)
+        self._angle_head = -QLineF(pos_begin, self.pos_head).angle()
+        self._head_transform.angle = self._angle_head
+        # print("Head Angle:", self._angle_head)
 
-    def _identify_header(self):
-        self._identify_header_pos()
-        self._calculate_header_angle()
-        self._create_header_path()
+    def _identify_head(self):
+        self._identify_head_pos()
+        self._calculate_head_angle()
+        self._create_head_path()
 
-    def _calculate_header_offset(self):
+    def _calculate_head_offset(self):
         """
         self._cps[-1]: dummy point
         self._cps[-2]: real point (the end of node)
-        self._cps[-3]: previous connector (the tail of header)
+        self._cps[-3]: previous connector (the tail of head)
         """
 
         v = self._cps[-2] - self._cps[-3]
@@ -229,19 +229,19 @@ class ElbowLink(StraightLink):
             return 0
 
         radius = self.target.calculate_radius(angle_rad)
-        return radius + self.header.offset + self.header.height
+        return radius + self.head.offset + self.head.height
 
-    def _create_header_path(self):
-        points = self.header.identify_points(self.pos_header,
+    def _create_head_path(self):
+        points = self.head.identify_points(self.pos_head,
                                              self.width,
-                                             self._header_transform)
+                                             self._head_transform)
         path = QPainterPath()
 
         path.moveTo(points[-1])
         for pt in points[-2::-1]:
             path.lineTo(pt)
 
-        self._path_header = path
+        self._path_head = path
 
     def _identify_elbow_points(self):
         # Update positions of source and target
@@ -325,12 +325,12 @@ class ElbowLink(StraightLink):
             self._path_paint.lineTo(self._fps[i])
         # end of for
 
-        if self.header:  # Add the header
-            self._identify_header()
+        if self.head:  # Add the head
+            self._identify_head()
 
-        if self.is_header_visible():
-            self._path_paint.connectPath(self._path_header)
-        else:  # if header is not visible, hide the header.
+        if self.is_head_visible():
+            self._path_paint.connectPath(self._path_head)
+        else:  # if head is not visible, hide the head.
             self._path_paint.lineTo(self._fps[-1])
             self._path_paint.lineTo(self._bps[0])
 

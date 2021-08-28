@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>456</width>
-    <height>350</height>
+    <width>591</width>
+    <height>470</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -76,7 +76,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="label_link_mapping">
+    <widget class="QLabel" name="ui_labelLinkHeadMapping">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -84,12 +84,47 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Link Header Mapping</string>
+      <string>Link Head Mapping</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTableWidget" name="ui_linkHeaderMappingTable">
+    <widget class="QTableWidget" name="ui_linkHeadMappingTable">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustIgnored</enum>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="ui_labelLinkTailMapping">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Link Tail Mapping</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="ui_linkTailMappingTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>

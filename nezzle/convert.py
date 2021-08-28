@@ -12,7 +12,7 @@ import nezzle
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import LabelClassFactory
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import Network
 from nezzle.graphics import SelfloopLink
 from nezzle.constants import DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
@@ -54,20 +54,20 @@ def to_graphics(dg, iden, no_link_type=False):
 
     for str_src, str_tgt, link_data in dg.edges(data=True):
         str_link_type = None
-        header = None
+        head = None
 
         if not no_link_type:
-            if 'HEADER' in link_data:
-                if isinstance(link_data['HEADER'], dict):
-                    attr_header = link_data.pop('HEADER')
-                    HeaderClass = HeaderClassFactory.create(attr_header['TYPE'])
-                    header = HeaderClass.from_dict(attr_header)
-                    # if dict_header['TYPE'] == 'ARROW':
+            if 'HEAD' in link_data:
+                if isinstance(link_data['HEAD'], dict):
+                    attr_head = link_data.pop('HEAD')
+                    ArrowClass = ArrowClassFactory.create(attr_head['TYPE'])
+                    head = ArrowClass.from_dict(attr_head)
+                    # if dict_head['TYPE'] == 'TRIANGLE':
                     #     str_link_type = '+'
-                    # elif dict_header['TYPE'] == 'HAMMER':
+                    # elif dict_head['TYPE'] == 'HAMMER':
                     #     str_link_type = '-'
                 else:
-                    str_link_type = link_data.pop('HEADER')
+                    str_link_type = link_data.pop('HEAD')
             elif 'SIGN' in link_data:
                 sign_link = link_data['SIGN']
                 if sign_link > 0:
@@ -77,7 +77,7 @@ def to_graphics(dg, iden, no_link_type=False):
                 else:
                     raise ValueError("Undefined link sign: %s"%(sign_link))
 
-        if not header and not no_link_type \
+        if not head and not no_link_type \
            and (str_link_type not in (str_act, str_inh)):
             raise ValueError("Undefined link type: %s"%(str_link_type))
 
@@ -137,30 +137,30 @@ def to_graphics(dg, iden, no_link_type=False):
 
         counter_link += 1
 
-        # Add header
-        if not header:  # Header can created according to header information.
+        # Add head
+        if not head:  # Head can created according to head information.
             if no_link_type:
-                HeaderClass = None
+                ArrowClass = None
             elif str_link_type == '+':
-                header_type = 'ARROW'
-                HeaderClass = HeaderClassFactory.create(header_type)
+                head_type = 'TRIANGLE'
+                ArrowClass = ArrowClassFactory.create(head_type)
             elif str_link_type == '-':
-                header_type = 'HAMMER'
-                HeaderClass = HeaderClassFactory.create(header_type)
+                head_type = 'HAMMER'
+                ArrowClass = ArrowClassFactory.create(head_type)
             else:
                 pass  # This logic is processed just below.
 
-            if HeaderClass:
-                header = HeaderClass()
+            if ArrowClass:
+                head = ArrowClass()
 
-        # Add link with header
+        # Add link with head
         if str_src == str_tgt:  # Self-loop link
             LinkClass = LinkClassFactory.create('SELFLOOP_LINK')
             iden = "%s%s%s" % (str_src, str_link_type, str_src)
             link = LinkClass(iden=iden,
                              name=str_link_type,
                              node=src,
-                             header=header)
+                             head=head)
 
             if 'FILL_COLOR' not in link_data:
                 link['FILL_COLOR'] = QColor(100, 100, 100, 100)
@@ -173,7 +173,7 @@ def to_graphics(dg, iden, no_link_type=False):
             link = LinkClass(iden=iden,
                              name= str_link_type,
                              source=src, target=tgt,
-                             header=header)
+                             head=head)
 
             if 'FILL_COLOR' not in link_data:
                 link['FILL_COLOR'] = Qt.black
@@ -244,12 +244,12 @@ def to_networkx(net):
         link_data = dg.edges[src.iden, tgt.iden]
         link_data.update(link.to_dict())
 
-        # Set sign information if header exists.
-        if link.header:
+        # Set sign information if head exists.
+        if link.head:
             sign_link = 0
-            if link.header.TYPE == 'ARROW':
+            if link.head.TYPE == 'TRIANGLE':
                 sign_link = +1
-            elif link.header.TYPE == 'HAMMER':
+            elif link.head.TYPE == 'HAMMER':
                 sign_link = -1
 
             link_data['SIGN'] = sign_link

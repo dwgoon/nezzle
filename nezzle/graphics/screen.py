@@ -19,7 +19,9 @@ import numpy as np
 
 class GraphicsView(QGraphicsView):
 
-    items_moved = Signal(list, list)
+    #items_moved = Signal(list, list)
+    items_moved_by_mouse = Signal(list)
+    items_moved_by_key = Signal(list)
     items_removed = Signal(list)
 
     def __init__(self, main_window=None, parent=None):
@@ -68,6 +70,10 @@ class GraphicsView(QGraphicsView):
     def mousePressEvent(self, event):
         self._item_clicked = self.scene().itemAt(self.mapToScene(event.pos()), QTransform())
 
+        if event.button() == Qt.LeftButton:
+            print("Mouse Pressed with Left Button!")
+            self._pos_drag_start = event.pos()
+
         if self.dragMode() == QGraphicsView.RubberBandDrag:
             # Process the context menu actions such as alignment.
             if event.button() == Qt.RightButton:
@@ -76,13 +82,6 @@ class GraphicsView(QGraphicsView):
                 # Should not return super().mousePressEvent(event) here.
                 # Otherwise, the press event is processed under the drag mode.
                 return
-
-            if event.button() == Qt.LeftButton:
-                self._pos_drag_start = event.pos()
-                # items = self.scene().selected_movable_items()
-                # self._old_positions_selected_items = [item.pos() for item in items]
-                # if len(items) != 0:
-                #     print("[Old positions of selected items]", self._old_positions_selected_items)
 
         return super().mousePressEvent(event)
 
@@ -97,20 +96,20 @@ class GraphicsView(QGraphicsView):
         if (event.pos() - self._pos_drag_start).manhattanLength() >= QApplication.startDragDistance():
             self._is_dragged = True
 
-        #print("Dragged!")
         return super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         if self._item_clicked and self._is_dragged:
             items = self.scene().selected_movable_items()
             if len(items) != 0:
-                self.items_moved.emit(items, self._old_positions_selected_items)
+                self.items_moved_by_mouse.emit(items)
                 print("Emit items moved signal")
 
         # Updating the old positions should be done after emitting the signal to History object.
         if self.dragMode() == QGraphicsView.RubberBandDrag:
             self.mw.ct_manager.update_console_vars()
-            self.update_old_positions_selected_items()
+            self.enable_menu_align()
+            self.scene().update_old_positions_selected_items()
 
         self._is_dragged = False
         return super().mouseReleaseEvent(event)
@@ -134,6 +133,10 @@ class GraphicsView(QGraphicsView):
 
             # Move the selected items with arrow keys
             if event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
+
+                if not event.isAutoRepeat():
+                    self.scene().update_old_positions_selected_items()
+
                 items = self.scene().selected_movable_items()
                 if len(items) <= 0:
                     return
@@ -150,9 +153,6 @@ class GraphicsView(QGraphicsView):
                     for item in items:
                         item.setX(item.x() + 1)
 
-                # if not self._moved_by_key:
-                #     self.update_old_positions_selected_items()
-
                 self._moved_by_key = True
             # end of if
 
@@ -165,10 +165,10 @@ class GraphicsView(QGraphicsView):
             if not event.isAutoRepeat() and event.key() in [Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right]:
                 items = self.scene().selected_movable_items()
                 if self._moved_by_key and len(items) > 0:
-                    self.items_moved.emit(items, self._old_positions_selected_items)
+                    self.items_moved_by_key.emit(items)
                     print("Emit items moved signal")
                     self._moved_by_key = False
-                    self.update_old_positions_selected_items()
+                    #self.scene().update_old_positions_selected_items()  # Record each step
 
 
     def _list_pos_x(self, items):
@@ -229,12 +229,6 @@ class GraphicsView(QGraphicsView):
         else:
             raise ValueError("Unknown direction for distribution: %s"%(direction))
 
-    def update_old_positions_selected_items(self):
-        items = self.scene().selected_movable_items()
-        self._old_positions_selected_items = [item.pos() for item in items]
-        print("[Old positions of selected items]", self._old_positions_selected_items)
-
-
 class GraphicsScene(QGraphicsScene):
 
     def __init__(self, *args, parent=None, **kwargs):
@@ -243,12 +237,31 @@ class GraphicsScene(QGraphicsScene):
         self.setBackgroundBrush(Qt.transparent)
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
+    def addItem(self, item):
+        item["_OLD_POS"] = item.pos()
+        return super().addItem(item)
+
     def selected_movable_items(self):
         items_selected = self.selectedItems()
+        # print("Selected Movable Items")
+        # for item in items_selected:
+        #     print(item.to_dict())
+
         return [item for item in items_selected if item.is_movable()]
 
     def on_selection_changed(self):
-        view = self.views()[0]
-        view.enable_menu_align()
+        pass
+        # view = self.views()[0]
+        # view.enable_menu_align()
+        # self.update_old_positions_selected_items()
 
+    def update_old_positions_selected_items(self):
+        items = self.selected_movable_items()
+        if len(items) == 0:
+            return
+
+        for item in items:
+            item["_OLD_POS"] = item.pos()
+
+        print("update_old_positions_selected_items")
 # end of class

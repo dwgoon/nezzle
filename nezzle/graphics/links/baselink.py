@@ -19,7 +19,7 @@ from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.baseitem import PainterOptionItem
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics.nodes.basenode import BaseNode
 
 
@@ -126,7 +126,7 @@ class BaseLink(PainterOptionItem):
 
     def __init__(self,
                  iden,
-                 header=None,
+                 head=None,
                  width=2,
                  *args,
                  **kwargs):
@@ -136,7 +136,7 @@ class BaseLink(PainterOptionItem):
         """
         super().__init__(iden, *args, **kwargs)
 
-        self._pos_header = QPointF()
+        self._pos_head = QPointF()
         self._path_paint = QPainterPath()
         self._bounding_rect = QRectF()
 
@@ -148,12 +148,12 @@ class BaseLink(PainterOptionItem):
         self._attr.set('WIDTH', width, trigger=False)
         self._width = width
 
-        self._attr.set_trigger('HEADER', self._trigger_set_header, when='set')
-        self._attr.set('HEADER', header, trigger=False)
+        self._attr.set_trigger('HEAD', self._trigger_set_head, when='set')
+        self._attr.set('HEAD', head, trigger=False)
 
-        self._header = header
-        if header:
-            self._header.parent = self
+        self._head = head
+        if head:
+            self._head.parent = self
 
         self.initialize()
 
@@ -168,13 +168,13 @@ class BaseLink(PainterOptionItem):
     def width(self, val):
         self._attr['WIDTH'] = val
 
-    def set_width(self, val, header=True):
-        if header and self.header:
-            self.header.set_size_from_link(link_width=val)
+    def set_width(self, val, head=True):
+        if head and self.head:
+            self.head.set_size_from_link(link_width=val)
             # w = self.width
             # scale = val/w
-            # self.header.width *= scale
-            # self.header.height *= scale
+            # self.head.width *= scale
+            # self.head.height *= scale
 
         self._width = val
         self._attr.set('WIDTH', val, trigger=False)
@@ -184,27 +184,27 @@ class BaseLink(PainterOptionItem):
         self.set_width(value)
         return value
 
-    def _trigger_set_header(self, key, value):
-        self._header = value
-        if self._header:
-            self._header.parent = self
+    def _trigger_set_head(self, key, value):
+        self._head = value
+        if self._head:
+            self._head.parent = self
 
-        self._attr.set('HEADER', value, trigger=False)
+        self._attr.set('HEAD', value, trigger=False)
         self.update()
 
         return value
 
     @property
-    def header(self):
-        return self._attr['HEADER']
+    def head(self):
+        return self._attr['HEAD']
 
-    @header.setter
-    def header(self, obj):
-        self._attr['HEADER'] = obj
+    @head.setter
+    def head(self, obj):
+        self._attr['HEAD'] = obj
 
     @property
-    def pos_header(self):
-        return self._pos_header
+    def pos_head(self):
+        return self._pos_head
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -237,16 +237,16 @@ class BaseLink(PainterOptionItem):
     def itemChange(self, change, value):
         return super().itemChange(change, value)
 
-    def _create_header_path(self):
-        points = self.header.identify_points(self.pos_header,
+    def _create_head_path(self):
+        points = self.head.identify_points(self.pos_head,
                                              self.width,
-                                             self._header_transform)
+                                             self._head_transform)
         path = QPainterPath()
         path.moveTo(points[0])
         for pt in points[1:]:
             path.lineTo(pt)
 
-        self._path_header = path
+        self._path_head = path
 
     def update(self, *args, **kwargs):
         self._create_path()
@@ -260,19 +260,19 @@ class BaseLink(PainterOptionItem):
 
     def to_dict(self):
         attr = super().to_dict()
-        if self.header:
-            attr['HEADER'] = self.header.to_dict()
+        if self.head:
+            attr['HEAD'] = self.head.to_dict()
 
         return attr
 
     @classmethod
-    def header_from_dict(cls, attr):
-        if 'HEADER' in attr:
-            attr_header = attr.pop('HEADER')
-            if attr_header:
-                HeaderClass = HeaderClassFactory.create(attr_header['TYPE'])
-                header = HeaderClass.from_dict(attr_header)
-                return header
+    def head_from_dict(cls, attr):
+        if 'HEAD' in attr:
+            attr_head = attr.pop('HEAD')
+            if attr_head:
+                ArrowClass = ArrowClassFactory.create(attr_head['TYPE'])
+                head = ArrowClass.from_dict(attr_head)
+                return head
         return None
 
 
@@ -292,7 +292,7 @@ class BaseLink(PainterOptionItem):
     def _create_path(self):
         raise NotImplementedError()
 
-    def _identify_header(self):
+    def _identify_head(self):
         raise NotImplementedError()
 
     def is_movable(self):
@@ -370,11 +370,15 @@ class TwoNodeLink(BaseLink):
         to show the graphics of link appropriately.
         """
         v = self.pos_tgt - self.pos_src
-        angle_rad = np.arccos(v.x() / length(v))
+        len_v = length(v)
+        if len_v <= 1e-6:
+            return True
+
+        angle_rad = np.arccos(v.x() / len_v)
         radius_src = self.source.calculate_radius(angle_rad)
 
         v *= -1
-        angle_rad = np.arccos(v.x() / length(v))
+        angle_rad = np.arccos(v.x() / len_v)
         radius_tgt = self.target.calculate_radius(angle_rad)
 
         return dist(self.pos_src, self.pos_tgt) < radius_src + radius_tgt
@@ -395,7 +399,7 @@ class TwoNodeLink(BaseLink):
         width = attr.pop('WIDTH')
 
         obj = cls(iden, source, target, width=width)
-        obj.header = cls.header_from_dict(attr)
+        obj.head = cls.head_from_dict(attr)
 
         attr['ID_SOURCE'] = source.iden
         attr['ID_TARGET'] = target.iden

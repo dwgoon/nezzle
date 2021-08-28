@@ -9,7 +9,7 @@ from qtpy.QtGui import QColor
 from qtpy.QtGui import QBrush
 
 from .baselink import BaseLink
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics.mixins import Lockable
 
 
@@ -69,8 +69,8 @@ class SelfloopLink(BaseLink):
         self.setPos(x+self._node.x(), y+self._node.y())
 
     def _calculate_angle_offset(self):
-        if self.header:
-            offset = self.header.offset + self.header.height
+        if self.head:
+            offset = self.head.offset + self.head.height
             self._angle_offset = math.degrees(offset/self._radius_core)
         else:
             self._angle_offset = 0
@@ -85,13 +85,13 @@ class SelfloopLink(BaseLink):
         cosine = (2*radius**2-(node_hw**2+node_hh**2))/(2*radius**2)
         self._angle_sweep -= math.degrees(math.acos(cosine))
 
-    def _calculate_header_angle(self):
+    def _calculate_head_angle(self):
         """Calculate the angle between the tangent line of
         the core circle at the axis between 3rd and 4th quadrants
-        (where the header angle is not rotated yet) and the tangent
-        line of header pos.
+        (where the head angle is not rotated yet) and the tangent
+        line of head pos.
         """
-        self._angle_header = self._angle_sweep - (self._angle_begin-90)
+        self._angle_head = self._angle_sweep - (self._angle_begin-90)
 
     def _calculate_angle_begin(self):
         node_hw = self._node.width / 2  # Half of nodes width
@@ -110,20 +110,20 @@ class SelfloopLink(BaseLink):
         cosine = (2*radius**2-dist_sq)/(2*radius**2)
         self._angle_begin += math.degrees(math.acos(cosine))
 
-    def _identify_header(self):
-        SelfloopLink._identify_header_pos(self)
-        SelfloopLink._calculate_header_angle(self)
-        super()._create_header_path()
+    def _identify_head(self):
+        SelfloopLink._identify_head_pos(self)
+        SelfloopLink._calculate_head_angle(self)
+        super()._create_head_path()
 
-    def _identify_header_pos(self):
+    def _identify_head_pos(self):
         radius = self._radius_core
         rect_core = QRectF(-radius, -radius,
                            2*radius, 2*radius)
 
         pos = self._identify_arc_pos(rect_core,
                                      -self._angle_sweep)
-        self.pos_header.setX(pos.x())
-        self.pos_header.setY(pos.y())
+        self.pos_head.setX(pos.x())
+        self.pos_head.setY(pos.y())
 
     def _identify_arc_pos(self, rect, angle):
         path = QPainterPath()
@@ -164,9 +164,9 @@ class SelfloopLink(BaseLink):
         path.arcMoveTo(rect_outer, begin_angle)
         path.arcTo(rect_outer, begin_angle, -self._angle_sweep)
 
-        if self.header:
-            SelfloopLink._identify_header(self)
-            self._path_paint.connectPath(self._path_header)
+        if self.head:
+            SelfloopLink._identify_head(self)
+            self._path_paint.connectPath(self._path_head)
         else:
             path.lineTo(self._identify_arc_pos(rect_inner, -self._angle_sweep))
 
@@ -195,10 +195,10 @@ class SelfloopLink(BaseLink):
         # #     painter.drawEllipse(-1 + elem.x,
         # #                         -1 + elem.y, 2, 2)
         #
-        # if self.header:
-        #     painter.drawPath(self._path_header)
-        #     # for i in range(self._path_header.elementCount()):
-        #     #     elem = self._pat_header.elementAt(i)
+        # if self.head:
+        #     painter.drawPath(self._path_head)
+        #     # for i in range(self._path_head.elementCount()):
+        #     #     elem = self._pat_head.elementAt(i)
         #     #     painter.drawEllipse(-1 + elem.x,h
         #     #                         -1 + elem.y, 2, 2)
 
@@ -207,8 +207,8 @@ class SelfloopLink(BaseLink):
     # def itemChange(self, change, value):
     #
     #     if change == QGraphicsItem.ItemSelectedHasChanged:
-    #         if self.header:
-    #             print("angle_header: ", self._angle_header)
+    #         if self.head:
+    #             print("angle_head: ", self._angle_head)
     #
     #         print("Node width, height", self._node.width, self._node.height)
     #         print("angle_offset: ", self._angle_offset)
@@ -229,7 +229,7 @@ class SelfloopLink(BaseLink):
         width = attr.pop('WIDTH')
 
         obj = cls(iden, node, width=width)
-        obj.header = cls.header_from_dict(attr)
+        obj.head = cls.head_from_dict(attr)
 
         attr['ID_NODE'] = node.iden
         obj._attr.update(attr)

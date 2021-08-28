@@ -8,7 +8,7 @@ from qtpy.QtWidgets import QComboBox
 
 from nezzle.ui.ui_opennetworkdialog import Ui_OpenNetworkDialog
 from nezzle.fileio import read_metadata
-from nezzle.graphics.headers.headerclassfactory import HeaderClassFactory
+from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
 
 
 class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
@@ -25,15 +25,15 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         validator_double.setBottom(0.0)
 
         # Set TableWidget for link haader mapping
-        self.ui_linkHeaderMappingTable.setColumnCount(3)
-        self.ui_linkHeaderMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Header"])
+        self.ui_linkHeadMappingTable.setColumnCount(3)
+        self.ui_linkHeadMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Head"])
 
-        # Set header selection QComboBox
-        # self._ui_headerSelection = QComboBox()
-        self._available_headers = HeaderClassFactory.get_available_headers()
-        self._header_selections = {}
-        # for header_name in available_headers:
-        #     self._ui_headerSelection.addItem(header_name.title())
+        # Set head selection QComboBox
+        # self._ui_headSelection = QComboBox()
+        self._available_heads = ArrowClassFactory.get_available_heads()
+        self._head_selections = {}
+        # for head_name in available_heads:
+        #     self._ui_headSelection.addItem(head_name.title())
 
         # Link signal and slot
         self.ui_openButton.released.connect(self.on_open_button_released)
@@ -58,9 +58,9 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
                 self.on_reload_button_released()
                 # interactions = read_interactions(fpath)
                 # num_rows = len(interactions)
-                # self.ui_linkHeaderMappingTable.setRowCount(num_rows)
+                # self.ui_linkHeadMappingTable.setRowCount(num_rows)
                 # for i, name in enumerate(interactions):
-                #     self.ui_linkHeaderMappingTable.setItem(i, 0, QTableWidgetItem(name))
+                #     self.ui_linkHeadMappingTable.setItem(i, 0, QTableWidgetItem(name))
 
                 # if fpath.endswith('.json'):
                 #     #self.ui_networkNameEdit.setEnabled(False)
@@ -87,33 +87,33 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         if not fpath or len(fpath) <= 0:
             return
 
-        self._header_selections.clear()
+        self._head_selections.clear()
         metadata = read_metadata(fpath)
         interactions = metadata["INTERACTIONS"]
         num_rows = len(interactions)
-        self.ui_linkHeaderMappingTable.setRowCount(num_rows)
+        self.ui_linkHeadMappingTable.setRowCount(num_rows)
         for i, (interaction_name, count) in enumerate(interactions.items()):
             # Column (0): Count of each interaction
             count_item = QTableWidgetItem(str(count))
             count_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
-            self.ui_linkHeaderMappingTable.setItem(i, 0, count_item)
+            self.ui_linkHeadMappingTable.setItem(i, 0, count_item)
 
             # Column (1): Interaction name
             interaction_item = QTableWidgetItem(interaction_name)
             interaction_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
-            self.ui_linkHeaderMappingTable.setItem(i, 1, interaction_item)
+            self.ui_linkHeadMappingTable.setItem(i, 1, interaction_item)
 
-            # Column (2): QComboBox for selecting headers
+            # Column (2): QComboBox for selecting heads
             cb = QComboBox()
-            cb.addItems(self._available_headers)
-            if interaction_name in self._available_headers:
-                index = self._available_headers.index(interaction_name)
+            cb.addItems(self._available_heads)
+            if interaction_name in self._available_heads:
+                index = self._available_heads.index(interaction_name)
                 cb.setCurrentIndex(index)
 
-            self.ui_linkHeaderMappingTable.setCellWidget(i, 2, cb)
-            self._header_selections[interaction_name] = cb
+            self.ui_linkHeadMappingTable.setCellWidget(i, 2, cb)
+            self._head_selections[interaction_name] = cb
         # end of for
 
         self.ui_networkNameEdit.setText(metadata["NETWORK_NAME"])
@@ -137,7 +137,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
     @property
     def link_map(self):
         _link_map = {}
-        for interaction_name, cb in self._header_selections.items():
+        for interaction_name, cb in self._head_selections.items():
             _link_map[interaction_name] = cb.currentText()
         return _link_map
 

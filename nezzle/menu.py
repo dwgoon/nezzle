@@ -75,7 +75,13 @@ class MenuActionHandler(QWidget):
         # self.mw.ui_actionUndo.triggered.connect(self.process_undo)
         # self.mw.ui_actionRedo.triggered.connect(self.process_redo)
 
-        self.mw.sv_manager.view.items_moved.connect(self.mw.history_manager.on_items_moved)
+        self.mw.sv_manager.view.items_moved_by_mouse.connect(
+            self.mw.history_manager.on_items_moved_by_mouse
+        )
+        self.mw.sv_manager.view.items_moved_by_key.connect(
+            self.mw.history_manager.on_items_moved_by_key
+        )
+
         #self.mw.view.item_removed.connect(self.mw.history_manager.on_item_removed)
 
         self.mw.ui_actionCopy.triggered.connect(self.process_copy)

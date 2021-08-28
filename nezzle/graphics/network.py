@@ -13,7 +13,7 @@ import networkx as nx
 from .nodes.nodefactory import NodeClassFactory
 from .links.linkfactory import LinkClassFactory
 from .labels.labelfactory import LabelClassFactory
-from nezzle.graphics.headers.headerclassfactory import HeaderClassFactory
+from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
 
 from .links.baselink import BaseLink
 from .labels.textlabel import TextLabel
@@ -209,12 +209,24 @@ class Network(MappableItem):
         dict_net["LABELS"] = []
 
         for iden, node in self.nodes.items():
-            dict_net["NODES"].append(node.to_dict())
+            dict_node = node.to_dict()
+            for key in dict_node:
+                if key.startswith("_"):
+                    del dict_node[key]
+            dict_net["NODES"].append(dict_node)
 
         for iden, link in self.links.items():
-            dict_net["LINKS"].append(link.to_dict())
+            dict_link = link.to_dict()
+            for key in dict_link:
+                if key.startswith("_"):
+                    del dict_link[key]
+            dict_net["LINKS"].append()
 
         for iden, label in self.labels.items():
+            dict_label = label.to_dict()
+            for key in dict_label:
+                if key.startswith("_"):
+                    del dict_label[key]
             dict_net["LABELS"].append(label.to_dict())
 
         dict_net.update(self._attr)
@@ -337,8 +349,8 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
 
     if not msc:
         msc = {}
-        msc['+'] = HeaderClassFactory.create('ARROW')
-        msc['-'] = HeaderClassFactory.create('HAMMER')
+        msc['+'] = ArrowClassFactory.create('TRIANGLE')
+        msc['-'] = ArrowClassFactory.create('HAMMER')
 
 
     ir, ic = A.nonzero()
@@ -351,8 +363,8 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
         tgt, src = i2n[itgt], i2n[isrc]
 
         sign = '+' if A[itgt, isrc] > 0 else '-'
-        HeaderClass = msc[sign]
-        header = HeaderClass()
+        ArrowClass = msc[sign]
+        head = ArrowClass()
 
         iden = "%s%s%s" % (src, sign, tgt)
 
@@ -365,7 +377,7 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
 
             link = SelfloopClass(iden=iden,
                                  node=node,
-                                 header=header)
+                                 head=head)
 
             node.add_link(link)
             net_new.add_link(link)
@@ -385,7 +397,7 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
             link = LinkClass(iden=iden,
                              source=node_src,
                              target=node_tgt,
-                             header=header)
+                             head=head)
 
             node_src.add_link(link)
             node_tgt.add_link(link)

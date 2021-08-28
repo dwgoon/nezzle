@@ -8,12 +8,12 @@ from qtpy.QtCore import Qt
 
 import nezzle
 from nezzle.graphics import LabelClassFactory
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 
 import sfa
 
-NegHeader = HeaderClassFactory.create('HAMMER')
-PosHeader = HeaderClassFactory.create('ARROW')
+NegHead = ArrowClassFactory.create('HAMMER')
+PosHead = ArrowClassFactory.create('TRIANGLE')
 TextLabel = LabelClassFactory.create('TEXT_LABEL')
 
 
@@ -260,25 +260,25 @@ def _update_links(net, A, F, i2n, pct_link, lw_min, lw_max):
 
         link = net.nxdg[src][tgt]['VIS']
 
-        header_old = link.header
-        args_header = header_old.width, header_old.height, header_old.offset
+        head_old = link.head
+        args_head = head_old.width, head_old.height, head_old.offset
         if f > 0:
-            header = PosHeader(*args_header)
+            head = PosHead(*args_head)
             color_link = QColor(255, 10, 10, 70)
         elif f < 0:
-            header = NegHeader(*args_header)
+            head = NegHead(*args_head)
             color_link = QColor(10, 10, 255, 70)
         else:  # When flow is zero, show the sign of the original link.
             if A[i, j] > 0:
-                header = PosHeader(*args_header)
+                head = PosHead(*args_head)
             elif A[i, j] < 0:
-                header = NegHeader(*args_header)
+                head = NegHead(*args_head)
             else:
                 raise RuntimeError("The logic is abnormal.")
 
             color_link = QColor(100, 100, 100, 100)
 
-        link.header = header
+        link.head = head
         link['FILL_COLOR'] = color_link
 
         if f == 0:

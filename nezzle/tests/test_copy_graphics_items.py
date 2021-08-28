@@ -8,7 +8,7 @@ from qtpy.QtGui import QColor
 from nezzle import fileio
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import LinkClassFactory
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import Network
 
@@ -47,11 +47,11 @@ def test_copy_link():
     net.add_node(n1)
     net.add_node(n2)
 
-    HeaderClass = HeaderClassFactory.create("ARROW")
-    header = HeaderClass()
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
+    head = ArrowClass()
 
     LinkClass = LinkClassFactory.create('CURVED_LINK')
-    link1 = LinkClass(iden="ID3", source=n1, target=n2, width=3, header=header)
+    link1 = LinkClass(iden="ID3", source=n1, target=n2, width=3, head=head)
     link1['FILL_COLOR'] = QColor(10, 100, 10)
     link1['WIDTH'] = 5
 

@@ -1,66 +1,53 @@
 from qtpy.QtCore import QPointF
-from qtpy.QtCore import qrand
 from qtpy.QtWidgets import QUndoCommand
 
-# from diagramitem import DiagramItem
-# from diagramitem import DiagramItemType
 
+class MoveByMouseCommand(QUndoCommand):
+    ID = 0
 
-# def create_command_str(item, pos):
-#     if item.itemType() == DiagramItemType.Box:
-#         itemType = "Box"
-#     else:
-#         itemType = "Triangle"
-#
-#     return "%s at (%f, %f)" % (itemType, pos.x(), pos.y())
+    def id(self):
+        return self.ID
 
-
-class MoveCommand(QUndoCommand):
-    # Id = 1234
-
-    def __init__(self, items, old_positions, parent=None):
+    def __init__(self, items, parent=None):
         super().__init__(parent)
         self._items = items
-        self._new_positions = [item.pos() for item in items]
-        self._old_positions = old_positions
-
-    # def id(self):
-    #     return self.Id
-
-    """
-    The mergeWith() makes the consecutive moves a single MoveCommand,
-    (i.e., the item will be moved back to the first position,
-          when undo is performed.)
-
-    def mergeWith(self, command):
-        moveCommand = command
-        item = moveCommand.myDiagramItem
-
-        if self.myDiagramItem != item:
-            return False
-
-        self.newPos = item.pos()
-        self.setText("Move %s"%createCommandString(self.myDiagramItem, self.newPos))
-
-        return True
-    """
+        self._new_positions = {item.iden:QPointF(item.pos()) for item in items}
+        self._old_positions = {item.iden:QPointF(item["_OLD_POS"]) for item in items}
 
     def undo(self):
-        if not self._old_positions:
-            return
-
         for i, item in enumerate(self._items):
-            item.setPos(self._old_positions[i])
+            item.setPos(self._old_positions[item.iden])
 
         item.scene().update()
         self.setText("Moving to new positions")
 
     def redo(self):
         for i, item in enumerate(self._items):
-            item.setPos(self._new_positions[i])
+            item.setPos(self._new_positions[item.iden])
 
         item.scene().update()
         self.setText("Moving to new positions")
+
+
+class MoveByKeyCommand(MoveByMouseCommand):
+    ID = 1
+
+    def id(self):
+        return self.ID
+    """
+    The mergeWith() makes the consecutive moves a single MoveCommand,
+    (i.e., the item will be moved back to the first position,
+          when undo is performed.)
+    """
+    def mergeWith(self, command):
+        items = command._items
+
+        if not isinstance(command, MoveByKeyCommand):
+            return False
+
+        self._new_positions = {item.iden:QPointF(item.pos()) for item in items}
+        self.setText("Moving to new positions")
+        return True
 
 
 # class DeleteCommand(QUndoCommand):

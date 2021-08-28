@@ -12,7 +12,7 @@ from qtpy.QtCore import QPoint, Qt
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
 
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
@@ -45,9 +45,9 @@ def add_curve(view):
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
-    HeaderClass = HeaderClassFactory.create('ARROW')
-    header = HeaderClass(width=10, height=10, offset=4)
-    curve = LinkClass("ID_LINK_1", src, tgt, width=4, header=header)
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    head = ArrowClass(width=10, height=10, offset=4)
+    curve = LinkClass("ID_LINK_1", src, tgt, width=4, head=head)
     curve['FILL_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(25, 50, 100)
     curve['BORDER_WIDTH'] = 2
@@ -60,8 +60,8 @@ def add_curve(view):
     #
     # # Two-nodes negative feedback loop
     # NodeClass = NodeClassFactory.create('ELLIPSE_NODE')
-    # HeaderClass = HeaderClassFactory.create('HAMMER')
-    # header = HeaderClass(width=16, height=4, offset=4)
+    # ArrowClass = ArrowClassFactory.create('HAMMER')
+    # head = ArrowClass(width=16, height=4, offset=4)
     # src = NodeClass('ID_NODE_3', 30, 20, pos=QPoint(x0, y0 + 20))
     # tgt = NodeClass('ID_NODE_4', 20, 30, pos=QPoint(x1, y1 + 20))
     #
@@ -74,15 +74,15 @@ def add_curve(view):
     # tgt['BORDER_WIDTH'] = 2
     # tgt['BORDER_LINE_TYPE'] = 'DASH'
     #
-    # curve = LinkClass("ID_LINK_2", src, tgt, width=4, header=header)
+    # curve = LinkClass("ID_LINK_2", src, tgt, width=4, head=head)
     # curve['FILL_COLOR'] = QColor(0, 0, 255)
     # curve['BORDER_COLOR'] = '#ffa500'
     #
     # net.add_link(curve)
     #
-    # HeaderClass = HeaderClassFactory.create('ARROW')
-    # header = HeaderClass(width=10, height=10, offset=4)
-    # curve = LinkClass("ID_LINK_3", tgt, src, width=2, header=header)
+    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # head = ArrowClass(width=10, height=10, offset=4)
+    # curve = LinkClass("ID_LINK_3", tgt, src, width=2, head=head)
     # curve['FILL_COLOR'] = QColor(0, 0, 255)
     # curve['BORDER_WIDTH'] = 1
     # curve['BORDER_COLOR'] = QColor(255, 0, 0)
@@ -102,13 +102,13 @@ def add_curve(view):
     # tgt['BORDER_COLOR'] = Qt.magenta
     # tgt.pen = QPen()  # Previously defined border options are ignored
     #
-    # curve = LinkClass("ID_LINK_4", tgt, src, width=4, header=None)
+    # curve = LinkClass("ID_LINK_4", tgt, src, width=4, head=None)
     # curve['FILL_COLOR'] = QColor(25, 150, 155)
     #
     # LinkClass = LinkClassFactory.create("STRAIGHT_LINK")
-    # HeaderClass = HeaderClassFactory.create('ARROW')
-    # header = HeaderClass(width=10, height=10, offset=4)
-    # straight = LinkClass("ID_LINK_5", src, tgt, width=4, header=header)
+    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # head = ArrowClass(width=10, height=10, offset=4)
+    # straight = LinkClass("ID_LINK_5", src, tgt, width=4, head=head)
     # straight['FILL_COLOR'] = Qt.magenta
     # net.add_link(straight)
     #
@@ -135,11 +135,11 @@ def add_curve(view):
     # nodes = NodeClass('ID_NODE_7', 100, 100, pos=QPoint(x0, y0 - 100))
     # nodes['FILL_COLOR'] = QColor(100, 150, 150, 100)
     #
-    # HeaderClass = HeaderClassFactory.create('ARROW')
-    # header = HeaderClass(width=10, height=10, offset=4)
+    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # head = ArrowClass(width=10, height=10, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # link = LinkClass('ID_LINK_6', nodes, width=6, header=header)
+    # link = LinkClass('ID_LINK_6', nodes, width=6, head=head)
     # #link['BORDER_WIDTH'] = 2
     # #link['BORDER_COLOR'] = QColor(255, 100, 100, 200)
     # link['FILL_COLOR'] = QColor(100, 100, 255, 100)
@@ -150,11 +150,11 @@ def add_curve(view):
     # nodes = NodeClass('ID_NODE_7', 100, 80, pos=QPoint(x0-20, y0-100))
     # nodes['FILL_COLOR'] = QColor(200, 200, 255, 100)
     #
-    # HeaderClass = HeaderClassFactory.create('HAMMER')
-    # header = HeaderClass(width=14, height=4, offset=4)
+    # ArrowClass = ArrowClassFactory.create('HAMMER')
+    # head = ArrowClass(width=14, height=4, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # link = LinkClass('ID_LINK_7', nodes, width=6, header=header)
+    # link = LinkClass('ID_LINK_7', nodes, width=6, head=head)
     # #link['BORDER_WIDTH'] = 2
     # #link['BORDER_COLOR'] = QColor(200, 200, 255, 150)
     # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
@@ -165,11 +165,11 @@ def add_curve(view):
     # nodes = NodeClass('ID_NODE_8', 40, 30, pos=QPoint(x0 - 40, y0 - 150))
     # nodes['FILL_COLOR'] = QColor(100, 255, 100, 200)
     #
-    # HeaderClass = HeaderClassFactory.create('ARROW')
-    # header = HeaderClass(width=5, height=5, offset=4)
+    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # head = ArrowClass(width=5, height=5, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # link = LinkClass('ID_LINK_8', nodes, width=2, header=header)
+    # link = LinkClass('ID_LINK_8', nodes, width=2, head=head)
     # #link['BORDER_WIDTH'] = 1
     # #link['BORDER_COLOR'] = QColor(200, 200, 255, 150)
     # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
@@ -181,11 +181,11 @@ def add_curve(view):
     # nodes = NodeClass('ID_NODE_9', 80, 100, pos=QPoint(x0-40, y0-120))
     # nodes['FILL_COLOR'] = QColor(200, 200, 255, 100)
     #
-    # HeaderClass = HeaderClassFactory.create('HAMMER')
-    # header = HeaderClass(width=14, height=4, offset=2)
+    # ArrowClass = ArrowClassFactory.create('HAMMER')
+    # head = ArrowClass(width=14, height=4, offset=2)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # link = LinkClass('ID_LINK_10', nodes, width=6, header=header)
+    # link = LinkClass('ID_LINK_10', nodes, width=6, head=head)
     #
     # link['FILL_COLOR'] = QColor(255, 150, 150, 250)
     # net.add_link(link)
@@ -195,11 +195,11 @@ def add_curve(view):
     # nodes = NodeClass('ID_NODE_10', 20, 40, pos=QPoint(x0 - 80, y0 - 180))
     # nodes['FILL_COLOR'] = QColor(200, 255, 200, 200)
     #
-    # HeaderClass = HeaderClassFactory.create('ARROW')
-    # header = HeaderClass(width=5, height=5, offset=2)
+    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # head = ArrowClass(width=5, height=5, offset=2)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
-    # link = LinkClass('ID_LINK_11', nodes, width=2, header=header)
+    # link = LinkClass('ID_LINK_11', nodes, width=2, head=head)
     #
     # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
     # net.add_link(link)

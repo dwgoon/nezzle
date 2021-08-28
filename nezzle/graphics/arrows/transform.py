@@ -5,17 +5,16 @@ from nezzle.utils.math import reflect_yaxis, reflect_xaxis
 
 class BaseTransform(object):
 
-    def __call__(self, pos_point, pos_header=None):
+    def __call__(self, pos_point, pos_head=None):
         raise NotImplemented()
-
 
 
 class Rotate(BaseTransform):
     def __init__(self, angle=None):
         self._angle = angle
 
-    def __call__(self, pos_point, pos_header=None):
-        return rotate(pos_header, pos_point, self._angle)
+    def __call__(self, pos_point, pos_head=None):
+        return rotate(pos_head, pos_point, self._angle)
 
     @property
     def angle(self):
@@ -33,5 +32,5 @@ class Reflect(BaseTransform):
         elif axis in [1, "x"]:
             self._reflect = reflect_xaxis
 
-    def __call__(self, pos_point, pos_header=None):
-        return self._reflect(pos_header, pos_point)
+    def __call__(self, pos_point, pos_head=None):
+        return self._reflect(pos_head, pos_point)

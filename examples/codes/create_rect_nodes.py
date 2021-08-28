@@ -7,7 +7,7 @@ from qtpy.QtCore import QPoint, Qt
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
 
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
@@ -36,9 +36,9 @@ def update(nav, net):
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
-    HeaderClass = HeaderClassFactory.create('ARROW')
-    header = HeaderClass(width=10, height=10, offset=4)
-    curve = LinkClass("ID_LINK_1", src, tgt, width=4, header=header)
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    head = ArrowClass(width=10, height=10, offset=4)
+    curve = LinkClass("ID_LINK_1", src, tgt, width=4, head=head)
     curve['FILL_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_WIDTH'] = 2
@@ -64,9 +64,9 @@ def update(nav, net):
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
-    HeaderClass = HeaderClassFactory.create('HAMMER')
-    header = HeaderClass(width=80, height=5, offset=4)
-    curve = LinkClass("ID_LINK_2", src, tgt, width=4, header=header)
+    ArrowClass = ArrowClassFactory.create('HAMMER')
+    head = ArrowClass(width=80, height=5, offset=4)
+    curve = LinkClass("ID_LINK_2", src, tgt, width=4, head=head)
     curve['FILL_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(255, 0, 0)
     curve['BORDER_WIDTH'] = 2

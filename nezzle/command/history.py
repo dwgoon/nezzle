@@ -4,7 +4,8 @@ from qtpy.QtWidgets import QUndoView
 from qtpy.QtWidgets import QUndoStack
 from qtpy.QtGui import QKeySequence
 
-from nezzle.command.commands import MoveCommand
+from nezzle.command.commands import MoveByMouseCommand
+from nezzle.command.commands import MoveByKeyCommand
 
 
 class HistoryManager(QObject):
@@ -28,9 +29,17 @@ class HistoryManager(QObject):
         #self.mw.ui_actionUndo.triggered.connect(self.process_undo)
         #self.mw.ui_actionRedo.triggered.connect(self.process_redo)
 
-    @Slot(list, list)
-    def on_items_moved(self, items, old_positions):
-         self.undo_stack.push(MoveCommand(items, old_positions))
+    # @Slot(list, list)
+    # def on_items_moved(self, items, old_positions):
+    #      self.undo_stack.push(MoveCommand(items, old_positions))
+
+    @Slot(list)
+    def on_items_moved_by_mouse(self, items):
+         self.undo_stack.push(MoveByMouseCommand(items))
+
+    @Slot(list)
+    def on_items_moved_by_key(self, items):
+        self.undo_stack.push(MoveByKeyCommand(items))
 
     @Slot()
     def process_undo(self):

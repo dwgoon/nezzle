@@ -9,7 +9,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LinkClassFactory
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import Network
 
@@ -103,10 +103,10 @@ def test_create_network():
     assert node3.to_dict() != node4.to_dict()
 
     # Create CurvedLink
-    HeaderClass = HeaderClassFactory.create('ARROW')
-    header = HeaderClass()
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    head = ArrowClass()
     LinkClass = LinkClassFactory.create('CURVED_LINK')
-    link = LinkClass('ID_LINK_1', node, node2, header=header)
+    link = LinkClass('ID_LINK_1', node, node2, head=head)
     net.add_link(link)
     attr = link.to_dict()
 
@@ -115,17 +115,17 @@ def test_create_network():
     net.add_link(link2)
 
     # Create StraightLink
-    HeaderClass = HeaderClassFactory.create('HAMMER')
-    header = HeaderClass()
+    ArrowClass = ArrowClassFactory.create('HAMMER')
+    head = ArrowClass()
     LinkClass = LinkClassFactory.create('STRAIGHT_LINK')
-    link3 = LinkClass('ID_LINK_3', node, node2, header=header)
+    link3 = LinkClass('ID_LINK_3', node, node2, head=head)
     net.add_link(link3)
 
-    HeaderClass = HeaderClassFactory.create('ARROW')
-    header = HeaderClass()
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    head = ArrowClass()
     link4 = LinkClass.from_dict(link3.to_dict(), node, node2)
     link4.iden = 'ID_LINK_4'
-    link4.header = header
+    link4.head = head
     net.add_link(link4)
 
     # Setting the size of CircleNode

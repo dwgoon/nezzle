@@ -7,7 +7,7 @@ from qtpy.QtCore import QPoint, Qt
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
 
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
@@ -36,11 +36,11 @@ def update(nav, net):
 
     LinkClass = LinkClassFactory.create("VERTICAL_ELBOW_LINK")
 
-    HeaderClass = HeaderClassFactory.create('ARROW')
-    header = HeaderClass(width=10, height=10, offset=4)
-    #header = None
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    head = ArrowClass(width=10, height=10, offset=4)
+    #head = None
 
-    elbow = LinkClass("LINK_1", src, tgt, width=4, header=header)
+    elbow = LinkClass("LINK_1", src, tgt, width=4, head=head)
     elbow['FILL_COLOR'] = QColor(255, 0, 0)
     elbow['BORDER_COLOR'] = QColor(255, 0, 0)
     elbow['BORDER_WIDTH'] = 2
@@ -75,11 +75,11 @@ def update(nav, net):
 
     LinkClass = LinkClassFactory.create("HORIZONTAL_ELBOW_LINK")
 
-    HeaderClass = HeaderClassFactory.create('ARROW')
-    header = HeaderClass(width=10, height=10, offset=4)
-    # header = None
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    head = ArrowClass(width=10, height=10, offset=4)
+    # head = None
 
-    elbow = LinkClass("LINK_2", src, tgt, width=4, header=header)
+    elbow = LinkClass("LINK_2", src, tgt, width=4, head=head)
     elbow['FILL_COLOR'] = QColor(255, 0, 0)
     elbow['BORDER_COLOR'] = QColor(255, 0, 0)
     elbow['BORDER_WIDTH'] = 2

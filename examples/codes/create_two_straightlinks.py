@@ -6,7 +6,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPoint
 from qtpy.QtGui import QColor
 
-from nezzle.graphics import HeaderClassFactory
+from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
@@ -18,8 +18,8 @@ def update(nav, net):
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     LinkClass = LinkClassFactory.create("STRAIGHT_LINK")
-    ArrowClass = HeaderClassFactory.create('ARROW')
-    HammerClass = HeaderClassFactory.create('HAMMER')
+    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    HammerClass = ArrowClassFactory.create('HAMMER')
 
     # Create four nodes
     x0 = -70.0
@@ -61,14 +61,14 @@ def update(nav, net):
     new_net.add_node(tgt2)
 
     # Create two links
-    header = ArrowClass(width=10, height=10, offset=4)
-    link1 = LinkClass("LINK1", src1, tgt1, width=4, header=header)
+    head = ArrowClass(width=10, height=10, offset=4)
+    link1 = LinkClass("LINK1", src1, tgt1, width=4, head=head)
     link1["FILL_COLOR"] = Qt.black
     link1["CTRL_POS_X"] = -10
     link1["CTRL_POS_Y"] = -50
 
-    header = HammerClass(width=16, height=3, offset=4)
-    link2 = LinkClass("LINK2", src2, tgt2, width=4, header=header)
+    head = HammerClass(width=16, height=3, offset=4)
+    link2 = LinkClass("LINK2", src2, tgt2, width=4, head=head)
     link2["FILL_COLOR"] = Qt.black
     link2["CTRL_POS_X"] = 10
     link2["CTRL_POS_Y"] = 50

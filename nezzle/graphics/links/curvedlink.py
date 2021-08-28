@@ -23,7 +23,7 @@ class CurvedLink(StraightLink):
     ITEM_TYPE = 'CURVED_LINK'
 
     def __init__(self, *args, **kwargs):
-        self._t_header = 0
+        self._t_head = 0
         super().__init__(*args, **kwargs)
 
         self._attr.set_trigger('CTRL_POS_X',
@@ -93,21 +93,21 @@ class CurvedLink(StraightLink):
                 painter.drawLine(self.pos_ctrl, self.pos_tgt)
 
         ## [DEBUG]
-        # if self.header:
+        # if self.head:
         #     painter.setPen(Qt.black)
         #     painter.setBrush(Qt.white)
-        #     painter.drawEllipse(-0.5 + self.pos_header.x(), -0.5 + self.pos_header.y(), 1, 1)
+        #     painter.drawEllipse(-0.5 + self.pos_head.x(), -0.5 + self.pos_head.y(), 1, 1)
         #
         #     painter.setPen(Qt.green)
         #     painter.setBrush(Qt.green)
         #     for i in range(0, 3):
-        #         elem = self._path_header.elementAt(i)
+        #         elem = self._path_head.elementAt(i)
         #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
         #
         #     painter.setPen(Qt.blue)
         #     painter.setBrush(Qt.blue)
-        #     for i in range(3, self._path_header.elementCount()):
-        #         elem = self._path_header.elementAt(i)
+        #     for i in range(3, self._path_head.elementCount()):
+        #         elem = self._path_head.elementAt(i)
         #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
         ##########################################################
 
@@ -159,13 +159,13 @@ class CurvedLink(StraightLink):
         self._dps_top = []
         self._dps_bottom = []
 
-    def _identify_header(self):
-        CurvedLink._identify_header_pos(self)
-        CurvedLink._calculate_header_angle(self)
-        super()._create_header_path()
+    def _identify_head(self):
+        CurvedLink._identify_head_pos(self)
+        CurvedLink._calculate_head_angle(self)
+        super()._create_head_path()
 
-    def _identify_header_pos(self):
-        offset = self._calculate_header_offset()
+    def _identify_head_pos(self):
+        offset = self._calculate_head_offset()
 
         p1 = self.pos_src
         p2 = self.pos_tgt
@@ -179,25 +179,25 @@ class CurvedLink(StraightLink):
 
         ix = np.argmax(rchange < 5e-2)
         t = self._arr_t[ix]
-        self._t_header = t
+        self._t_head = t
 
         ph = (1-t)**2*p1 + 2*(1-t)*t*pc + t**2*p2
-        self.pos_header.setX(ph.x())
-        self.pos_header.setY(ph.y())
+        self.pos_head.setX(ph.x())
+        self.pos_head.setY(ph.y())
 
-    def _calculate_header_offset(self):
+    def _calculate_head_offset(self):
         v = self.pos_ctrl - self.pos_tgt
         try:
             angle_rad = np.arccos(v.x() / length(v))
         except ZeroDivisionError:
-            return self.header.offset + self.header.height
+            return self.head.offset + self.head.height
 
         radius = self.target.calculate_radius(angle_rad)
-        return radius + self.header.offset + self.header.height
+        return radius + self.head.offset + self.head.height
 
-    def _calculate_header_angle(self):
-        self._angle_header = -QLineF(self.pos_ctrl, self.pos_header).angle()
-        self._header_transform.angle = self._angle_header
+    def _calculate_head_angle(self):
+        self._angle_head = -QLineF(self.pos_ctrl, self.pos_head).angle()
+        self._head_transform.angle = self._angle_head
 
     def _identify_curve_points(self):
         # Control points for quadratic Bezier curve
@@ -205,13 +205,13 @@ class CurvedLink(StraightLink):
                self.ctrl_point.pos(),
                self.pos_tgt]
 
-        if self.header:
+        if self.head:
             if self.is_straight():
-                StraightLink._identify_header(self)
+                StraightLink._identify_head(self)
                 return
             else:
-                CurvedLink._identify_header(self)
-                cps[2] = self.pos_header
+                CurvedLink._identify_head(self)
+                cps[2] = self.pos_head
 
         sps = quadbezier.identify_sps(cps)
         qps_top, qps_bottom = quadbezier.identify_qps(sps, self.width)
@@ -233,8 +233,8 @@ class CurvedLink(StraightLink):
         for i in range(len(self._dps_top)):
             self._path_paint.quadTo(self._dps_top[i], self._qps_top[i + 1])
 
-        if self.header:
-            self._path_paint.connectPath(self._path_header)
+        if self.head:
+            self._path_paint.connectPath(self._path_head)
         else:
             self._path_paint.lineTo(self._qps_bottom[-1])
 

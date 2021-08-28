@@ -10,7 +10,7 @@ from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.links.baselink import TwoNodeLink
-from nezzle.graphics.headers.transform import Rotate
+from nezzle.graphics.arrows.transform import Rotate
 
 
 @Lockable
@@ -21,8 +21,8 @@ class StraightLink(TwoNodeLink):
     ITEM_TYPE = 'STRAIGHT_LINK'
 
     def __init__(self, *args, **kwargs):
-        self._angle_header = None
-        self._header_transform = Rotate()
+        self._angle_head = None
+        self._head_transform = Rotate()
         super().__init__(*args, **kwargs)
 
     def initialize(self):
@@ -30,24 +30,24 @@ class StraightLink(TwoNodeLink):
         self._create_path()
         self._update_bounding_rect()
 
-    def _identify_header(self):
-        StraightLink._identify_header_pos(self)
-        StraightLink._calculate_header_angle(self)
-        #self._identify_header_pos()
-        #self._calculate_header_angle()
-        super()._create_header_path()
+    def _identify_head(self):
+        StraightLink._identify_head_pos(self)
+        StraightLink._calculate_head_angle(self)
+        #self._identify_head_pos()
+        #self._calculate_head_angle()
+        super()._create_head_path()
 
-    def _identify_header_pos(self):
-        offset = self._calculate_header_offset()
+    def _identify_head_pos(self):
+        offset = self._calculate_head_offset()
 
         p1 = self.pos_src
         p2 = self.pos_tgt
 
         ph = internal_division(p1, p2, dist(p1, p2) - offset, offset)
-        self.pos_header.setX(ph.x())
-        self.pos_header.setY(ph.y())
+        self.pos_head.setX(ph.x())
+        self.pos_head.setY(ph.y())
 
-    def _calculate_header_offset(self):
+    def _calculate_head_offset(self):
         v = self.pos_tgt - self.pos_src
         try:
             angle_rad = np.arccos(v.x()/length(v))
@@ -55,11 +55,11 @@ class StraightLink(TwoNodeLink):
             return 0
 
         radius = self.target.calculate_radius(angle_rad)
-        return radius + self.header.offset + self.header.height
+        return radius + self.head.offset + self.head.height
 
-    def _calculate_header_angle(self):
-        self._angle_header = -QLineF(self.pos_src, self.pos_tgt).angle()
-        self._header_transform.angle = self._angle_header
+    def _calculate_head_angle(self):
+        self._angle_head = -QLineF(self.pos_src, self.pos_tgt).angle()
+        self._head_transform.angle = self._angle_head
 
     def _identify_pos(self):
         m = internal_division(self.source.pos(), self.target.pos(), 0.5, 0.5)
@@ -86,9 +86,9 @@ class StraightLink(TwoNodeLink):
         self._path_paint.moveTo(butt2_rotated)
         self._path_paint.lineTo(butt1_rotated)
 
-        if self.header and not self.are_nodes_close():
-            StraightLink._identify_header(self)
-            self._path_paint.connectPath(self._path_header)
+        if self.head and not self.are_nodes_close():
+            StraightLink._identify_head(self)
+            self._path_paint.connectPath(self._path_head)
             self._path_paint.lineTo(butt2_rotated)
         else:
             head1 = self.pos_src + QPointF(line.length(), -self.width / 2)

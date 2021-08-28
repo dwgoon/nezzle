@@ -21,17 +21,17 @@ inputs = ["EGF", "I"]
 
 
 influence_erk = pd.read_csv(os.path.join(dpath, "influence_erk.csv"),
-                            header=None, index_col=0, squeeze=True)
+                            head=None, index_col=0, squeeze=True)
 influence_erk = influence_erk.sort_values(ascending=False)
 influence_erk = influence_erk.index.tolist()
 
 influence_akt = pd.read_csv(os.path.join(dpath, "influence_akt.csv"),
-                            header=None, index_col=0, squeeze=True)
+                            head=None, index_col=0, squeeze=True)
 influence_akt = influence_akt.sort_values(ascending=False)
 influence_akt = influence_akt.index.tolist()
 
 influence_comp = pd.read_csv(os.path.join(dpath, "influence_comp.csv"),
-                             header=None, index_col=0, squeeze=True)
+                             head=None, index_col=0, squeeze=True)
 influence_comp = influence_comp.sort_values(ascending=False)
 influence_comp = influence_comp.index.tolist()
 
