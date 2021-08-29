@@ -42,14 +42,16 @@ class ConsoleTabManager(QObject):
 
     def update_console_vars(self):
         net = None
+        selected = None
         if self.mw.nt_manager.current_item:
             net = self.mw.nt_manager.current_item.data()
+            selected = net.scene.selectedItems()
 
         vars = {'net': net,
                 'console': self.console_widget,
-                'view': self.mw.sv_manager.current_view,
+                'view': self.mw.sv_manager.view,
                 'nav': self.mw.nt_manager,
-                'selected': net.scene.selectedItems()}
+                'selected': selected}
 
         self.console_widget.pushVariables(vars)
 

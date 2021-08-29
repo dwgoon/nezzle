@@ -11,19 +11,24 @@ class MoveByMouseCommand(QUndoCommand):
     def __init__(self, items, parent=None):
         super().__init__(parent)
         self._items = items
-        self._new_positions = {item.iden:QPointF(item.pos()) for item in items}
-        self._old_positions = {item.iden:QPointF(item["_OLD_POS"]) for item in items}
+        self._new_positions = [(item, QPointF(item.pos())) for item in items]
+        self._old_positions = [(item, QPointF(item["_OLD_POS"])) for item in items]
 
     def undo(self):
-        for i, item in enumerate(self._items):
-            item.setPos(self._old_positions[item.iden])
+        #for i, item in enumerate(self._items):
+        #    item.setPos(self._old_positions[item.iden])
+
+        for item, pos in self._old_positions:
+            item.setPos(pos)
 
         item.scene().update()
         self.setText("Moving to new positions")
 
     def redo(self):
-        for i, item in enumerate(self._items):
-            item.setPos(self._new_positions[item.iden])
+        # for i, item in enumerate(self._items):
+        #     item.setPos(self._new_positions[item.iden])
+        for item, pos in self._new_positions:
+            item.setPos(pos)
 
         item.scene().update()
         self.setText("Moving to new positions")
@@ -45,7 +50,8 @@ class MoveByKeyCommand(MoveByMouseCommand):
         if not isinstance(command, MoveByKeyCommand):
             return False
 
-        self._new_positions = {item.iden:QPointF(item.pos()) for item in items}
+        # self._new_positions = {item.iden:QPointF(item.pos()) for item in items}
+        self._new_positions = [(item, QPointF(item.pos())) for item in items]
         self.setText("Moving to new positions")
         return True
 

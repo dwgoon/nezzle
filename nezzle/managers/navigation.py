@@ -90,7 +90,7 @@ class NavigationTreeManager(QObject):
 
     @Slot(QItemSelection, QItemSelection)
     def on_selection_changed(self, selected, deselected):
-        self.mw.sv_manager.current_view.enable_menu_align()
+        self.mw.sv_manager.view.enable_menu_align()
 
     def append_item(self, net):
         item = QStandardItem(net.name)

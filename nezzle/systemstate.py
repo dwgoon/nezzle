@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
-
 from qtpy.QtCore import QObject
 from nezzle.constants import Lock
+
 
 class SystemState(QObject):
 
     def __init__(self):
 
-        self._lockState = 0
+        self._lock_state = 0
 
     @property
     def lock_state(self):
-        return self._lockState
+        return self._lock_state
 
     def is_locked(self, item_type):
 
@@ -33,9 +32,9 @@ class SystemState(QObject):
     def set_locked(self, lock, b):
 
         if b is True:
-            self._lockState |= lock
+            self._lock_state |= lock
         else:
-            self._lockState &= (~lock)
+            self._lock_state &= (~lock)
 
 # end of class SystemState
 

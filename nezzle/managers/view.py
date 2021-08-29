@@ -10,21 +10,21 @@ from nezzle.constants import DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
 
 class SingleViewManager(QObject):
 
-    def __init__(self, main_window):
+    def __init__(self, mw):
         super().__init__()
-        self.mw = main_window
+        self.mw = mw
 
         self._tab_widget = self.mw.ui_mainTabWidget
 
-        self.defaultScene = GraphicsScene()
-        self.defaultScene.setSceneRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT)
+        self._default_scene = GraphicsScene()
+        self._default_scene.setSceneRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT)
 
-        self.view = GraphicsView(main_window)
-        self.view.setScene(self.defaultScene)
+        self._view = GraphicsView(mw)
+        self._view.setScene(self._default_scene)
 
         self._is_empty = True
-        self.tab_widget.addTab(self.view, "<Not selected>")
-        self.tab_widget.setTabsClosable(False)
+        self._tab_widget.addTab(self.view, "<Not selected>")
+        self._tab_widget.setTabsClosable(False)
 
     @property
     def is_empty(self):
@@ -35,12 +35,16 @@ class SingleViewManager(QObject):
         return self._tab_widget
 
     @property
-    def current_view(self):
-        return self.tab_widget.currentWidget()
+    def view(self):
+        return self._view
+
+    # @property
+    # def current_view(self):
+    #     return self.tab_widget.currentWidget()
 
     def clear(self):
-        self.defaultScene.clear()
-        self.current_view.setScene(self.defaultScene)
+        self._default_scene.clear()
+        self.view.setScene(self._default_scene)
         self.set_current_view_text("<Not selected>")
         self._is_empty = True
 
@@ -49,7 +53,7 @@ class SingleViewManager(QObject):
             self.clear()
             return
 
-        self.current_view.setScene(scene)
+        self.view.setScene(scene)
         self.set_current_view_text(text)
         self._is_empty = False
 

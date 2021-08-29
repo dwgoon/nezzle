@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
@@ -67,14 +66,9 @@ class TextLabel(PainterOptionItem):
                       | QGraphicsItem.ItemIsFocusable
                       | QGraphicsItem.ItemSendsGeometryChanges)
 
-        # self._text_item.setFlags(QGraphicsItem.ItemIsMovable
-        #                          | QGraphicsItem.ItemSendsGeometryChanges)
-
-        self._text_item.setFlags(QGraphicsItem.ItemSendsGeometryChanges)
-
+        self._text_item.setSelected(False)
         self._attr['TEXT'] = text
-        #self._text_item.setParentItem(self)
-        #self._text_item.setPos(0, 0)
+
         self.update()
 
     # end of def __init__
@@ -175,6 +169,10 @@ class TextLabel(PainterOptionItem):
         self.update()
         return value
 
+    def setSelected(self, val):
+        self._text_item.setSelected(val)
+        super().setSelected(val)
+
     def boundingRect(self):
         return self._text_item.boundingRect()
 
@@ -205,14 +203,7 @@ class TextLabel(PainterOptionItem):
             if isinstance(parent, BaseLink):
                 if parent.is_node_selected():
                     self._text_item.itemChange(change, self.pos())
-                    super().itemChange(change, self.pos())
-                    return
-        # elif change == QGraphicsItem.ItemScaleChange:
-            # super().itemChange(change, value)
-            #self._text_item.itemChange(change, value)
-            #self._text_item.setScale(self.scale())
-            # print(self.scale(), self._text_item.scale())
-        # end of if
+                    return super().itemChange(change, self.pos())
 
         return super().itemChange(change, value)
 
@@ -223,12 +214,9 @@ class TextLabel(PainterOptionItem):
                 to initialize the position.
             """
             self._text_item.setFont(self._font)
-            #rect = self._text_item.boundingRect()
-            #self._text_item.setPos(-rect.width()/2., -rect.height()/2.)
             self._text_item.update()
         self._invalidate()
         super().update()
-
 
     def copy(self, parent=None):
         if not parent:

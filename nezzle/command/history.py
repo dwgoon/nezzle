@@ -8,22 +8,22 @@ from nezzle.command.commands import MoveByMouseCommand
 from nezzle.command.commands import MoveByKeyCommand
 
 
-class HistoryManager(QObject):
+class History(QObject):
 
-    def __init__(self, mw):
-        super().__init__(parent=mw)
-        self.mw = mw  # Main Window
+    def __init__(self, parent):
+        super().__init__(parent=parent)
+        #self.mw = mw  # Main Window
         self.undo_stack = QUndoStack(self)
 
-        self.mw.ui_actionUndo = self.undo_stack.createUndoAction(self, "&Undo")
-        self.mw.ui_actionUndo.setShortcuts(QKeySequence.Undo)
+        # self.mw.ui_actionUndo = self.undo_stack.createUndoAction(self, "&Undo")
+        # self.mw.ui_actionUndo.setShortcuts(QKeySequence.Undo)
+        #
+        # self.mw.ui_actionRedo = self.undo_stack.createRedoAction(self, "&Redo")
+        # self.mw.ui_actionRedo.setShortcuts(QKeySequence.Redo)
 
-        self.mw.ui_actionRedo = self.undo_stack.createRedoAction(self, "&Redo")
-        self.mw.ui_actionRedo.setShortcuts(QKeySequence.Redo)
-
-        self.mw.ui_menuEdit.insertAction(self.mw.ui_actionCopy, self.mw.ui_actionRedo)
-        self.mw.ui_menuEdit.insertAction(self.mw.ui_actionRedo, self.mw.ui_actionUndo)
-        self.mw.ui_menuEdit.insertSeparator(self.mw.ui_actionCopy)
+        #self.mw.ui_menuEdit.insertAction(self.mw.ui_actionCopy, self.mw.ui_actionRedo)
+        #self.mw.ui_menuEdit.insertAction(self.mw.ui_actionRedo, self.mw.ui_actionUndo)
+        #self.mw.ui_menuEdit.insertSeparator(self.mw.ui_actionCopy)
 
 
         #self.mw.ui_actionUndo.triggered.connect(self.process_undo)
@@ -33,21 +33,25 @@ class HistoryManager(QObject):
     # def on_items_moved(self, items, old_positions):
     #      self.undo_stack.push(MoveCommand(items, old_positions))
 
-    @Slot(list)
     def on_items_moved_by_mouse(self, items):
          self.undo_stack.push(MoveByMouseCommand(items))
 
-    @Slot(list)
     def on_items_moved_by_key(self, items):
         self.undo_stack.push(MoveByKeyCommand(items))
 
-    @Slot()
-    def process_undo(self):
-        pass
+    def undo(self):
+        self.undo_stack.undo()
 
-    @Slot()
-    def process_redo(self):
-        pass
+    def redo(self):
+        self.undo_stack.redo()
+
+    # @Slot()
+    # def process_undo(self):
+    #     pass
+    #
+    # @Slot()
+    # def process_redo(self):
+    #     pass
 
     # @Slot(list, list)
     # def on_item_moved(self, moved_items, old_positions):

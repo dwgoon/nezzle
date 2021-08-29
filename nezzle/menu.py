@@ -1,16 +1,6 @@
 import os
 from traceback import format_exc
 
-from qtpy.QtWidgets import QWidget
-from qtpy.QtWidgets import QMessageBox
-from qtpy.QtWidgets import QDialog, QFileDialog
-from qtpy.QtWidgets import QApplication
-
-from qtpy.QtGui import QKeySequence
-from qtpy.QtGui import QImage
-from qtpy.QtGui import QPainter
-from qtpy.QtGui import QClipboard
-
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QSize
 from qtpy.QtCore import QRectF
@@ -21,6 +11,19 @@ from qtpy.QtCore import QByteArray
 from qtpy.QtCore import QIODevice
 from qtpy.QtCore import Signal, Slot
 from qtpy.QtCore import QRectF
+
+from qtpy.QtWidgets import QWidget
+from qtpy.QtWidgets import QMessageBox
+from qtpy.QtWidgets import QDialog, QFileDialog
+from qtpy.QtWidgets import QApplication
+from qtpy.QtWidgets import QGraphicsScene
+
+from qtpy.QtGui import QKeySequence
+from qtpy.QtGui import QImage
+from qtpy.QtGui import QPainter
+from qtpy.QtGui import QClipboard
+
+
 
 from qtpy.QtSvg import QSvgGenerator
 
@@ -72,17 +75,18 @@ class MenuActionHandler(QWidget):
         # self.mw.history_manager.actionUndo.triggered.connect(self.procees_undo)
         # self.mw.history_manager.actionRedo.triggered.connect(self.process_redo)
 
-        # self.mw.ui_actionUndo.triggered.connect(self.process_undo)
-        # self.mw.ui_actionRedo.triggered.connect(self.process_redo)
+        self.mw.ui_actionUndo.triggered.connect(self.process_undo)
+        self.mw.ui_actionRedo.triggered.connect(self.process_redo)
 
-        self.mw.sv_manager.view.items_moved_by_mouse.connect(
-            self.mw.history_manager.on_items_moved_by_mouse
-        )
-        self.mw.sv_manager.view.items_moved_by_key.connect(
-            self.mw.history_manager.on_items_moved_by_key
-        )
+        self.mw.ui_actionUndo.setShortcuts(QKeySequence.Undo)
+        self.mw.ui_actionRedo.setShortcuts(QKeySequence.Redo)
 
-        #self.mw.view.item_removed.connect(self.mw.history_manager.on_item_removed)
+        # self.mw.sv_manager.view.items_moved_by_mouse.connect(
+        #     self.mw.history_manager.on_items_moved_by_mouse
+        # )
+        # self.mw.sv_manager.view.items_moved_by_key.connect(
+        #     self.mw.history_manager.on_items_moved_by_key
+        # )
 
         self.mw.ui_actionCopy.triggered.connect(self.process_copy)
         self.mw.ui_actionCopy.setShortcut(QKeySequence('Ctrl+C'))
@@ -166,13 +170,15 @@ class MenuActionHandler(QWidget):
 
         self.mw.ui_menuAlign.setEnabled(False)
 
-    # @Slot()
-    # def process_undo(self):
-    #     self.mw.history_manager.undo()
-    #
-    # @Slot()
-    # def process_redo(self):
-    #     self.mw.history_manager.redo()
+    @Slot()
+    def process_undo(self):
+        #self.mw.history_manager.undo()
+        self.mw.sv_manager.view.undo_current_scene()
+
+    @Slot()
+    def process_redo(self):
+        #self.mw.history_manager.redo()
+        self.mw.sv_manager.view.redo_current_scene()
 
     # TODO: Implement Copy & Paste QGraphicsItem to the clipboard
     @Slot()
@@ -185,6 +191,7 @@ class MenuActionHandler(QWidget):
         net = item.data()
         scene = net.scene
         scene.clearSelection()
+        scene.clearFocus()
         brect = scene.itemsBoundingRect()
         brect.adjust(-5, -5, +10, +10)
 
