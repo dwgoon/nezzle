@@ -1,11 +1,8 @@
 import math
-from qtpy.QtCore import QRectF
-from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtGui import QPainterPath
 
 from nezzle.graphics.mixins import Lockable
-from .basenode import BaseNode
-
+from nezzle.graphics.nodes.basenode import BaseNode
 
 
 @Lockable
@@ -20,12 +17,12 @@ class RectangleNode(BaseNode):
 
     def shape(self):
         path = QPainterPath()
-        path.addRect(self._rect)
+        path.addRect(self._brect)
         return path
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
-        painter.drawRect(self._rect)
+        painter.drawRect(self._brect)
 
     def calculate_radius(self, angle):
         """

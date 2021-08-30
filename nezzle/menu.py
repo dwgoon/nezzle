@@ -16,7 +16,6 @@ from qtpy.QtWidgets import QWidget
 from qtpy.QtWidgets import QMessageBox
 from qtpy.QtWidgets import QDialog, QFileDialog
 from qtpy.QtWidgets import QApplication
-from qtpy.QtWidgets import QGraphicsScene
 
 from qtpy.QtGui import QKeySequence
 from qtpy.QtGui import QImage
@@ -195,6 +194,8 @@ class MenuActionHandler(QWidget):
         brect = scene.itemsBoundingRect()
         brect.adjust(-5, -5, +10, +10)
 
+        #print("[COPY] boundingRect:", brect, "sceneRect:", scene.sceneRect())
+
         width = brect.width()
         height = brect.height()
 
@@ -204,16 +205,16 @@ class MenuActionHandler(QWidget):
         b.open(QIODevice.WriteOnly)
 
         # Create SVG
-        svgGen = QSvgGenerator()
-        svgGen.setOutputDevice(b)
-        svgGen.setSize(QSize(width, height))
-        svgGen.setViewBox(QRectF(0.0, 0.0, width, height))
+        svg_gen = QSvgGenerator()
+        svg_gen.setOutputDevice(b)
+        svg_gen.setSize(QSize(width, height))
+        svg_gen.setViewBox(QRectF(0.0, 0.0, width, height))
 
         painter = QPainter()
-        painter.begin(svgGen)
+        painter.begin(svg_gen)
         painter.setBackgroundMode(Qt.TransparentMode)  # Added
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
-        scene.render(painter)
+        scene.render(painter, source=brect)
         painter.end()
 
         mimeData = QMimeData()

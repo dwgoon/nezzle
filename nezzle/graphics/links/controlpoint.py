@@ -7,13 +7,20 @@ from qtpy.QtGui import QColor
 from qtpy.QtGui import QPainterPath
 
 from nezzle.graphics.baseitem import Movable
+from nezzle.graphics.baseitem import GeometryChangeItem
 from nezzle.utils import length
 
 
-class BaseControlPoint(QGraphicsItem, Movable):
-    def __init__(self, parent, pos, radius=5, sticky_radius=None):
-        super().__init__()
-        self.setParentItem(parent)
+#class BaseControlPoint(QGraphicsItem, Movable):
+class BaseControlPoint(GeometryChangeItem):
+    def __init__(self, parent, pos, iden=None, radius=5, sticky_radius=None):
+        if not iden:
+            iden = parent.iden + "_CP"
+        self._iden = iden
+
+        super().__init__(iden=iden, parent=parent)
+        #self.setParentItem(parent)
+
         self._radius = radius
 
         if not sticky_radius:
@@ -39,6 +46,10 @@ class BaseControlPoint(QGraphicsItem, Movable):
 
         self.ctrl_pos = None
         self.update()
+
+    @property
+    def iden(self):
+        return self._iden
 
     @property
     def radius(self):
@@ -125,8 +136,7 @@ class ConnectorControlPoint(BaseControlPoint):
     def is_movable(self):  # inherited from Movable
         return True
 
-    def __init__(self, iden, connectors=None, *args, **kwargs):
-        self._iden = iden
+    def __init__(self, connectors=None, *args, **kwargs):
         self._connectors = []
         if connectors:
             for obj in connectors:
@@ -134,9 +144,6 @@ class ConnectorControlPoint(BaseControlPoint):
 
         super().__init__(*args, **kwargs)
 
-    @property
-    def iden(self):
-        return self._iden
 
     @property
     def connectors(self):

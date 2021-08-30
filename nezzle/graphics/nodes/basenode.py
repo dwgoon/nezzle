@@ -8,10 +8,11 @@ class BaseNode(PainterOptionItem):
 
     ITEM_TYPE = 'NODE'
 
-    def __init__(self, iden, width, height, *args, pos=None, **kwargs):
+    def __init__(self, iden, width, height, *args, **kwargs):
+        print("BaseNode.args:", args, kwargs)
         super().__init__(iden, *args, **kwargs)
         self._iden = iden
-        self._rect = QRectF()
+        self._brect = QRectF()
         self._links = []
 
         self._attr.set_trigger('WIDTH', self._trigger_set_width)
@@ -20,8 +21,10 @@ class BaseNode(PainterOptionItem):
         self.width = width
         self.height = height
 
-        if pos:
-            self.setPos(pos)
+        # if pos:
+        # #    self.setPos(pos)
+        #     self._attr["POS_X"] = pos.x()
+        #     self._attr["POS_Y"] = pos.y()
 
         self.setFlags(QGraphicsItem.ItemIsSelectable
                       | QGraphicsItem.ItemIsMovable
@@ -57,7 +60,7 @@ class BaseNode(PainterOptionItem):
         return True
 
     def boundingRect(self):
-        rect = QRectF(self._rect)
+        rect = QRectF(self._brect)
         if self._pen:
             wp = self._pen.width()
             rect.adjust(-wp, -wp, +wp, +wp)
@@ -95,15 +98,15 @@ class BaseNode(PainterOptionItem):
 
     def _trigger_set_width(self, key, value):
         self._width = value
-        self._rect.setX(-value/2)
-        self._rect.setWidth(value)
+        self._brect.setX(-value / 2)
+        self._brect.setWidth(value)
         self.update()
         return value
 
     def _trigger_set_height(self, key, value):
         self._height = value
-        self._rect.setY(-value/2)
-        self._rect.setHeight(value)
+        self._brect.setY(-value / 2)
+        self._brect.setHeight(value)
         self.update()
         return value
 

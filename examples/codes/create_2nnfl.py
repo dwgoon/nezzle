@@ -2,7 +2,8 @@
 Create 2-node negative feedback loop (2NNFL)
 """
 
-from qtpy.QtCore import QPoint, Qt
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
 
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LinkClassFactory
@@ -26,12 +27,12 @@ def update(nav, net):
     HammerClass = ArrowClassFactory.create('HAMMER')
 
     # Create two nodes
-    src = NodeClass('SRC', 40, 40, pos=QPoint(x0, y0))
+    src = NodeClass('SRC', 40, 40, pos=QPointF(x0, y0))
     src['FILL_COLOR'] = Qt.yellow
     src["BORDER_COLOR"] = Qt.black
     src['BORDER_WIDTH'] = 2
 
-    tgt = NodeClass('TGT', 40, 40, pos=QPoint(x1, y1))
+    tgt = NodeClass('TGT', 40, 40, pos=QPointF(x1, y1))
     tgt['FILL_COLOR'] = Qt.yellow
     tgt["BORDER_COLOR"] = Qt.black
     tgt['BORDER_WIDTH'] = 2

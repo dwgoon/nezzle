@@ -5,17 +5,20 @@
 """
 from collections import MutableMapping
 
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
 from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtWidgets import QStyle
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
-from qtpy.QtCore import Qt
 
 from .attributemapper import AttributeMapper
 from nezzle.utils import TriggerDict
 
 
-class MappableGraphicsItemMeta(type(QGraphicsItem), type(MutableMapping)):
+class MappableGraphicsItemMeta(type(QGraphicsItem),
+                               type(MutableMapping)):
+
     def __new__(cls, *args, **kwargs):
         return super().__new__(cls, *args, **kwargs)
 
@@ -89,7 +92,8 @@ class MappableItem(MutableMapping):
         return obj
 
 
-class MappableGraphicsItem(MappableItem, QGraphicsItem,
+class MappableGraphicsItem(MappableItem,
+                           QGraphicsItem,
                            metaclass=MappableGraphicsItemMeta):
     """
     A simple mappable class, which handles multiple attributes with
@@ -107,18 +111,29 @@ class Movable(object):
         return False
 
 
-class GeometryChangeItem(MappableGraphicsItem, Movable):
+class GeometryChangeItem(MappableGraphicsItem,
+                         Movable):
 
     ITEM_TYPE = 'GEOMETRY_CHANGE_ITEM'
 
     def __init__(self, *args, **kwargs):
+        pos = None
+        if "pos" in kwargs:
+            pos = kwargs.pop("pos")
+
         super().__init__(*args, **kwargs)
 
         self._attr.set_trigger('POS_X', self._trigger_set_x)
         self._attr.set_trigger('POS_Y', self._trigger_set_y)
 
-        self._attr['POS_X'] = 0
-        self._attr['POS_Y'] = 0
+        if pos:
+            self._attr['POS_X'] = pos.x()
+            self._attr['POS_Y'] = pos.y()
+            self._attr['_OLD_POS'] = QPointF(pos)
+        else:
+            self._attr['POS_X'] = 0
+            self._attr['POS_Y'] = 0
+            self._attr['_OLD_POS'] = QPointF(0, 0)
 
         self.setFlags(QGraphicsItem.ItemIsMovable
                       | QGraphicsItem.ItemSendsGeometryChanges)
@@ -147,6 +162,7 @@ class PainterOptionItem(GeometryChangeItem):
     _attr_map = AttributeMapper()
 
     def __init__(self, *args, **kwargs):
+        print("PainterOptionItem args:", args, kwargs)
         super().__init__(*args, **kwargs)
 
         self._attr.set_trigger('BORDER_WIDTH', self._trigger_set_border_width)

@@ -13,6 +13,7 @@ from qtpy.QtGui import QPixmapCache
 from qtpy.QtGui import QPainter
 from qtpy.QtGui import QTransform
 
+from nezzle.graphics.baseitem import MappableGraphicsItem
 from nezzle.command.history import History
 
 
@@ -98,10 +99,10 @@ class GraphicsView(QGraphicsView):
     def mouseMoveEvent(self, event):
         #modifiers = QApplication.keyboardModifiers()
         if event.modifiers() == Qt.ControlModifier:
-            return
+            return super().mouseMoveEvent(event)
 
         if event.buttons() != Qt.LeftButton:
-            return
+            return super().mouseMoveEvent(event)
 
         if (event.pos() - self._pos_drag_start).manhattanLength() >= QApplication.startDragDistance():
             self._is_dragged = True
@@ -259,9 +260,10 @@ class GraphicsScene(QGraphicsScene):
     def history(self):
         return self._history
 
-    def addItem(self, item):
-        item["_OLD_POS"] = item.pos()
-        return super().addItem(item)
+    # def addItem(self, item):
+    #     if isinstance(item, MappableGraphicsItem):
+    #         item["_OLD_POS"] = item.pos()
+    #     return super().addItem(item)
 
     def selected_movable_items(self):
         items_selected = self.selectedItems()

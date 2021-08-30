@@ -20,6 +20,7 @@ class MoveByMouseCommand(QUndoCommand):
 
         for item, pos in self._old_positions:
             item.setPos(pos)
+            item["_OLD_POS"] = QPointF(pos)  # Update old position manually, not using scene.update_old_positions...
 
         item.scene().update()
         self.setText("Moving to new positions")
@@ -29,6 +30,7 @@ class MoveByMouseCommand(QUndoCommand):
         #     item.setPos(self._new_positions[item.iden])
         for item, pos in self._new_positions:
             item.setPos(pos)
+            item["_OLD_POS"] = QPointF(pos)  # Update old position manually, not using scene.update_old_positions...
 
         item.scene().update()
         self.setText("Moving to new positions")

@@ -116,9 +116,13 @@ class CurvedLink(StraightLink):
         v2 = self.pos_tgt - self.ctrl_point.pos()
         len_v1 = length(v1)
         len_v2 = length(v2)
-        
+        dot_v1v2 = dot(v1, v2)
+
+        if len_v1 <= 1e-8 or len_v2 <= 1e-8:
+            return True
+
         try:
-            inner_product = np.clip(dot(v1, v2)/(len_v1*len_v2), -1, 1)
+            inner_product = np.clip(dot_v1v2/(len_v1*len_v2), -1, 1)
             control_angle = np.arccos(inner_product)
         except ZeroDivisionError:
             return True

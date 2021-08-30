@@ -20,12 +20,12 @@ class EllipseNode(BaseNode):
 
     def shape(self):
         path = QPainterPath()
-        path.addEllipse(self._rect)
+        path.addEllipse(self._brect)
         return path
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
-        painter.drawEllipse(self._rect)
+        painter.drawEllipse(self._brect)
 
     def calculate_radius(self, angle):
         """
