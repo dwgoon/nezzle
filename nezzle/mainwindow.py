@@ -1,13 +1,13 @@
 from qtpy.QtWidgets import QMainWindow
 
-from nezzle.managers.view import SingleViewManager
-from nezzle.managers.navigation import NavigationTreeManager
-from nezzle.managers.console import ConsoleTabManager
-from nezzle.managers.networkmodel import NetworkModelManager
-from nezzle.managers.code import CodeManager
-from nezzle.menu import MenuActionHandler
 from nezzle.ui.ui_mainwindow import Ui_MainWindow
-
+from nezzle.managers.singleviewmanager import SingleViewManager
+from nezzle.managers.navigationtreemanager import NavigationTreeManager
+from nezzle.managers.consolemanager import ConsoleTabManager
+from nezzle.managers.networkmodelmanager import NetworkModelManager
+from nezzle.managers.codemanager import CodeManager
+from nezzle.managers.historyviewmanager import HistoryViewManager
+from nezzle.menu import MenuActionHandler
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -22,7 +22,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.nt_manager = NavigationTreeManager(self)
         self.ct_manager = ConsoleTabManager(self)
         self.code_manager = CodeManager(self)
-        #self.history_manager = History(self)
+        self.hv_manager = HistoryViewManager(self)
 
         # The MenuActionHandler object should be created after creating all managers.
         self.ma_handler = MenuActionHandler(self)
@@ -44,3 +44,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #     event.accept()
         # else:
         #     event.ignore()
+
+#
+# main_window = MainWindow()
+#
+# def get_main_window():
+#     global main_window
+#     return main_window

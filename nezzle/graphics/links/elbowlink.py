@@ -23,7 +23,7 @@ from nezzle.utils import normal_vector
 from nezzle.utils import length
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 
 np.seterr('raise')
 
@@ -345,6 +345,8 @@ class ElbowLink(StraightLink):
         try:
             # if self.is_straight():
             #     return super()._create_path()
+            if self.are_nodes_close():
+                return
 
             self._create_elbow_path()
         except Exception as err:
@@ -352,7 +354,7 @@ class ElbowLink(StraightLink):
             print(err)
 
 
-@Lockable
+@lockable
 class VerticalElbowLink(ElbowLink):
 
     ITEM_TYPE = 'VERTICAL_ELBOW_LINK'
@@ -362,17 +364,17 @@ class VerticalElbowLink(ElbowLink):
         m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
         m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
 
-        cp0 = VerticalConnectorControlPoint("CP0", parent=self, pos=m_sm)
+        cp0 = VerticalConnectorControlPoint(iden="CP0", parent=self, pos=m_sm)
         cp0.append_connector(self._pos_connectors[0])
         cp0.append_connector(self._pos_connectors[1])
         self._ctrl_points.append(cp0)
 
-        cp1 = HorizontalConnectorControlPoint("CP1", parent=self, pos=m_st)
+        cp1 = HorizontalConnectorControlPoint(iden="CP1", parent=self, pos=m_st)
         cp1.append_connector(self._pos_connectors[1])
         cp1.append_connector(self._pos_connectors[2])
         self._ctrl_points.append(cp1)
 
-        cp2 = VerticalConnectorControlPoint("CP2", parent=self, pos=m_mt)
+        cp2 = VerticalConnectorControlPoint(iden="CP2", parent=self, pos=m_mt)
         cp2.append_connector(self._pos_connectors[2])
         cp2.append_connector(self._pos_connectors[3])
         self._ctrl_points.append(cp2)
@@ -400,7 +402,7 @@ class VerticalElbowLink(ElbowLink):
         con3.setY(pos_cp2.y())
 
 
-@Lockable
+@lockable
 class HorizontalElbowLink(ElbowLink):
 
     ITEM_TYPE = 'HORIZONTAL_ELBOW_LINK'
@@ -410,17 +412,17 @@ class HorizontalElbowLink(ElbowLink):
         m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
         m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
 
-        cp0 = HorizontalConnectorControlPoint("CP0", parent=self, pos=m_sm)
+        cp0 = HorizontalConnectorControlPoint(iden="CP0", parent=self, pos=m_sm)
         cp0.append_connector(self._pos_connectors[0])
         cp0.append_connector(self._pos_connectors[1])
         self._ctrl_points.append(cp0)
 
-        cp1 = VerticalConnectorControlPoint("CP1", parent=self, pos=m_st)
+        cp1 = VerticalConnectorControlPoint(iden="CP1", parent=self, pos=m_st)
         cp1.append_connector(self._pos_connectors[1])
         cp1.append_connector(self._pos_connectors[2])
         self._ctrl_points.append(cp1)
 
-        cp2 = HorizontalConnectorControlPoint("CP2", parent=self, pos=m_mt)
+        cp2 = HorizontalConnectorControlPoint(iden="CP2", parent=self, pos=m_mt)
         cp2.append_connector(self._pos_connectors[2])
         cp2.append_connector(self._pos_connectors[3])
         self._ctrl_points.append(cp2)

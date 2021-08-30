@@ -155,6 +155,21 @@ class GeometryChangeItem(MappableGraphicsItem,
         return super().itemChange(change, value)
 
 
+    def gather_children(self):
+        children = self.childItems()
+        return children
+
+    def update_children_old_positions(self):
+        children = self.gather_children()
+
+        #print("[CHILDREN]", children)
+        if children:
+            for child in children:
+                if child.is_movable():
+                    #print("- [MOVABLE CHILD]", child, child.pos())
+                    child["_OLD_POS"] = child.pos()
+
+
 class PainterOptionItem(GeometryChangeItem):
 
     ITEM_TYPE = 'PAINTER_OPTION_ITEM'
@@ -162,7 +177,6 @@ class PainterOptionItem(GeometryChangeItem):
     _attr_map = AttributeMapper()
 
     def __init__(self, *args, **kwargs):
-        print("PainterOptionItem args:", args, kwargs)
         super().__init__(*args, **kwargs)
 
         self._attr.set_trigger('BORDER_WIDTH', self._trigger_set_border_width)

@@ -7,14 +7,14 @@ from qtpy.QtCore import Signal
 
 class NetworkModelManager(QObject):
 
-    def __init__(self, mainWindow, standardModel=None):
+    def __init__(self, mainWindow, model=None):
         super().__init__()
         self.mw = mainWindow
-        if not standardModel:
-            standardModel = QStandardItemModel()
-            standardModel.setColumnCount(1)
+        if not model:
+            model = QStandardItemModel()
+            model.setColumnCount(1)
 
-        self._model = standardModel
+        self._model = model
         self._root = self.model.invisibleRootItem()
         self._model.itemChanged.connect(self.on_item_changed)
 

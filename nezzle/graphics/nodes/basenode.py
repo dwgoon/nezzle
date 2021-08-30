@@ -9,7 +9,6 @@ class BaseNode(PainterOptionItem):
     ITEM_TYPE = 'NODE'
 
     def __init__(self, iden, width, height, *args, **kwargs):
-        print("BaseNode.args:", args, kwargs)
         super().__init__(iden, *args, **kwargs)
         self._iden = iden
         self._brect = QRectF()
@@ -58,6 +57,15 @@ class BaseNode(PainterOptionItem):
 
     def is_movable(self):
         return True
+
+    def gather_children(self):
+        children = super().gather_children()
+        for link in self.links:
+            for child in link.childItems():
+                if child not in children:
+                    children.append(child)
+
+        return children
 
     def boundingRect(self):
         rect = QRectF(self._brect)

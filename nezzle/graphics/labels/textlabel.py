@@ -17,13 +17,13 @@ from qtpy.QtWidgets import QGraphicsSimpleTextItem
 from qtpy.QtWidgets import QGraphicsTextItem
 from qtpy.QtCore import QEvent
 
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 from nezzle.systemstate import get_system_state
 from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import BaseLink
 
 
-@Lockable
+@lockable
 class TextLabel(PainterOptionItem):
 
     ITEM_TYPE = 'TEXT_LABEL'
@@ -66,7 +66,7 @@ class TextLabel(PainterOptionItem):
                       | QGraphicsItem.ItemIsFocusable
                       | QGraphicsItem.ItemSendsGeometryChanges)
 
-        self._text_item.setSelected(False)
+        #self._text_item.setSelected(False)
         self._attr['TEXT'] = text
 
         self.update()
@@ -190,12 +190,32 @@ class TextLabel(PainterOptionItem):
 
         self._text_item.paint(painter, option, widget)
 
-    def mousePressEvent(self, event):
-        ss = get_system_state()
-        if ss.is_locked(self.ITEM_TYPE):
-            event.ignore()
-        else:
-            return super().mousePressEvent(event)
+    def is_movable(self):
+        return True
+
+    # def mousePressEvent(self, event):
+    #     print("mousePressEvent of label")
+    #     ss = get_system_state()
+    #     if ss.is_locked(self.ITEM_TYPE):
+    #         event.ignore()
+    #         return
+    #
+    #     return super().mousePressEvent(event)
+    #
+    #     if event.button() == Qt.LeftButton:
+    #         """
+    #         The following check prevents this item being selected
+    #         simply according to boundingRect.
+    #         """
+    #
+    #         pos = event.pos() - self.pos()
+    #         if self._path_paint.contains(pos):
+    #             print("[MOUSE EVENT] Selected!")
+    #             self.setSelected(True)
+    #             event.accept()
+    #     else:
+    #         event.reject()
+
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionChange:
@@ -242,14 +262,18 @@ class TextLabel(PainterOptionItem):
         obj._attr.update(attr)
         return obj
 
-    def align(self, pos="center"):
+    def align(self, mode="center"):
         rect = self._text_item.boundingRect()
-        if pos == "center":
-            self.setPos(-rect.width() / 2, -rect.height() / 2)
+        if mode == "center":
+            #self.setPos(-rect.width() / 2, -rect.height() / 2)
+            self._attr["POS_X"] = -rect.width() / 2
+            self._attr["POS_Y"] = -rect.height() / 2
+
+            self._attr["_OLD_POS"] = self.pos()
 
 
 
-# @Lockable
+# @lockable
 # class TextLabel(PainterOptionItem):
 #
 #     ITEM_TYPE = 'TEXT_LABEL'

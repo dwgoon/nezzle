@@ -180,7 +180,9 @@ def internal_division(p1, p2, r1, r2):
         >>> internal_division(a, b, 2, 8)
         PyQt5.QtCore.QPointF(0.4, 0.0)
     """
-    sum_r = r1+r2
+    sum_r = r1 + r2
+
+
     return (r2/sum_r*p1) + (r1/sum_r*p2)
 
 

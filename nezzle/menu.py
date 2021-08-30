@@ -81,10 +81,10 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionRedo.setShortcuts(QKeySequence.Redo)
 
         # self.mw.sv_manager.view.items_moved_by_mouse.connect(
-        #     self.mw.history_manager.on_items_moved_by_mouse
+        #     self.mw.history_manager.on_move_items_by_mouse
         # )
         # self.mw.sv_manager.view.items_moved_by_key.connect(
-        #     self.mw.history_manager.on_items_moved_by_key
+        #     self.mw.history_manager.on_move_items_by_key
         # )
 
         self.mw.ui_actionCopy.triggered.connect(self.process_copy)
@@ -99,6 +99,10 @@ class MenuActionHandler(QWidget):
         )
         self.mw.ui_actionViewConsoleDock.triggered.connect(
             self.process_view_console_dock
+        )
+
+        self.mw.ui_actionViewHistoryDock.triggered.connect(
+            self.process_view_history_dock
         )
 
         # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
@@ -332,6 +336,10 @@ class MenuActionHandler(QWidget):
         self.mw.ui_consoleDock.setVisible(checked)
 
     @Slot(bool)
+    def process_view_history_dock(self, checked):
+        self.mw.ui_historyDock.setVisible(checked)
+
+    @Slot(bool)
     def process_lock_nodes(self, checked):
         ss = get_system_state()
         ss.set_locked(Lock.NODES, checked)
@@ -347,22 +355,38 @@ class MenuActionHandler(QWidget):
         ss.set_locked(Lock.LINKS, checked)
 
     def _process_convert_to_node(self, nodeclass):
-        item = self.mw.nt_manager.current_item
-        if not item:
+        net = self.mw.nt_manager.current_net
+        if not net:
             return
 
-        net = item.data()
+        # scene = net.scene
+        # for obj in scene.selectedItems():
+        #     if not isinstance(obj, BaseNode):
+        #         continue
+        #
+        #     if type(obj) == nodeclass:
+        #         continue
+        #
+        #     new_node = NodeConverter.convert(obj, nodeclass)
+        #     net.replace_node(obj, new_node)
+        # # end of for
         scene = net.scene
-        for obj in scene.selectedItems():
-            if not isinstance(obj, BaseNode):
+
+        old_items = []
+        new_items = []
+        for old_item in scene.selectedItems():
+            if not isinstance(old_item, BaseNode):
                 continue
 
-            if type(obj) == nodeclass:
+            if type(old_item) == nodeclass:
                 continue
 
-            new_node = NodeConverter.to_node(obj, nodeclass)
-            net.replace_node(obj, new_node)
+            new_item = NodeConverter.convert(old_item, nodeclass)
+            old_items.append(old_item)
+            new_items.append(new_item)
         # end of for
+        if len(old_items) > 0:
+            self.mw.hv_manager.history.on_convert_nodes(net, old_items, new_items)
 
     @Slot()
     def process_convert_to_ellipse_node(self):
@@ -373,23 +397,27 @@ class MenuActionHandler(QWidget):
         self._process_convert_to_node(RectangleNode)
 
     def _process_convert_to_link(self, linkclass):
-        item = self.mw.nt_manager.current_item
-        if not item:
+        net = self.mw.nt_manager.current_net
+        if not net:
             return
 
-        net = item.data()
         scene = net.scene
-        for obj in scene.selectedItems():
-            if not isinstance(obj, BaseLink):
+
+        old_items = []
+        new_items = []
+        for old_item in scene.selectedItems():
+            if not isinstance(old_item, BaseLink):
                 continue
 
-            if type(obj) == linkclass:
+            if type(old_item) == linkclass:
                 continue
 
-            new_link = LinkConverter.to_link(obj, linkclass)
-            net.remove_link(obj)
-            net.add_link(new_link)
+            new_item = LinkConverter.convert(old_item, linkclass)
+            old_items.append(old_item)
+            new_items.append(new_item)
         # end of for
+        if len(old_items) > 0:
+            self.mw.hv_manager.history.on_convert_links(net, old_items, new_items)
 
     @Slot()
     def process_convert_to_straight_link(self):

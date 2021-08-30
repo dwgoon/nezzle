@@ -17,7 +17,7 @@ from nezzle.utils import length
 from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics.nodes.basenode import BaseNode
@@ -320,7 +320,7 @@ class TwoNodeLink(BaseLink):
         super().__init__(iden, *args, **kwargs)
 
     def __str__(self):
-        str_link_type = self.ITEM_TYPE.replace('_', '').title()
+        str_link_type = ''.join([word.title() for word in self.ITEM_TYPE.split('_')])
         return "%s(%s, %s)"%(str_link_type, self.source.name, self.target.name)
 
     def __eq__(self, other):

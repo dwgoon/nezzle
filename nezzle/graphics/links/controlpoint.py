@@ -6,20 +6,16 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPainterPath
 
-from nezzle.graphics.baseitem import Movable
 from nezzle.graphics.baseitem import GeometryChangeItem
 from nezzle.utils import length
 
 
-#class BaseControlPoint(QGraphicsItem, Movable):
 class BaseControlPoint(GeometryChangeItem):
     def __init__(self, parent, pos, iden=None, radius=5, sticky_radius=None):
         if not iden:
             iden = parent.iden + "_CP"
         self._iden = iden
-
         super().__init__(iden=iden, parent=parent)
-        #self.setParentItem(parent)
 
         self._radius = radius
 
@@ -38,14 +34,17 @@ class BaseControlPoint(GeometryChangeItem):
                                  2 * radius_sf, 2 * radius_sf)
 
         self.setPos(pos)
+        self._attr["_OLD_POS"] = QPointF(pos)
 
         self.setFlags(QGraphicsItem.ItemIsSelectable
                       | QGraphicsItem.ItemIsMovable
                       | QGraphicsItem.ItemIsFocusable
                       | QGraphicsItem.ItemSendsGeometryChanges)
 
-        self.ctrl_pos = None
         self.update()
+
+    def __str__(self):
+        return "ControlPoint of %s" % (str(self.parentItem()))
 
     @property
     def iden(self):
@@ -111,7 +110,6 @@ class ControlPoint(BaseControlPoint):
         return True
 
     def itemChange(self, change, value):
-
         if change == QGraphicsItem.ItemPositionChange:
             if self.parent.is_node_selected():
                 return super().itemChange(change, self.pos())
@@ -133,9 +131,6 @@ class ControlPoint(BaseControlPoint):
 
 class ConnectorControlPoint(BaseControlPoint):
 
-    def is_movable(self):  # inherited from Movable
-        return True
-
     def __init__(self, connectors=None, *args, **kwargs):
         self._connectors = []
         if connectors:
@@ -144,6 +139,8 @@ class ConnectorControlPoint(BaseControlPoint):
 
         super().__init__(*args, **kwargs)
 
+    def is_movable(self):  # inherited from Movable
+        return True
 
     @property
     def connectors(self):
@@ -167,6 +164,8 @@ class ConnectorControlPoint(BaseControlPoint):
             if self.isSelected():
                 pos = value
                 self.update_pos(pos)
+            #else:
+            #    value = self.pos()
 
             return super().itemChange(change, value)
 
@@ -198,9 +197,6 @@ class HorizontalConnectorControlPoint(ConnectorControlPoint):
         self.connectors[1].setX(pos.x())
 
     def update_pos_by_connectors(self):
-        # if np.abs(self.connectors[0].y() - self.connectors[1].y()) < self.parent.width:
-        #     return
-
         mp_y = (self.connectors[0].y() + self.connectors[1].y()) / 2  # Y-axis midpoint of connectors
         self.setY(mp_y)
         self.setX(self.connectors[0].x())
@@ -233,9 +229,6 @@ class VerticalConnectorControlPoint(ConnectorControlPoint):
         self.connectors[1].setY(pos.y())
 
     def update_pos_by_connectors(self):
-        # if np.abs(self.connectors[0].x() - self.connectors[1].x()) < self.parent.width:
-        #     return
-
         mp_x = (self.connectors[0].x() + self.connectors[1].x()) / 2  # X-axis midpoint of connectors
         self.setX(mp_x)
         self.setY(self.connectors[0].y())

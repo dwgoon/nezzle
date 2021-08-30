@@ -8,12 +8,12 @@ from nezzle.utils import dist
 from nezzle.utils import length
 from nezzle.utils import internal_division
 from nezzle.utils import rotate
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 from nezzle.graphics.links.baselink import TwoNodeLink
 from nezzle.graphics.arrows.transform import Rotate
 
 
-@Lockable
+@lockable
 class StraightLink(TwoNodeLink):
     """
     Straight link class.

@@ -1,11 +1,11 @@
 import math
 from qtpy.QtGui import QPainterPath
 
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 from nezzle.graphics.nodes.basenode import BaseNode
 
 
-@Lockable
+@lockable
 class RectangleNode(BaseNode):
 
     ITEM_TYPE = 'RECT_NODE'
@@ -33,7 +33,7 @@ class RectangleNode(BaseNode):
         return 1/math.sqrt(1/b**2 + (1/a**2 - 1/b**2)*(math.cos(angle)**2))
 
 
-@Lockable
+@lockable
 class SquareNode(RectangleNode):
 
     ITEM_TYPE = 'SQUARE_NODE'

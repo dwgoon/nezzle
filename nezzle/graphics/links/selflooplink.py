@@ -10,10 +10,10 @@ from qtpy.QtGui import QBrush
 
 from .baselink import BaseLink
 from nezzle.graphics import ArrowClassFactory
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 
 
-@Lockable
+@lockable
 class SelfloopLink(BaseLink):
 
     ITEM_TYPE = 'SELFLOOP_LINK'

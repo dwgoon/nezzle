@@ -34,6 +34,7 @@ def main(args=None):
     #QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
 
     mw = MainWindow()
+    #mw = get_main_window()
     
     mw.setWindowTitle("Nezzle")
     droot_resources = pjoin(os.path.dirname(__file__), "resources")

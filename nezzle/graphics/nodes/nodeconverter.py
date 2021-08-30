@@ -1,11 +1,17 @@
-from typing import ClassVar
+from typing import AnyStr
+from typing import Union
+from typing import Type
 
 from nezzle.graphics.nodes.basenode import BaseNode
+from nezzle.graphics.nodes.nodefactory import NodeClassFactory
+
 
 class NodeConverter(object):
 
     @staticmethod
-    def to_node(node: BaseNode, node_type: ClassVar):
+    def convert(node: BaseNode, node_type: Union[Type, AnyStr]):
+        if isinstance(node_type, str):
+            node_type = NodeClassFactory.create(node_type)
 
         if type(node) == node_type:
             return

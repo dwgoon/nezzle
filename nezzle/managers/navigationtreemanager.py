@@ -15,9 +15,9 @@ from qtpy.QtWidgets import QMenu
 
 class NavigationTreeManager(QObject):
 
-    def __init__(self, main_window):
-        super().__init__(parent=main_window)
-        self.mw = main_window
+    def __init__(self, mw):
+        super().__init__(parent=mw)
+        self.mw = mw
         self.tree_view = self.mw.ui_navigationTree
         model = self.mw.nm_manager.model
 
@@ -30,7 +30,6 @@ class NavigationTreeManager(QObject):
             selection_model = self.tree_view.selectionModel()
             selection_model.currentChanged.connect(self.on_current_changed)
             selection_model.selectionChanged.connect(self.on_selection_changed)
-
 
         self.tree_view.keyPressed.connect(self.keyPressEvent)
 
@@ -54,10 +53,10 @@ class NavigationTreeManager(QObject):
 
     @property
     def current_item(self):
-        # indexes = self.tree_view.selectedIndexes()
+        # indexes = self.history_view.selectedIndexes()
         # if len(indexes) >= 1:
         #     idx = indexes[-1]
-        #     model = self.tree_view.model()
+        #     model = self.history_view.model()
         #     item = model.itemFromIndex(idx)
         #     return item
 
@@ -69,6 +68,14 @@ class NavigationTreeManager(QObject):
 
         return None
 
+    @property
+    def current_net(self):
+        item = self.current_item
+        if not item:
+            return None
+        net = item.data()
+        return net
+
     @Slot(QEvent)
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Delete:
@@ -76,7 +83,7 @@ class NavigationTreeManager(QObject):
 
     @Slot(QModelIndex, QModelIndex)
     def on_current_changed(self, current, previous):
-        if current.row()<0:
+        if current.row() < 0:
             self.mw.sv_manager.clear()
             self.mw.ct_manager.update_console_vars()
             return
@@ -84,9 +91,19 @@ class NavigationTreeManager(QObject):
         model = self.tree_view.model()
         item = model.itemFromIndex(current)
         net = item.data()
+        scene = net.scene
         self.action_remove_selected.setEnabled(True)
         self.mw.sv_manager.set_current_view_scene(net.scene, net.name)
         self.mw.ct_manager.update_console_vars()
+
+        self.mw.hv_manager.update_history_view(scene.history)
+
+        # # Process previous net
+        # if previous.row() >= 0:
+        #     item = model.itemFromIndex(previous)
+        #     net = item.data()
+        #     scene = net.scene
+        #     scene.history.hide_history_view()
 
     @Slot(QItemSelection, QItemSelection)
     def on_selection_changed(self, selected, deselected):
@@ -103,7 +120,7 @@ class NavigationTreeManager(QObject):
         """
         Following is a code snippet to consult.
 
-        selection_model = self.tree_view.selectionModel()
+        selection_model = self.history_view.selectionModel()
         selection_model.select(item.index(),
                               QItemSelectionModel.ClearAndSelect)
         """

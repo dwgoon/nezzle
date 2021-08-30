@@ -14,10 +14,10 @@ from nezzle.utils import internal_division
 from nezzle.utils import length
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
-from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.mixins import lockable
 
 
-@Lockable
+@lockable
 class CurvedLink(StraightLink):
 
     ITEM_TYPE = 'CURVED_LINK'
@@ -70,7 +70,6 @@ class CurvedLink(StraightLink):
             cp.setVisible(False)
         else:
             cp.setVisible(True)
-
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
@@ -150,6 +149,7 @@ class CurvedLink(StraightLink):
 
     def _create_control_items(self):
         mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        print("Ctrl Point Initial Pos:", mid)
         self._ctrl_point = ControlPoint(parent=self, pos=mid)
 
     def _create_subpoints(self):

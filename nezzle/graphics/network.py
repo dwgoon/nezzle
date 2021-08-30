@@ -121,6 +121,31 @@ class Network(MappableItem):
         # Remove the old node from the scene.
         self.scene.removeItem(old_node)
 
+    def replace_link(self, old_link, new_link):
+        if isinstance(old_link, SelfloopLink):
+            self.nxdg.remove_edge(old_link.node.iden, old_link.node.iden)
+            self.nxdg.add_edge(new_link.node.iden, new_link.node.iden)
+
+            old_link.node.remove_link(old_link)
+            old_link.node.add_link(new_link)
+        else:
+            self.nxdg.remove_edge(old_link.source.iden, old_link.target.iden)
+            self.nxdg.add_edge(new_link.source.iden, new_link.target.iden)
+
+            old_link.source.remove_link(old_link)
+            old_link.target.remove_link(old_link)
+
+            old_link.source.add_link(new_link)
+            old_link.target.add_link(new_link)
+
+        del self.links[old_link.iden]
+        self.links[new_link.iden] = new_link
+
+        old_link.setZValue(-1)
+        new_link.setZValue(-1)
+        self.scene.removeItem(old_link)
+        self.scene.addItem(new_link)
+        new_link.update()
 
     def add_link(self, link):
         """Add a links object.

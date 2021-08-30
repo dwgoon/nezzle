@@ -38,9 +38,9 @@ class SingleViewManager(QObject):
     def view(self):
         return self._view
 
-    # @property
-    # def current_view(self):
-    #     return self.tab_widget.currentWidget()
+    @property
+    def current_scene(self):
+        return self.view.scene()
 
     def clear(self):
         self._default_scene.clear()

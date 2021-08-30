@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1127</width>
-    <height>785</height>
+    <width>1347</width>
+    <height>833</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="ui_centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QFrame" name="ui_mainFrame">
       <property name="frameShape">
@@ -62,8 +62,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1127</width>
-     <height>26</height>
+     <width>1347</width>
+     <height>36</height>
     </rect>
    </property>
    <widget class="QMenu" name="ui_menuFile">
@@ -84,6 +84,7 @@
     </property>
     <addaction name="ui_actionViewNetworksDock"/>
     <addaction name="ui_actionViewConsoleDock"/>
+    <addaction name="ui_actionViewHistoryDock"/>
    </widget>
    <widget class="QMenu" name="ui_menuEdit">
     <property name="title">
@@ -152,179 +153,179 @@
    <addaction name="ui_menuLayout"/>
   </widget>
   <widget class="QStatusBar" name="ui_statusbar"/>
-  <widget class="QDockWidget" name="ui_netDock">
+  <widget class="QDockWidget" name="ui_controlDock">
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="windowTitle">
-    <string>Networks</string>
+    <string>Control</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="ui_netDockContents">
+   <widget class="QWidget" name="ui_controlDockContents">
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QSplitter" name="splitterControlPanel">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+      <widget class="QGroupBox" name="ui_groupNavigation">
+       <property name="title">
+        <string>Navigation</string>
        </property>
-       <widget class="QGroupBox" name="ui_groupNavigation">
-        <property name="title">
-         <string>Navigation</string>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="NavigationTreeView" name="ui_navigationTree">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="ui_groupCode">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>130</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>From Python Code</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="NavigationTreeView" name="ui_navigationTree">
-           <property name="selectionMode">
-            <enum>QAbstractItemView::ExtendedSelection</enum>
+        <item>
+         <widget class="QWidget" name="widget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
            </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QGroupBox" name="ui_groupSimulation">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>130</height>
-         </size>
-        </property>
-        <property name="title">
-         <string>From Python Code</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetMinimumSize</enum>
-         </property>
-         <item>
-          <widget class="QWidget" name="widget" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_9">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetDefaultConstraint</enum>
-            </property>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <property name="spacing">
-               <number>10</number>
-              </property>
-              <property name="sizeConstraint">
-               <enum>QLayout::SetDefaultConstraint</enum>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
-                <property name="sizeConstraint">
-                 <enum>QLayout::SetDefaultConstraint</enum>
-                </property>
-                <item>
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>File</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="ui_codeFilePathEdit"/>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
-                <property name="sizeConstraint">
-                 <enum>QLayout::SetDefaultConstraint</enum>
-                </property>
-                <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Minimum</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>5</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="ui_openCodeButton">
-                  <property name="text">
-                   <string>Open</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Minimum</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>5</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="ui_runButton">
-                  <property name="text">
-                   <string>Run</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Minimum</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>2</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="sizeConstraint">
+                <enum>QLayout::SetDefaultConstraint</enum>
+               </property>
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>File</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="ui_codeFilePathEdit"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <property name="sizeConstraint">
+                <enum>QLayout::SetDefaultConstraint</enum>
+               </property>
+               <item>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Minimum</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>5</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="ui_openCodeButton">
+                 <property name="text">
+                  <string>Open</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Minimum</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>5</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="ui_runButton">
+                 <property name="text">
+                  <string>Run</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Minimum</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>2</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
   </widget>
   <widget class="QDockWidget" name="ui_consoleDock">
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="windowTitle">
     <string>Console</string>
    </property>
@@ -390,6 +391,31 @@
          </item>
         </layout>
        </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="ui_historyDock">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>History</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="HistoryView" name="ui_historyView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
       </widget>
      </item>
     </layout>
@@ -598,12 +624,28 @@
     <string>Redo</string>
    </property>
   </action>
+  <action name="ui_actionViewHistoryDock">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>History</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>NavigationTreeView</class>
    <extends>QTreeView</extends>
    <header>nezzle/widgets/navigationtreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>HistoryView</class>
+   <extends>QListView</extends>
+   <header>nezzle/widgets/historyview</header>
   </customwidget>
  </customwidgets>
  <resources/>
