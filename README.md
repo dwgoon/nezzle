@@ -24,7 +24,7 @@
 ### Adjust network graphics by programming with REPL
 <img src="assets/demo02.gif" alt="Drawing" width="700px"/>
 
-### Adjust network graphics by running a code
+### Create network graphics by running a code
 <img src="assets/demo03.gif" alt="Drawing" width="700px"/>
 
 
