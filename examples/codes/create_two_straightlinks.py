@@ -64,14 +64,10 @@ def update(nav, net):
     head = ArrowClass(width=10, height=10, offset=4)
     link1 = LinkClass("LINK1", src1, tgt1, width=4, head=head)
     link1["FILL_COLOR"] = Qt.black
-    #link1["CTRL_POS_X"] = -10
-    #link1["CTRL_POS_Y"] = -50
 
     head = HammerClass(width=16, height=3, offset=4)
     link2 = LinkClass("LINK2", src2, tgt2, width=4, head=head)
     link2["FILL_COLOR"] = Qt.black
-    #link2["CTRL_POS_X"] = 10
-    #link2["CTRL_POS_Y"] = 50
 
     new_net.add_link(link1)
     new_net.add_link(link2)
