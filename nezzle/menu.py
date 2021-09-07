@@ -94,16 +94,28 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionPaste.setShortcut(QKeySequence('Ctrl+V'))
 
         # View
-        self.mw.ui_actionViewNetworksDock.triggered.connect(
-            self.process_view_networks_dock
+        self.mw.ui_actionViewControlDock.triggered.connect(
+            self.process_view_control_dock
         )
+        self.mw.ui_controlDock.visibilityChanged.connect(
+            self.process_view_control_dock
+        )
+
+
         self.mw.ui_actionViewConsoleDock.triggered.connect(
+            self.process_view_console_dock
+        )
+        self.mw.ui_consoleDock.visibilityChanged.connect(
             self.process_view_console_dock
         )
 
         self.mw.ui_actionViewHistoryDock.triggered.connect(
             self.process_view_history_dock
         )
+        self.mw.ui_historyDock.visibilityChanged.connect(
+            self.process_view_history_dock
+        )
+
 
         # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
         self.mw.ui_actionLockNodes.triggered.connect(
@@ -328,16 +340,19 @@ class MenuActionHandler(QWidget):
         msg.exec()
 
     @Slot(bool)
-    def process_view_networks_dock(self, checked):
-        self.mw.ui_netDock.setVisible(checked)
+    def process_view_control_dock(self, checked):
+        self.mw.ui_controlDock.setVisible(checked)
+        self.mw.ui_actionViewControlDock.setChecked(checked)
 
     @Slot(bool)
     def process_view_console_dock(self, checked):
         self.mw.ui_consoleDock.setVisible(checked)
+        self.mw.ui_actionViewConsoleDock.setChecked(checked)
 
     @Slot(bool)
     def process_view_history_dock(self, checked):
         self.mw.ui_historyDock.setVisible(checked)
+        self.mw.ui_actionViewHistoryDock.setChecked(checked)
 
     @Slot(bool)
     def process_lock_nodes(self, checked):

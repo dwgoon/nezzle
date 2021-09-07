@@ -63,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>1347</width>
-     <height>36</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="ui_menuFile">
@@ -82,7 +82,7 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="ui_actionViewNetworksDock"/>
+    <addaction name="ui_actionViewControlDock"/>
     <addaction name="ui_actionViewConsoleDock"/>
     <addaction name="ui_actionViewHistoryDock"/>
    </widget>
@@ -454,7 +454,7 @@
     <string>Open Simulation</string>
    </property>
   </action>
-  <action name="ui_actionViewNetworksDock">
+  <action name="ui_actionViewControlDock">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -462,7 +462,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Networks</string>
+    <string>Control</string>
    </property>
   </action>
   <action name="ui_actionViewConsoleDock">
