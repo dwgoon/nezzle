@@ -1,10 +1,10 @@
 <img src="nezzle/resources/logo.png" alt="Drawing" width="395px"/>
 
+
 ## Introduction 
 - Nezzle is a programmable and interactive visualization software for small-scale networks.
 - Nezzle was initially developed to visualize biological networks such as signaling networks.
-- Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is 
-  similar to playing a puzzle.
+- Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is similar to playing a puzzle.
   
 ## Features
 - Lightweight, programmable, detailed visualization of small-scale networks for high quality figures.
@@ -14,6 +14,11 @@
 - The GUI depends on Python bindings for [`Qt`](https://www.qt.io/)
   such as [`PyQt`](https://riverbankcomputing.com/software/pyqt)
   (abstracted by [`QtPy`](https://github.com/spyder-ide/qtpy) in this project).
+
+
+## Examples
+<img src="assets/demo.gif" alt="Drawing" width="700px"/>
+
 
 ## Documentation
 - Home:
