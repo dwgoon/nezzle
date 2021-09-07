@@ -17,9 +17,15 @@
 
 
 ## Examples
+
+### Adjust network graphics through GUI
 <img src="assets/demo01.gif" alt="Drawing" width="700px"/>
-<br/><br/>
+
+### Adjust network graphics by programming with REPL
 <img src="assets/demo02.gif" alt="Drawing" width="700px"/>
+
+### Adjust network graphics by running a code
+<img src="assets/demo03.gif" alt="Drawing" width="700px"/>
 
 
 ## Documentation
