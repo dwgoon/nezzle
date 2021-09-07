@@ -17,7 +17,9 @@
 
 
 ## Examples
-<img src="assets/demo.gif" alt="Drawing" width="700px"/>
+<img src="assets/demo01.gif" alt="Drawing" width="700px"/>
+<br/><br/>
+<img src="assets/demo02.gif" alt="Drawing" width="700px"/>
 
 
 ## Documentation

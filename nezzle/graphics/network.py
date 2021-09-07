@@ -235,24 +235,18 @@ class Network(MappableItem):
 
         for iden, node in self.nodes.items():
             dict_node = node.to_dict()
-            for key in dict_node:
-                if key.startswith("_"):
-                    del dict_node[key]
+            dict_node = {key: val for key, val in dict_node.items() if not key.startswith("_")}
             dict_net["NODES"].append(dict_node)
 
         for iden, link in self.links.items():
             dict_link = link.to_dict()
-            for key in dict_link:
-                if key.startswith("_"):
-                    del dict_link[key]
-            dict_net["LINKS"].append()
+            dict_link = {key: val for key, val in dict_link.items() if not key.startswith("_")}
+            dict_net["LINKS"].append(dict_link)
 
         for iden, label in self.labels.items():
             dict_label = label.to_dict()
-            for key in dict_label:
-                if key.startswith("_"):
-                    del dict_label[key]
-            dict_net["LABELS"].append(label.to_dict())
+            dict_label = {key: val for key, val in dict_label.items() if not key.startswith("_")}
+            dict_net["LABELS"].append(dict_label)
 
         dict_net.update(self._attr)
         return dict_net

@@ -57,26 +57,13 @@ class ConsoleWidget(RichJupyterWidget):
         
         self.kernel_client = self.kernel_manager.client()
         self.kernel_client.start_channels()
-        #self.kernel_client.execute(code="print('Hello~!')")
-        #kernel_app = default_kernel_app()
-
 
         self.buffer_size = 1000
-
-
-
         self.exit_requested.connect(self.stop)
-
 
 
     @Slot()
     def stop(self):
-        #background(self.kernel_client.stop_channels)
-        #background(self.kernel_manager.shutdown_kernel)
-
-        #QtCore.QTimer.singleShot(0, self.kernel_client.stop_channels)
-        #QtCore.QTimer.singleShot(0, self.kernel_manager.shutdown_kernel)
-
         self.kernel_client.stop_channels()
         self.kernel_manager.shutdown_kernel()
 
@@ -89,8 +76,6 @@ class ConsoleWidget(RichJupyterWidget):
         Given a dictionary containing labels / value pairs, push those variables
         to the Jupyter console widget
         """
-
-        #self.kernel_client.execute(code, silent=True)
         self.kernel_manager.kernel.shell.push(variableDict)
 
     def clear(self):
@@ -99,7 +84,6 @@ class ConsoleWidget(RichJupyterWidget):
         """
         
         self._control.clear()
-        # self.kernel_manager
 
     def printText(self, text):
         """
@@ -111,10 +95,12 @@ class ConsoleWidget(RichJupyterWidget):
         """
         Execute a command in the frame of the console widget
         """
+        print("Execute command in shell!")
         self._execute(command, False)
         
     def reset(self, clear=True):
         super().reset(clear)
+
 
 
 class ConsoleTabWidget(QTabWidget):
@@ -127,17 +113,17 @@ class ConsoleTabWidget(QTabWidget):
             
             self.tabCloseRequested.connect(self.closeTab)
                         
-            # set button context menu policy
+            # Set button context menu policy
             self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             self.customContextMenuRequested.connect(self.onContextMenu)
 
-            # create context menu
-            self.popMenu = QMenu(self)
-            self.actionNewConsole = self.popMenu.addAction('New console')
+            # Create context menu
+            self.pop_menu = QMenu(self)
+            self.actionNewConsole = self.pop_menu.addAction('New console')
             self.appendConsole()
             
         def appendConsole(self):            
-            console = ConsoleWidget(banner="<<< Signal Flow Visualization >>>\n")
+            console = ConsoleWidget()
             self.addTab(console, "Console")
             console.pushVariables({'console': console})
 
@@ -152,7 +138,7 @@ class ConsoleTabWidget(QTabWidget):
                 raise RuntimeError("An illegal state of the ConsoleTabWidget object "
                                     "has been detected.")
             
-            selectedAction = self.popMenu.exec_(self.mapToGlobal(point))
+            selectedAction = self.pop_menu.exec_(self.mapToGlobal(point))
             if selectedAction == self.actionNewConsole:
                 self.appendConsole()                
                 
