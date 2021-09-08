@@ -38,7 +38,7 @@ from nezzle.constants import Lock
 from nezzle.graphics.nodes.nodeconverter import NodeConverter
 from nezzle.graphics.nodes.basenode import BaseNode
 from nezzle.graphics.nodes.ellipsenode import EllipseNode
-from nezzle.graphics.nodes.rectangleenode import RectangleNode
+from nezzle.graphics.nodes.rectanglenode import RectangleNode
 
 from nezzle.graphics.links.linkconverter import LinkConverter
 from nezzle.graphics.links.baselink import BaseLink

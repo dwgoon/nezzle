@@ -1,7 +1,7 @@
 from .ellipsenode import EllipseNode
 from .ellipsenode import CircleNode
-from .rectangleenode import RectangleNode
-from .rectangleenode import SquareNode
+from .rectanglenode import RectangleNode
+from .rectanglenode import SquareNode
 
 
 class NodeClassFactory(object):
