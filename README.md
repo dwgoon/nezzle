@@ -31,8 +31,5 @@
 ## Documentation
 - Home:
 - Tutorials:
-- API:
 
 ## Citation
-
-## License
