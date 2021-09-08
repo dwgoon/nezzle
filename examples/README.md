@@ -9,9 +9,7 @@
   </tr>
   <tr>
   <td>
-
-    <img src="images/node01.png" alt="Drawing" width="300px"/>
-
+  <img src="images/node01.png" alt="Drawing" width="300px"/>
   </td>
   <td>
 
