@@ -27,6 +27,9 @@
 ### Create network graphics by running a code
 <img src="assets/demo03.gif" alt="Drawing" width="700px"/>
 
+<br/>
+
+More examples: 
 
 ## Documentation
 - Home:
