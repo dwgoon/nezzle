@@ -1,5 +1,7 @@
 # Code Examples
 
+Each example shows how network visualization can be automated in different ways.
+
 ## Nodes
 
 <table>
@@ -283,3 +285,10 @@
 
 
 ## Labels
+
+
+
+# GUI Examples
+
+### Converting node types
+<img src="images/convert_node_type.gif" alt="Drawing" width="400px"/>
