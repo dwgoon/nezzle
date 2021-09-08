@@ -6,7 +6,7 @@ from nezzle.graphics.nodes.basenode import BaseNode
 
 
 @lockable
-class RectangleNode(BaseNode):
+class EllipseNode(BaseNode):
 
     ITEM_TYPE = 'RECT_NODE'
 
@@ -34,7 +34,7 @@ class RectangleNode(BaseNode):
 
 
 @lockable
-class SquareNode(RectangleNode):
+class SquareNode(EllipseNode):
 
     ITEM_TYPE = 'SQUARE_NODE'
 

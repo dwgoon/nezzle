@@ -4,7 +4,7 @@ from nezzle.graphics.nodes.nodefactory import NodeClassFactory
 from nezzle.graphics.nodes.basenode import BaseNode
 from nezzle.graphics.nodes.ellipsenode import EllipseNode
 from nezzle.graphics.nodes.ellipsenode import CircleNode
-from nezzle.graphics.nodes.rectanglenode import RectangleNode
+from nezzle.graphics.nodes.rectanglenode import EllipseNode
 from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
 from nezzle.graphics.arrows.basearrow import Triangle
 from nezzle.graphics.arrows.basearrow import Hammer
