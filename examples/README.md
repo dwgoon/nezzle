@@ -291,4 +291,15 @@ Each example shows how network visualization can be automated in different ways.
 # GUI Examples
 
 ### Converting node types
-<img src="images/convert_node_type.gif" alt="Drawing" width="400px"/>
+<table>
+<tr><td>
+<img src="images/convert_node_types.gif" alt="Drawing" width="600px"/>
+</td></tr>
+</table>
+
+### Converting link types
+<table>
+<tr><td>
+<img src="images/convert_link_types.gif" alt="Drawing" width="600px"/>
+</td></tr>
+</table>
