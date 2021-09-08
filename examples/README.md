@@ -1,8 +1,20 @@
-# Code Examples
+
+## Contents
+
+1. [Code Examples](#Code-Examples)
+    - [Nodes](#Nodes)
+    - [Links](#Links)
+    - [Arrows](#Arrows)
+    - [Labels](#Labels)
+2. [GUI Examples](#GUI-Examples)
+    - [Converting node types](#Converting-node-types)
+    - [Converting link types](#Converting-link-types)
+
+## Code Examples
 
 Each example shows how network visualization can be automated in different ways.
 
-## Nodes
+### Nodes
 
 <table>
   <tr>
@@ -303,3 +315,6 @@ Each example shows how network visualization can be automated in different ways.
 <img src="images/convert_link_types.gif" alt="Drawing" width="600px"/>
 </td></tr>
 </table>
+
+
+### Undo & redo in history
