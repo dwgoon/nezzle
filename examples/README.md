@@ -117,7 +117,7 @@
   
           net.add_node(node)
           net.add_label(label)
-    # end of for
+      # end of for
       nav.append_item(net)
   ```
 
