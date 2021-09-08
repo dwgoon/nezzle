@@ -97,25 +97,33 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionViewControlDock.triggered.connect(
             self.process_view_control_dock
         )
-        self.mw.ui_controlDock.visibilityChanged.connect(
-            self.process_view_control_dock
+        self.mw.ui_controlDock.closeEventOccured.connect(
+             self.process_view_control_dock
         )
-
+        # self.mw.ui_controlDock.showEventOccured.connect(
+        #      self.process_view_control_dock
+        # )
 
         self.mw.ui_actionViewConsoleDock.triggered.connect(
             self.process_view_console_dock
         )
-        self.mw.ui_consoleDock.visibilityChanged.connect(
-            self.process_view_console_dock
+        self.mw.ui_consoleDock.closeEventOccured.connect(
+             self.process_view_console_dock
         )
+
+        # self.mw.ui_consoleDock.showEventOccured.connect(
+        #      self.process_view_console_dock
+        # )
 
         self.mw.ui_actionViewHistoryDock.triggered.connect(
             self.process_view_history_dock
         )
-        self.mw.ui_historyDock.visibilityChanged.connect(
-            self.process_view_history_dock
+        self.mw.ui_historyDock.closeEventOccured.connect(
+             self.process_view_history_dock
         )
-
+        # self.mw.ui_historyDock.showEventOccured.connect(
+        #      self.process_view_history_dock
+        # )
 
         # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
         self.mw.ui_actionLockNodes.triggered.connect(
@@ -341,17 +349,27 @@ class MenuActionHandler(QWidget):
 
     @Slot(bool)
     def process_view_control_dock(self, checked):
-        self.mw.ui_controlDock.setVisible(checked)
+        if checked:
+            self.mw.ui_controlDock.show()
+        else:
+            self.mw.ui_controlDock.hide()
         self.mw.ui_actionViewControlDock.setChecked(checked)
 
     @Slot(bool)
     def process_view_console_dock(self, checked):
-        self.mw.ui_consoleDock.setVisible(checked)
+        if checked:
+            self.mw.ui_consoleDock.show()
+        else:
+            self.mw.ui_consoleDock.hide()
         self.mw.ui_actionViewConsoleDock.setChecked(checked)
 
     @Slot(bool)
     def process_view_history_dock(self, checked):
-        self.mw.ui_historyDock.setVisible(checked)
+        if checked:
+            self.mw.ui_historyDock.show()
+        else:
+            self.mw.ui_historyDock.hide()
+
         self.mw.ui_actionViewHistoryDock.setChecked(checked)
 
     @Slot(bool)

@@ -1,0 +1,6 @@
+from nezzle.managers.codemanager import CodeManager
+from nezzle.managers.consoletabmanager import ConsoleTabManager
+from nezzle.managers.historyviewmanager import HistoryViewManager
+from nezzle.managers.navigationtreemanager import NavigationTreeManager
+from nezzle.managers.networkmodelmanager import NetworkModelManager
+from nezzle.managers.singleviewmanager import SingleViewManager

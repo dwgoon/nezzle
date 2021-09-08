@@ -3,7 +3,7 @@ from qtpy.QtWidgets import QMainWindow
 from nezzle.ui.ui_mainwindow import Ui_MainWindow
 from nezzle.managers.singleviewmanager import SingleViewManager
 from nezzle.managers.navigationtreemanager import NavigationTreeManager
-from nezzle.managers.consolemanager import ConsoleTabManager
+from nezzle.managers.consoletabmanager import ConsoleTabManager
 from nezzle.managers.networkmodelmanager import NetworkModelManager
 from nezzle.managers.codemanager import CodeManager
 from nezzle.managers.historyviewmanager import HistoryViewManager

@@ -29,12 +29,10 @@ class HistoryViewManager(QObject):
     @property
     def stack(self):
         return self._history.stack
-        #return self.history_view.stack
 
     @property
     def history(self):
         return self._history
-        #return self.stack.parentItem()
 
     def update_history_view(self, history):
         self._history = history
@@ -44,5 +42,3 @@ class HistoryViewManager(QObject):
         model_index = current.indexes()[0]  # Get QModelIndex from QItemSelection
         scene = self.mw.sv_manager.current_scene
         selected = scene.selectedItems()
-        #scene.clearSelection()
-        #scene.clearFocus()

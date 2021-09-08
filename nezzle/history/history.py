@@ -37,9 +37,3 @@ class History(QObject):
     @property
     def stack(self):
         return self._undo_stack
-
-    # def show_history_view(self):
-    #     self.undo_view.show()
-    #
-    # def hide_history_view(self):
-    #     self.undo_view.hide()

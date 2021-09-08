@@ -41,6 +41,13 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         self.ui_buttonBox.accepted.connect(self.on_accepted)
         self.ui_buttonBox.rejected.connect(self.on_rejected)
 
+        # TODO: Implement tail mapping
+        self.ui_linkTailMappingTable.setColumnCount(3)
+        self.ui_linkTailMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Tail"])
+        self.ui_linkTailMappingTable.setItem(0, 0, QTableWidgetItem("Currently Not Supported"))
+
+        self.ui_linkTailMappingTable.setDisabled(True)
+
 
     @Slot()
     def on_open_button_released(self):

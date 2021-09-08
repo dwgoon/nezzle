@@ -1,9 +1,6 @@
-from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
-from qtpy.QtCore import QObject
 from qtpy.QtCore import QItemSelection
 from qtpy.QtWidgets import QUndoView
-from qtpy.QtWidgets import QUndoStack
 
 
 class HistoryView(QUndoView):
