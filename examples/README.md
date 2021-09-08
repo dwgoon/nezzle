@@ -100,8 +100,12 @@
       net = Network("A single node with a label")
       node_colors = [Qt.red, Qt.green, Qt.blue]
       text_colors = [Qt.black, Qt.black, Qt.white]
-      for i, name in enumerate(["A", "B", "C"]):
-          node = EllipseNode(name, 40, 40, pos=QPointF(-80 + 80*i, -80 + 80*i))
+      for i, name in enumerate(["A", "B", "C"]):          
+          # Node ID (i.e., iden) should be different.
+          node = EllipseNode(iden=name,
+                             width=40,
+                             height=40,
+                             pos=QPointF(-80 + 80*i, -80 + 80*i))
           node['FILL_COLOR'] = node_colors[i]
           node["BORDER_COLOR"] = Qt.black
           node['BORDER_WIDTH'] = 2
