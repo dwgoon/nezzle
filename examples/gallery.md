@@ -4,7 +4,8 @@
     - [Convert node types](#Convert-node-types)
     - [Convert link types](#Convert-link-types)
     - [Undo & redo in history](#Undo-&-redo-in-history)
-    - [Save & load networks](#Save-&-load-networks)
+    - [Save networks](#Save-networks)
+    - [Load networks](#Load-networks)
     - [Export images](#Export-images)
     - [Copy to clipboard](#Copy-to-clipboard)
 
@@ -34,7 +35,9 @@
 
 ### Undo & redo in history
 
-### Save & load networks
+### Save networks
+
+## Load networks
 
 ### Export images
 
@@ -280,9 +283,9 @@
   
       num_nodes = 30
   
-      x = np.random.uniform(-200, 200, num_nodes)
-      y = np.random.uniform(-200, 200, num_nodes)
-      z = np.random.uniform(-1, 1, num_nodes)
+      x = np.random.uniform(-200, 200, num_nodes)  # X coordinates
+      y = np.random.uniform(-200, 200, num_nodes)  # Y coordinates
+      z = np.random.uniform(-1, 1, num_nodes)  # Some values to display in color
       abs_z = np.abs(z)
       norm_abs_z = abs_z / abs_z.max()
   
