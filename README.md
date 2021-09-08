@@ -29,7 +29,7 @@
 
 <br/>
 
-:computer: :keyboard: :computer_mouse: [More examples](examples/README.md)
+:computer: :keyboard: :computer_mouse: [More examples](examples/gallery.md)
 
 ## Documentation
 To be updated...
