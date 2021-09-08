@@ -24,4 +24,4 @@ def update(nav, net):
         net.add_node(node)
         net.add_label(label)
 
-        nav.append_item(net)
+    nav.append_item(net)
