@@ -1,18 +1,51 @@
 
-## Contents
+# Contents
+1. [GUI Examples](#GUI-Examples)
+    - [Convert node types](#Convert-node-types)
+    - [Convert link types](#Convert-link-types)
+    - [Undo & redo in history](#Undo-&-redo-in-history)
+    - [Save & load networks](#Save-&-load-networks)
+    - [Export images](#Export-images)
+    - [Copy to clipboard](#Copy-to-clipboard)
 
-1. [Code Examples](#Code-Examples)
+2. [Code Examples](#Code-Examples)
     - [Nodes](#Nodes)
     - [Links](#Links)
     - [Arrows](#Arrows)
     - [Labels](#Labels)
-2. [GUI Examples](#GUI-Examples)
-    - [Converting node types](#Converting-node-types)
-    - [Converting link types](#Converting-link-types)
+    - [Files](#Files)
 
-## Code Examples
 
-Each example shows how network visualization can be automated in different ways.
+# GUI Examples
+
+### Convert node types
+<table>
+<tr><td>
+<img src="images/convert_node_types.gif" alt="Drawing" width="600px"/>
+</td></tr>
+</table>
+
+### Convert link types
+<table>
+<tr><td>
+<img src="images/convert_link_types.gif" alt="Drawing" width="600px"/>
+</td></tr>
+</table>
+
+### Undo & redo in history
+
+### Save & load networks
+
+### Export images
+
+### Copy to clipboard
+
+
+
+# Code Examples
+
+- Each example shows how network visualization can be automated in different ways.
+- These codes are basic templates for new tasks.
 
 ### Nodes
 
@@ -299,22 +332,4 @@ Each example shows how network visualization can be automated in different ways.
 ## Labels
 
 
-
-# GUI Examples
-
-### Converting node types
-<table>
-<tr><td>
-<img src="images/convert_node_types.gif" alt="Drawing" width="600px"/>
-</td></tr>
-</table>
-
-### Converting link types
-<table>
-<tr><td>
-<img src="images/convert_link_types.gif" alt="Drawing" width="600px"/>
-</td></tr>
-</table>
-
-
-### Undo & redo in history
+## Files
