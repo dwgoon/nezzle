@@ -50,7 +50,7 @@
 
 - Each example shows how network visualization can be automated in different ways.
 - These codes are basic templates for new tasks.
-
+- The Python source code (i.e., module) should include `update(nav, net)` function, which is called by Nezzle.
 
 <img src="images/run_code_update.png" alt="Drawing" width="600px"/>
 
