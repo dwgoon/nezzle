@@ -94,14 +94,14 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionPaste.setShortcut(QKeySequence('Ctrl+V'))
 
         # View
-        self.mw.ui_actionViewControlDock.triggered.connect(
-            self.process_view_control_dock
+        self.mw.ui_actionViewNavigationDock.triggered.connect(
+            self.process_view_navigation_dock
         )
-        self.mw.ui_controlDock.closeEventOccured.connect(
-             self.process_view_control_dock
+        self.mw.ui_navigationDock.closeEventOccured.connect(
+             self.process_view_navigation_dock
         )
-        # self.mw.ui_controlDock.showEventOccured.connect(
-        #      self.process_view_control_dock
+        # self.mw.ui_navigationDock.showEventOccured.connect(
+        #      self.process_view_navigation_dock
         # )
 
         self.mw.ui_actionViewConsoleDock.triggered.connect(
@@ -348,12 +348,12 @@ class MenuActionHandler(QWidget):
         msg.exec()
 
     @Slot(bool)
-    def process_view_control_dock(self, checked):
+    def process_view_navigation_dock(self, checked):
         if checked:
-            self.mw.ui_controlDock.show()
+            self.mw.ui_navigationDock.show()
         else:
-            self.mw.ui_controlDock.hide()
-        self.mw.ui_actionViewControlDock.setChecked(checked)
+            self.mw.ui_navigationDock.hide()
+        self.mw.ui_actionViewNavigationDock.setChecked(checked)
 
     @Slot(bool)
     def process_view_console_dock(self, checked):

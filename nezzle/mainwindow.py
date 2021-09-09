@@ -2,7 +2,7 @@ from qtpy.QtWidgets import QMainWindow
 
 from nezzle.ui.ui_mainwindow import Ui_MainWindow
 from nezzle.managers.singleviewmanager import SingleViewManager
-from nezzle.managers.navigationtreemanager import NavigationTreeManager
+from nezzle.managers.networktreemanager import NetworkTreeManager
 from nezzle.managers.consoletabmanager import ConsoleTabManager
 from nezzle.managers.networkmodelmanager import NetworkModelManager
 from nezzle.managers.codemanager import CodeManager
@@ -19,7 +19,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.sv_manager = SingleViewManager(self)
         self.nm_manager = NetworkModelManager(self)
-        self.nt_manager = NavigationTreeManager(self)
+        self.nt_manager = NetworkTreeManager(self)
         self.ct_manager = ConsoleTabManager(self)
         self.code_manager = CodeManager(self)
         self.hv_manager = HistoryViewManager(self)

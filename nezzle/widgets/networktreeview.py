@@ -5,7 +5,7 @@ from qtpy.QtCore import QEvent
 from qtpy.QtWidgets import QTreeView
 
 
-class NavigationTreeView(QTreeView):
+class NetworkTreeView(QTreeView):
     keyPressed = Signal(QEvent)
 
     def keyPressEvent(self, event):

@@ -13,7 +13,7 @@ from qtpy.QtGui import QStandardItemModel
 from qtpy.QtWidgets import QMenu
 
 
-class NavigationTreeManager(QObject):
+class NetworkTreeManager(QObject):
 
     def __init__(self, mw):
         super().__init__(parent=mw)
