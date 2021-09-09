@@ -149,6 +149,6 @@ class NetworkTreeManager(QObject):
 
         if root.rowCount() == 0:
             self.mw.sv_manager.clear()
-            self.mv.hv_manager.clear()
+            self.mw.hv_manager.clear()
         else:
             self.on_selection_changed([], [])

@@ -42,3 +42,6 @@ class HistoryViewManager(QObject):
         model_index = current.indexes()[0]  # Get QModelIndex from QItemSelection
         scene = self.mw.sv_manager.current_scene
         selected = scene.selectedItems()
+
+    def clear(self):
+        self.stack.clear()
