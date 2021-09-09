@@ -95,7 +95,6 @@ class ConsoleWidget(RichJupyterWidget):
         """
         Execute a command in the frame of the console widget
         """
-        print("Execute command in shell!")
         self._execute(command, False)
         
     def reset(self, clear=True):
@@ -129,7 +128,6 @@ class ConsoleTabWidget(QTabWidget):
 
         @Slot()
         def onContextMenu(self, point):
-            print("Num. of console tabs: ", self.count())
             if self.count() == 1:
                 self.actionNewConsole.setEnabled(False)
             elif self.count() == 0:

@@ -22,5 +22,6 @@ class LinkConverter(object):
             return
 
         attr = link.to_dict()
+        attr["ITEM_TYPE"] = link_type.ITEM_TYPE
         new_link = link_type.from_dict(attr=attr, source=link.source, target=link.target)
         return new_link

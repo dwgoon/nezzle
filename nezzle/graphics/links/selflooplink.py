@@ -24,31 +24,14 @@ class SelfloopLink(BaseLink):
         self._angle_offset = None
         self._angle_sweep = None
         self._angle_begin = None
+
         super().__init__(iden, *args, **kwargs)
-        # self._attr.set_trigger('RADIUS_CORE',
-        #                        self._trigger_set_radius_core, when='set')
 
         self.node.add_link(self)
 
     @property
     def node(self):
         return self._node
-
-    # @property
-    # def radius_core(self):
-    #     return self._attr['RADIUS_CORE']
-
-    # def _trigger_set_radius_core(self, key, value):
-    #     self._radius_core = value
-    #     return value
-
-    # @property
-    # def angle_offset(self):
-    #     return self._attr['ANGLE_OFFSET']
-
-    # def _trigger_set_angle_offset(self, key, value):
-    #     self._angle_offset = value
-    #     return value
 
     def initialize(self):
         self._create_path()
@@ -142,7 +125,6 @@ class SelfloopLink(BaseLink):
 
         """
         [REF] http://stackoverflow.com/a/17123051/4136588
-
         """
         self._path_paint = QPainterPath()
         path = self._path_paint
@@ -176,47 +158,6 @@ class SelfloopLink(BaseLink):
 
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
-        #painter.drawPath(self._path_paint)
-
-        #color = QColor(self._attr['FILL_COLOR'])
-        # painter.drawPath(self._path_paint)
-        #painter.setBrush(color)
-        #painter.fillPath(self._path_paint, QBrush(color))
-        #painter.drawPath(self._path_paint)
-
-        # painter.setBrush(Qt.blue)
-        #
-        # painter.drawEllipse(-1,
-        #                     -1, 2, 2)
-        #
-        # painter.setBrush(QColor(0, 0, 255, 100))
-        # # for i in range(self._path_paint.elementCount()):
-        # #     elem = self._path_paint.elementAt(i)
-        # #     painter.drawEllipse(-1 + elem.x,
-        # #                         -1 + elem.y, 2, 2)
-        #
-        # if self.head:
-        #     painter.drawPath(self._path_head)
-        #     # for i in range(self._path_head.elementCount()):
-        #     #     elem = self._pat_head.elementAt(i)
-        #     #     painter.drawEllipse(-1 + elem.x,h
-        #     #                         -1 + elem.y, 2, 2)
-
-
-
-    # def itemChange(self, change, value):
-    #
-    #     if change == QGraphicsItem.ItemSelectedHasChanged:
-    #         if self.head:
-    #             print("angle_head: ", self._angle_head)
-    #
-    #         print("Node width, height", self._node.width, self._node.height)
-    #         print("angle_offset: ", self._angle_offset)
-    #         print("sweep angle: ", self._angle_sweep)
-    #         print("radius_core:", self._radius_core)
-    #
-    #     return super().itemChange(change, value)
-
 
     def to_dict(self):
         attr = super().to_dict()

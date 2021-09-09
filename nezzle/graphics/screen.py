@@ -81,10 +81,8 @@ class GraphicsView(QGraphicsView):
             self._pos_drag_start = event.pos()
 
             if self._item_clicked:
-                print("[mousePressed] Item Clicked:", self._item_clicked)
                 super().mousePressEvent(event)
                 items = self.scene().selectedItems()
-                print("[mousePressed] Item Selected:")
                 self.scene().update_selected_items_old_positions()
                 return
 
@@ -224,7 +222,6 @@ class GraphicsView(QGraphicsView):
         else:
             raise ValueError("Unknown direction for alignment: %s"%(direction))
 
-        #self.scene().items_moved_by_align(items)
         self.scene().history.on_move_items_by_mouse(items)
 
     def distribute_objects(self, direction):
@@ -234,9 +231,11 @@ class GraphicsView(QGraphicsView):
             items.sort(key=lambda obj: obj.x())
             x_max = max([item.x() for item in items])
             x_min = min([item.x() for item in items])
-            gap_x = (x_max - x_min)/(len(items)-1)
+            gap_x = (x_max - x_min) / (len(items) - 1)
             for i, item in enumerate(items):
                 item.setX(x_min + i*gap_x)
+                item.update()
+
         elif direction == 'vertical':  # y
             items.sort(key=lambda obj: obj.y())
             y_max = max([item.y() for item in items])
@@ -244,6 +243,8 @@ class GraphicsView(QGraphicsView):
             gap_y = (y_max - y_min) / (len(items) - 1)
             for i, item in enumerate(items):
                 item.setY(y_min + i*gap_y)
+                item.update()
+
         else:
             raise ValueError("Unknown direction for distribution: %s"%(direction))
 
@@ -254,7 +255,6 @@ class GraphicsScene(QGraphicsScene):
 
     def __init__(self, *args, parent=None, **kwargs):
         super().__init__(*args, parent, **kwargs)
-        #self.selectionChanged.connect(self.on_selection_changed)
         self.setBackgroundBrush(Qt.transparent)
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
@@ -268,27 +268,12 @@ class GraphicsScene(QGraphicsScene):
     def history(self):
         return self._history
 
-    # def addItem(self, item):
-    #     if isinstance(item, MappableGraphicsItem):
-    #         item["_OLD_POS"] = item.pos()
-    #     return super().addItem(item)
-
     def selected_movable_items(self):
         items_selected = self.selectedItems()
-        # print("[Selected movable items]")
-        # for item in items_selected:
-        #     print(item, item.is_movable())
         return [item for item in items_selected if item.is_movable()]
-
-    # def on_selection_changed(self):
-    #     pass
-        # view = self.views()[0]
-        # view.enable_menu_align()
-        # self.update_selected_items_old_positions()
 
     def update_selected_items_old_positions(self):
         items = self.selectedItems()  # Don't use selected_movable_items()
-        print("[Update old positions] Selected Movable Items:", items)
         if len(items) == 0:
             return
 

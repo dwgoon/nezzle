@@ -195,17 +195,10 @@ def nearest_point(cps, pa):
     c = 2*sq_v0 - dot(v3, diff_v1v0)  # 3*dot(v0, v0) - dot(v1, v0)
     d = -dot(v3, v0)
 
-    #print("Nearest point cps: ", [p1, pc, p2])
-    #print("Scaled cps:", [p1_scaled, pc_scaled, p2_scaled])
-    #print("a, b, c, d", a, b, c, d)
-
     sols = solve_cubic(a, b, c, d)
     t = sols[0]
     f = a*t**3 + b*t**2 + c*t + d
 
-    #print("t: ", t)
-    #print("Assign: ", f)
-    #assert np.abs(f)<1e-1
     assert np.allclose(np.imag(t), 0)
     t = np.real(t)
 

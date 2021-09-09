@@ -20,7 +20,6 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         self.setWindowTitle("Open a network file")
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
 
-
         validator_double = QDoubleValidator()
         validator_double.setBottom(0.0)
 
@@ -29,11 +28,8 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         self.ui_linkHeadMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Head"])
 
         # Set head selection QComboBox
-        # self._ui_headSelection = QComboBox()
         self._available_heads = ArrowClassFactory.get_available_heads()
         self._head_selections = {}
-        # for head_name in available_heads:
-        #     self._ui_headSelection.addItem(head_name.title())
 
         # Link signal and slot
         self.ui_openButton.released.connect(self.on_open_button_released)
@@ -60,22 +56,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
             if dialog.exec() == QDialog.Accepted:
                 fpath = dialog.selectedFiles()[0]
                 self.ui_filePathEdit.setText(fpath)
-                #fpath = fpath.strip()
-
                 self.on_reload_button_released()
-                # interactions = read_interactions(fpath)
-                # num_rows = len(interactions)
-                # self.ui_linkHeadMappingTable.setRowCount(num_rows)
-                # for i, name in enumerate(interactions):
-                #     self.ui_linkHeadMappingTable.setItem(i, 0, QTableWidgetItem(name))
-
-                # if fpath.endswith('.json'):
-                #     #self.ui_networkNameEdit.setEnabled(False)
-                #
-                # elif fpath.endswith('.sif'):
-                #     # self.ui_networkNameEdit.setEnabled(True)
-                #     pass
-
             # end of if
         except Exception as err:
             print(err)
@@ -129,10 +110,6 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
     def on_accepted(self):
         self._fpath = self.ui_filePathEdit.text()
         self._network_name = self.ui_networkNameEdit.text().strip()
-        # self._act_sym = self.ui_actSymEdit.text()
-        # self._inh_sym = self.ui_inhSymEdit.text()
-        # self._scene_width = float(self.ui_sceneWidthEdit.text())
-        # self._scene_height = float(self.ui_sceneWidthEdit.text())
         super().accept()
 
     @Slot()
@@ -156,24 +133,23 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
     def network_name(self):
         return self._network_name
 
-    @property
-    def act_sym(self):
-        return self._act_sym
+    # @property
+    # def act_sym(self):
+    #     return self._act_sym
+    #
+    # @property
+    # def inh_sym(self):
+    #     return self._inh_sym
 
-    @property
-    def inh_sym(self):
-        return self._inh_sym
-
-    @property
-    def scene_width(self):
-        return self._scene_width
-
-    @property
-    def scene_height(self):
-        return self._scene_height
+    # @property
+    # def scene_width(self):
+    #     return self._scene_width
+    #
+    # @property
+    # def scene_height(self):
+    #     return self._scene_height
 
     @property
     def no_link_type(self):
         return self.ui_noLinkTypeCheck.isChecked()
-
 # end of class

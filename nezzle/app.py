@@ -34,16 +34,9 @@ def main(args=None):
     #QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
 
     mw = MainWindow()
-    #mw = get_main_window()
-    
     mw.setWindowTitle("Nezzle")
     droot_resources = pjoin(os.path.dirname(__file__), "resources")
-    print(droot_resources)
-    
     icon = QIcon(pjoin(droot_resources, "icon.png"))
-        
-    print(icon.isNull())
-    print(icon.name(), icon.themeName())
     mw.setWindowIcon(icon)
 
     # Before showing the main window, process arguments.
@@ -52,11 +45,9 @@ def main(args=None):
             pass
         elif os.path.isfile(args.fpath_code):
                 mw.code_manager.process_code(args.fpath_code)
-                print("%s has been executed."%(args.fpath_code))
                 mw.code_manager.file_path_edit.setText(args.fpath_code)
         else:
             sys.stderr.write("File path of source code is not valid: %s\n"%(args.fpath_code))
-
 
     # Show the main window.
     mw.show()

@@ -16,6 +16,7 @@ from nezzle.graphics import GraphicsScene
 from nezzle.graphics import Network
 from nezzle.fileio import write_image
 
+
 def update(nav, net):
     _net = Network('TestNetwork')
 
@@ -26,7 +27,7 @@ def update(nav, net):
     y1 = 200.0
 
     # A single arrow link with circle nodes
-    NodeClass = NodeClassFactory.create("RECT_NODE")
+    NodeClass = NodeClassFactory.create("RECTANGLE_NODE")
 
     src = NodeClass('ID_NODE_1', 40, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 40, 20, pos=QPoint(x0, y0))
@@ -54,7 +55,7 @@ def update(nav, net):
     y1 = 400.0
 
     # A single arrow link with circle nodes
-    NodeClass = NodeClassFactory.create("RECT_NODE")
+    NodeClass = NodeClassFactory.create("RECTANGLE_NODE")
 
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))

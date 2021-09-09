@@ -4,8 +4,7 @@
     - [Convert node types](#Convert-node-types)
     - [Convert link types](#Convert-link-types)
     - [Undo & redo in history](#Undo-&-redo-in-history)
-    - [Save networks](#Save-networks)
-    - [Load networks](#Load-networks)
+    - [Save & load networks](#Save-&-load-networks)    
     - [Export images](#Export-images)
     - [Copy to clipboard](#Copy-to-clipboard)
 
@@ -34,14 +33,16 @@
 </table>
 
 ### Undo & redo in history
+<img src="images/undo_redo_in_history.gif" alt="Drawing" width="800px"/>
 
-### Save networks
-
-### Load networks
+### Save & load networks
+<img src="images/save_load_networks.gif" alt="Drawing" width="800px"/>
 
 ### Export images
+<img src="images/export_images.gif" alt="Drawing" width="800px"/>
 
 ### Copy to clipboard
+<img src="images/copy_to_clipboard.gif" alt="Drawing" width="800px"/>
 
 
 

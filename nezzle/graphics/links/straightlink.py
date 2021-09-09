@@ -15,8 +15,7 @@ from nezzle.graphics.arrows.transform import Rotate
 
 @Lockable
 class StraightLink(TwoNodeLink):
-    """
-    Straight link class.
+    """Straight link class.
     """
     ITEM_TYPE = 'STRAIGHT_LINK'
 
@@ -33,8 +32,6 @@ class StraightLink(TwoNodeLink):
     def _identify_head(self):
         StraightLink._identify_head_pos(self)
         StraightLink._calculate_head_angle(self)
-        #self._identify_head_pos()
-        #self._calculate_head_angle()
         super()._create_head_path()
 
     def _identify_head_pos(self):

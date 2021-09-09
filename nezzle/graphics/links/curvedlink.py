@@ -8,11 +8,9 @@ from qtpy.QtWidgets import QGraphicsItem
 from .straightlink import StraightLink
 from .controlpoint import ControlPoint
 
-from nezzle.utils import dist
 from nezzle.utils import dot
 from nezzle.utils import internal_division
 from nezzle.utils import length
-from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
 from nezzle.graphics.mixins import Lockable
 
@@ -26,12 +24,12 @@ class CurvedLink(StraightLink):
         self._t_head = 0
         super().__init__(*args, **kwargs)
 
-        self._attr.set_trigger('CTRL_POS_X',
-                               self._trigger_set_ctrl_pos_x,
+        self._attr.set_trigger('CP_POS_X',
+                               self._trigger_set_cp_pos_x,
                                when='set')
 
-        self._attr.set_trigger('CTRL_POS_Y',
-                               self._trigger_set_ctrl_pos_y,
+        self._attr.set_trigger('CP_POS_Y',
+                               self._trigger_set_cp_pos_y,
                                when='set')
 
 
@@ -46,11 +44,11 @@ class CurvedLink(StraightLink):
     def ctrl_point(self):
         return self._ctrl_point
 
-    def _trigger_set_ctrl_pos_x(self, key, value):
+    def _trigger_set_cp_pos_x(self, key, value):
         self._ctrl_point.setX(value)
         return value
 
-    def _trigger_set_ctrl_pos_y(self, key, value):
+    def _trigger_set_cp_pos_y(self, key, value):
         self._ctrl_point.setY(value)
         return value
 
@@ -149,7 +147,6 @@ class CurvedLink(StraightLink):
 
     def _create_control_items(self):
         mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
-        print("Ctrl Point Initial Pos:", mid)
         self._ctrl_point = ControlPoint(parent=self, pos=mid)
 
     def _create_subpoints(self):

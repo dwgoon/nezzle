@@ -35,7 +35,7 @@ def add_curve(view):
     y1 = 200.0
 
     # A single arrow link with circle nodes
-    NodeClass = NodeClassFactory.create("RECT_NODE")
+    NodeClass = NodeClassFactory.create("RECTANGLE_NODE")
 
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))

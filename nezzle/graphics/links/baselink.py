@@ -215,7 +215,6 @@ class BaseLink(PainterOptionItem):
 
             pos = event.pos() - self.pos()
             if self._path_paint.contains(pos):
-                print("[MOUSE EVENT] Selected!")
                 self.setSelected(True)
                 event.accept()
         else:
@@ -312,7 +311,6 @@ class TwoNodeLink(BaseLink):
     ITEM_TYPE = 'TWO_NODE_LINK'
 
     def __init__(self, iden, source, target, *args, **kwargs):
-
         self._source = source
         self._target = target
         self.source.add_link(self)
@@ -325,7 +323,6 @@ class TwoNodeLink(BaseLink):
 
     def __eq__(self, other):
         return id(other) == id(self)
-
 
     @property
     def source(self):
@@ -350,15 +347,13 @@ class TwoNodeLink(BaseLink):
     # Read-only properties
     @property
     def pos_src(self):
-        """
-        The position of source relative to its parent link
+        """The position of source relative to its parent link
         """
         return self._source.pos() - self.pos()
 
     @property
     def pos_tgt(self):
-        """
-        The position of target relative to its parent link
+        """The position of target relative to its parent link
         """
         return self._target.pos() - self.pos()
 
@@ -366,8 +361,7 @@ class TwoNodeLink(BaseLink):
         return self.source.isSelected() or self.target.isSelected()
 
     def are_nodes_close(self):
-        """Decide whether the two nodes are overlapped
-        to show the graphics of link appropriately.
+        """Decide whether the two nodes are overlapped to show the graphics of link appropriately.
         """
         v = self.pos_tgt - self.pos_src
         len_v = length(v)
@@ -403,7 +397,9 @@ class TwoNodeLink(BaseLink):
 
         attr['ID_SOURCE'] = source.iden
         attr['ID_TARGET'] = target.iden
+
         obj._attr.update(attr)
+
         return obj
 
     def copy(self, source=None, target=None):

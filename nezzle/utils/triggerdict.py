@@ -32,12 +32,12 @@ class TriggerDict(UserDict):
             func = self._triggers_set[key]
             self.data[key] = func(key, value)
 
-    def get(self, key, default=None, trigger=True):
+    def get(self, key, trigger=True):
         if key not in self._triggers_get or not trigger:
-            return self.data.get(key, default)
+            return self.data.get(key)
 
         if trigger:
             func = self._triggers_get[key]
-            value = self.data.get(key, default)
+            value = self.data.get(key)
             return func(key, value)
 

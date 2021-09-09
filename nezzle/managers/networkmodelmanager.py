@@ -31,7 +31,6 @@ class NetworkModelManager(QObject):
         net = item.data()
         if net.name != item.text():
             net.name = item.text()
-            print("%s has been changed as follows: %s" % (item, item.text()))
 
         if item == self.mw.nt_manager.current_item:
             self.mw.sv_manager.set_current_view_text(net.name)

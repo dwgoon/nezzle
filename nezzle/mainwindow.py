@@ -30,7 +30,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def closeEvent(self, event):
-        print("Quit event")
         self.ct_manager.tab_widget.removeTab(0)
         self.ct_manager.console_widget.stop()
         event.accept()

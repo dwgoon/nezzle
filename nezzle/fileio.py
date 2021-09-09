@@ -231,12 +231,7 @@ def read_json(fpath, link_map):
             head_type_new = link_map[head_type_ori]
             link["HEAD"]["TYPE"] = head_type_new.upper()
 
-
-    print(dict_net)
     return Network.from_dict(dict_net)
-
-
-
 
 
 def write_network(net, fpath):

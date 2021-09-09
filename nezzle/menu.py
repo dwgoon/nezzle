@@ -80,13 +80,6 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionUndo.setShortcuts(QKeySequence.Undo)
         self.mw.ui_actionRedo.setShortcuts(QKeySequence.Redo)
 
-        # self.mw.sv_manager.view.items_moved_by_mouse.connect(
-        #     self.mw.history_manager.on_move_items_by_mouse
-        # )
-        # self.mw.sv_manager.view.items_moved_by_key.connect(
-        #     self.mw.history_manager.on_move_items_by_key
-        # )
-
         self.mw.ui_actionCopy.triggered.connect(self.process_copy)
         self.mw.ui_actionCopy.setShortcut(QKeySequence('Ctrl+C'))
 
@@ -100,9 +93,6 @@ class MenuActionHandler(QWidget):
         self.mw.ui_navigationDock.closeEventOccured.connect(
              self.process_view_navigation_dock
         )
-        # self.mw.ui_navigationDock.showEventOccured.connect(
-        #      self.process_view_navigation_dock
-        # )
 
         self.mw.ui_actionViewConsoleDock.triggered.connect(
             self.process_view_console_dock
@@ -111,19 +101,12 @@ class MenuActionHandler(QWidget):
              self.process_view_console_dock
         )
 
-        # self.mw.ui_consoleDock.showEventOccured.connect(
-        #      self.process_view_console_dock
-        # )
-
         self.mw.ui_actionViewHistoryDock.triggered.connect(
             self.process_view_history_dock
         )
         self.mw.ui_historyDock.closeEventOccured.connect(
              self.process_view_history_dock
         )
-        # self.mw.ui_historyDock.showEventOccured.connect(
-        #      self.process_view_history_dock
-        # )
 
         # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
         self.mw.ui_actionLockNodes.triggered.connect(

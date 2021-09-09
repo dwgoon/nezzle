@@ -116,8 +116,8 @@ class ControlPoint(BaseControlPoint):
 
         elif change == QGraphicsItem.ItemPositionHasChanged:
             pos = value
-            self.parent['CTRL_POS_X'] = pos.x()
-            self.parent['CTRL_POS_Y'] = pos.y()
+            self.parent['CP_POS_X'] = pos.x()
+            self.parent['CP_POS_Y'] = pos.y()
             self.parent.update()
 
         return super().itemChange(change, value)
@@ -164,18 +164,16 @@ class ConnectorControlPoint(BaseControlPoint):
             if self.isSelected():
                 pos = value
                 self.update_pos(pos)
-            #else:
-            #    value = self.pos()
 
             return super().itemChange(change, value)
 
         elif change == QGraphicsItem.ItemPositionHasChanged:
-            if self.isSelected():
-                self.parent.update()
-
             pos = value
             self.parent[f'{self._iden}_POS_X'] = pos.x()
             self.parent[f'{self._iden}_POS_Y'] = pos.y()
+
+            if self.isSelected():
+                self.parent.update()
             return
 
         return super().itemChange(change, value)
@@ -203,14 +201,14 @@ class HorizontalConnectorControlPoint(ConnectorControlPoint):
         # Never call parent.update() here
 
     def mouseReleaseEvent(self, event):
-        hwp = 0.5 * self.parent.width  # The half of width of parent
+        thr = 2 * self.parent.width
         for cp in self.parent.ctrl_points:
             if cp.isSelected() or isinstance(cp, HorizontalConnectorControlPoint):
                 continue
 
             conn1, conn2 = cp.connectors
             dist_conns = np.abs(conn1.x() - conn2.x())
-            if dist_conns < hwp:
+            if dist_conns < thr:
                 self.setX(conn1.x() + conn2.x() - self.x())
                 self.parent.update()
                 break
@@ -235,14 +233,14 @@ class VerticalConnectorControlPoint(ConnectorControlPoint):
         # Never call parent.update() here
 
     def mouseReleaseEvent(self, event):
-        hwp = 0.5 * self.parent.width  # The half of width of parent
+        thr = 2 * self.parent.width
         for cp in self.parent.ctrl_points:
             if cp.isSelected() or isinstance(cp, VerticalConnectorControlPoint):
                 continue
 
             conn1, conn2 = cp.connectors
             dist_conns = np.abs(conn1.y() - conn2.y())
-            if dist_conns < hwp:
+            if dist_conns < thr:
                 self.setY(conn1.y() + conn2.y() - self.y())
                 self.parent.update()
                 break

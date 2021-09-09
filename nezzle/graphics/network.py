@@ -265,10 +265,6 @@ class Network(MappableItem):
         net = cls(dict_net['ID'])
         net.name = dict_net['NAME']
 
-        #scene_width = dict_net["SCENE"]["SCENE_WIDTH"]
-        #scene_height = dict_net["SCENE"]["SCENE_HEIGHT"]
-        #net.scene.setSceneRect(0, 0, scene_width, scene_height)
-
         bg_color_rgb = dict_net["BACKGROUND_COLOR"]
         bg_color = QColor(bg_color_rgb)
         net.scene.setBackgroundBrush(bg_color)
@@ -285,7 +281,6 @@ class Network(MappableItem):
 
         for dict_link in dict_net["LINKS"]:
             item_type = dict_link.pop("ITEM_TYPE")
-
             if 'SELFLOOP' in item_type:
                 iden_node = dict_link.pop("ID_NODE")
                 node = dict_graphics[iden_node]

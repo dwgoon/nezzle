@@ -17,5 +17,6 @@ class NodeConverter(object):
             return
 
         attr = node.to_dict()
+        attr["ITEM_TYPE"] = node_type.ITEM_TYPE
         new_node = node_type.from_dict(attr=attr)
         return new_node

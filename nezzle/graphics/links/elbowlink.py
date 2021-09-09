@@ -37,15 +37,15 @@ class ElbowLink(StraightLink):
 
         # To avoid repetitive memory allocation, make this variable as a member.
         self._arr_t = np.arange(1, 0.5, -0.001, dtype=np.float64)
-        super().__init__(*args, **kwargs)  # initialize() is called in the hieararchy of super().__init__
+        super().__init__(*args, **kwargs)  # initialize() is called in the hierarchy of super().__init__
 
         for i in range(3):
             self._attr.set_trigger(f'CP{i}_POS_X',
-                                   self._trigger_set_ctrl_pos_x,
+                                   self._trigger_set_cp_pos_x,
                                    when='set')
 
             self._attr.set_trigger(f'CP{i}_POS_Y',
-                                   self._trigger_set_ctrl_pos_y,
+                                   self._trigger_set_cp_pos_y,
                                    when='set')
 
 
@@ -53,14 +53,22 @@ class ElbowLink(StraightLink):
     def ctrl_points(self):
         return self._ctrl_points
 
-    def _trigger_set_ctrl_pos_x(self, key, value):
+    def _trigger_set_cp_pos_x(self, key, value):
         ix = int(key[2])
-        self._ctrl_points[ix].setX(value)
+        cp = self._ctrl_points[ix]
+        old_selected = cp.isSelected()
+        cp.setSelected(True)
+        cp.setX(value)
+        cp.setSelected(old_selected)
         return value
 
-    def _trigger_set_ctrl_pos_y(self, key, value):
+    def _trigger_set_cp_pos_y(self, key, value):
         ix = int(key[2])
-        self._ctrl_points[ix].setY(value)
+        cp = self._ctrl_points[ix]
+        old_selected = cp.isSelected()
+        cp.setSelected(True)
+        cp.setY(value)
+        cp.setSelected(old_selected)
         return value
 
     def initialize(self):
