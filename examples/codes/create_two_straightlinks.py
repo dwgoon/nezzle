@@ -14,7 +14,7 @@ from nezzle.graphics import Network
 
 
 def update(nav, net):
-    new_net = Network('2NNFL')
+    new_net = Network('Two straight links')
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     LinkClass = LinkClassFactory.create("STRAIGHT_LINK")

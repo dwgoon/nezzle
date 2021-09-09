@@ -1,6 +1,6 @@
 from .ellipsenode import EllipseNode
 from .ellipsenode import CircleNode
-from .rectanglenode import EllipseNode
+from .rectanglenode import RectangleNode
 from .rectanglenode import SquareNode
 
 
@@ -11,8 +11,8 @@ class NodeClassFactory(object):
             return EllipseNode
         elif node_type.upper() == "CIRCLE_NODE":
             return CircleNode
-        elif node_type.upper() == "RECT_NODE":
-            return EllipseNode
+        elif node_type.upper() == "RECTANGLE_NODE":
+            return RectangleNode
         elif node_type.upper() == "SQUARE_NODE":
             return SquareNode
         else:

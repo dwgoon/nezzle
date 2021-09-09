@@ -23,7 +23,7 @@ from nezzle.utils import normal_vector
 from nezzle.utils import length
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
-from nezzle.graphics.mixins import lockable
+from nezzle.graphics.mixins import Lockable
 
 np.seterr('raise')
 
@@ -354,7 +354,7 @@ class ElbowLink(StraightLink):
             print(err)
 
 
-@lockable
+@Lockable
 class VerticalElbowLink(ElbowLink):
 
     ITEM_TYPE = 'VERTICAL_ELBOW_LINK'
@@ -402,7 +402,7 @@ class VerticalElbowLink(ElbowLink):
         con3.setY(pos_cp2.y())
 
 
-@lockable
+@Lockable
 class HorizontalElbowLink(ElbowLink):
 
     ITEM_TYPE = 'HORIZONTAL_ELBOW_LINK'

@@ -5,7 +5,7 @@ from qtpy.QtWidgets import QGraphicsItem
 from nezzle.systemstate import get_system_state
 
 
-def lockable(__class):
+def Lockable(__class):
 
     class __Lockable(__class):
 
@@ -26,7 +26,7 @@ def lockable(__class):
             return super().itemChange(change, value)
 
         def __repr__(self):
-            return '<lockable %s object at %s>'\
+            return '<Lockable %s object at %s>'\
                    %(self.__class__.__name__, hex(id(self)))
 
         # def __str__(self):

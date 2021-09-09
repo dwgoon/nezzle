@@ -38,7 +38,7 @@ from nezzle.constants import Lock
 from nezzle.graphics.nodes.nodeconverter import NodeConverter
 from nezzle.graphics.nodes.basenode import BaseNode
 from nezzle.graphics.nodes.ellipsenode import EllipseNode
-from nezzle.graphics.nodes.rectanglenode import EllipseNode
+from nezzle.graphics.nodes.rectanglenode import RectangleNode
 
 from nezzle.graphics.links.linkconverter import LinkConverter
 from nezzle.graphics.links.baselink import BaseLink
@@ -427,7 +427,7 @@ class MenuActionHandler(QWidget):
 
     @Slot()
     def process_convert_to_rectangle_node(self):
-        self._process_convert_to_node(EllipseNode)
+        self._process_convert_to_node(RectangleNode)
 
     def _process_convert_to_link(self, linkclass):
         net = self.mw.nt_manager.current_net

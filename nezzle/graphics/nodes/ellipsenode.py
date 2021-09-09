@@ -3,12 +3,10 @@ from qtpy.QtCore import QRectF
 from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtGui import QPainterPath
 
-from nezzle.graphics.mixins import lockable
+from nezzle.graphics.mixins import Lockable
 from .basenode import BaseNode
 
-
-
-@lockable
+@Lockable
 class EllipseNode(BaseNode):
 
     ITEM_TYPE = 'ELLIPSE_NODE'
@@ -36,7 +34,7 @@ class EllipseNode(BaseNode):
         return 1/math.sqrt(1/b**2 + (1/a**2 - 1/b**2)*(math.cos(angle)**2))
 
 
-@lockable
+@Lockable
 class CircleNode(EllipseNode):
 
     ITEM_TYPE = 'CIRCLE_NODE'

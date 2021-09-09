@@ -17,7 +17,7 @@ from nezzle.utils import length
 from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics import quadbezier
-from nezzle.graphics.mixins import lockable
+from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics.nodes.basenode import BaseNode

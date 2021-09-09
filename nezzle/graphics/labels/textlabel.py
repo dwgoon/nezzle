@@ -17,13 +17,13 @@ from qtpy.QtWidgets import QGraphicsSimpleTextItem
 from qtpy.QtWidgets import QGraphicsTextItem
 from qtpy.QtCore import QEvent
 
-from nezzle.graphics.mixins import lockable
+from nezzle.graphics.mixins import Lockable
 from nezzle.systemstate import get_system_state
 from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import BaseLink
 
 
-@lockable
+@Lockable
 class TextLabel(PainterOptionItem):
 
     ITEM_TYPE = 'TEXT_LABEL'
@@ -273,7 +273,7 @@ class TextLabel(PainterOptionItem):
 
 
 
-# @lockable
+# @Lockable
 # class TextLabel(PainterOptionItem):
 #
 #     ITEM_TYPE = 'TEXT_LABEL'
