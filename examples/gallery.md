@@ -14,6 +14,7 @@
     - [Arrows](#Arrows)
     - [Labels](#Labels)
     - [Files](#Files)
+    - [Applications](#Applications)
 
 
 # GUI Examples
