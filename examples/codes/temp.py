@@ -8,7 +8,7 @@ from nezzle.graphics import TextLabel
 from nezzle.graphics import Network
 
 
-def update(nav, net):
+def update(ntv, net):
     color_white = np.array([255, 255, 255, 0])
     color_up = np.array([255, 0, 0, 0])
     color_dn = np.array([0, 0, 255, 0])

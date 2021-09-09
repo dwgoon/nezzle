@@ -51,6 +51,10 @@
 - Each example shows how network visualization can be automated in different ways.
 - These codes are basic templates for new tasks.
 
+
+<img src="images/run_code_update.png" alt="Drawing" width="600px"/>
+
+
 ### Nodes
 
 <table>
@@ -73,14 +77,6 @@
 
 
   def update(nav, net):
-      """Update the navigation and network graphics.
-         This function is called by Nezzle, when pushing the "run" button.
-
-      Args:
-          nav: the navigation widget that adds network items.
-          net: the currently selected network item.
-      """
-
       net = Network("A single node")  # Overwrite the "net" variable.
 
       node = EllipseNode("NODE", 40, 40, pos=QPointF(0, 0))

@@ -10,6 +10,15 @@ from nezzle.graphics import Network
 
 
 def update(nav, net):
+    """Update the navigation by creating or modifying network graphics.
+       This function is called by Nezzle, when pushing the "run" button.
+
+    Args:
+        nav: the navigation widget that manages network items.
+        net: the currently selected network item in the networks.
+    """
+
+
     new_net = Network('Two links')
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
