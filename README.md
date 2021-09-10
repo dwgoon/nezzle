@@ -2,10 +2,12 @@
 
 
 ## Introduction 
-- Nezzle is a programmable and interactive visualization software for small-scale networks.
-- Nezzle was initially developed to visualize biological networks such as signaling networks.
+- Nezzle is a programmable and interactive visualization software for small scale networks (N < 100).
+- Nezzle was initially developed to visualize biological networks such as 
+  [signaling networks](https://www.nature.com/articles/s41598-018-23643-5).
 - Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is similar to playing a puzzle.
-  
+- Nezzle is currently under active development.
+
 ## Features
 - Lightweight, programmable, detailed visualization of small-scale networks for high quality figures.
 - Highly customizable visualization of networks with user-defined source codes.
@@ -29,10 +31,8 @@
 
 <br/>
 
-:computer: :keyboard: :computer_mouse: [More examples](examples/gallery.md)
+:computer::keyboard::computer_mouse: [More examples](examples/gallery.md)
 
-## Documentation
-To be updated...
 
 ## Citation
 To be updated...
