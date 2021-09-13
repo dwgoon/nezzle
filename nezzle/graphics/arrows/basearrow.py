@@ -64,6 +64,9 @@ class BaseArrow(object):
 
     @offset.setter
     def offset(self, val):
+        if not hasattr(self, "_parent") or not self._parent:
+            raise ValueError("A link should be assigned for this arrow before setting offset.")
+
         self._attr['OFFSET'] = val
         self.update()
 

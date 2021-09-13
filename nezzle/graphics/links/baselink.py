@@ -171,10 +171,6 @@ class BaseLink(PainterOptionItem):
     def set_width(self, val, head=True):
         if head and self.head:
             self.head.set_size_from_link(link_width=val)
-            # w = self.width
-            # scale = val/w
-            # self.head.width *= scale
-            # self.head.height *= scale
 
         self._width = val
         self._attr.set('WIDTH', val, trigger=False)
