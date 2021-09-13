@@ -82,7 +82,7 @@ class Network(MappableItem):
         self.nodes[node.iden] = node
         self.scene.addItem(node)
         self.nxdg.add_node(node.iden)
-        self.nxdg.nodes[node.iden]['VIS'] = node
+        self.nxdg.nodes[node.iden]['GRAPHICS'] = node
 
     def remove_node(self, obj):
         if isinstance(obj, BaseNode):
@@ -169,7 +169,7 @@ class Network(MappableItem):
             iden_tgt = link.target.iden
 
         self.nxdg.add_edge(iden_src, iden_tgt)
-        self.nxdg[iden_src][iden_tgt]['VIS'] = link
+        self.nxdg[iden_src][iden_tgt]['GRAPHICS'] = link
 
     def remove_link(self, obj):
         if isinstance(obj, BaseLink):
@@ -192,7 +192,7 @@ class Network(MappableItem):
     def add_label(self, label):
         self.labels[label.iden] = label
         self.nxdg.labels[label.iden] = {}
-        self.nxdg.labels[label.iden]['VIS'] = label
+        self.nxdg.labels[label.iden]['GRAPHICS'] = label
 
     def remove_label(self, obj):
         if isinstance(obj, TextLabel):
@@ -437,7 +437,7 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
             if src == tgt:  # Skip selfloops
                 continue
 
-            link = attr['VIS']
+            link = attr['GRAPHICS']
             mid = internal_division(link.pos_src, link.pos_tgt, 0.5, 0.5)
             d = dist(link.pos_src, mid) / math.cos(math.pi / 4)
             cp = rotate(link.pos_src, mid, -30, d)

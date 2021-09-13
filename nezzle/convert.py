@@ -207,7 +207,7 @@ def to_graphics(dg, iden, no_link_type=False):
             if src == tgt:  # Skip selfloops
                 continue
 
-            link = attr['VIS']
+            link = attr['GRAPHICS']
             mid = internal_division(link.pos_src, link.pos_tgt, 0.5, 0.5)
             d = dist(link.pos_src, mid)/math.cos(math.pi/4)
             cp = rotate(link.pos_src, mid, -30, d)

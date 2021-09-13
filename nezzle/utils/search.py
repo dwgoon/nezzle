@@ -31,7 +31,7 @@ def search_links(net, substr):
 def search_links_target(net, substr):
     links_found = []
     for src, tgt, data in net.nxdg.edges(data=True):
-        link = data['VIS']
+        link = data['GRAPHICS']
         if isinstance(link, nezzle.graphics.SelfloopLink):
             if substr in link.node:
                 links_found.append(link)
