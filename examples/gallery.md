@@ -1185,7 +1185,10 @@
           net.add_label(label)
       # end of for
   
-      write_network(net, "2nnfl.json")  # Not appending the new network to the navigation
+      
+      # Not appending the new network to the navigation.
+      # You should use *.json to save the graphics information.
+      write_network(net, "2nnfl.json")  
 
   ```
 
