@@ -12,6 +12,8 @@ from nezzle.graphics.links.linkfactory import LinkClassFactory
 from nezzle.graphics.links.baselink import BaseLink
 from nezzle.graphics.links.straightlink import StraightLink
 from nezzle.graphics.links.curvedlink import CurvedLink
+from nezzle.graphics.links.elbowlink import VerticalElbowLink
+from nezzle.graphics.links.elbowlink import HorizontalElbowLink
 from nezzle.graphics.links.selflooplink import SelfloopLink
 from nezzle.graphics.labels.labelfactory import LabelClassFactory
 from nezzle.graphics.labels.textlabel import TextLabel
