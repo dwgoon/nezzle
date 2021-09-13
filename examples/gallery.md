@@ -383,6 +383,62 @@
 
   </td>
   </tr>
+
+  <tr>
+  <td>
+  <img src="images/link02.png" alt="Drawing" width="300px"/>
+  </td>
+  <td>
+
+  ```python
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  
+  from nezzle.graphics import EllipseNode
+  from nezzle.graphics import TextLabel
+  from nezzle.graphics import CurvedLink
+  from nezzle.graphics import Network
+  
+  
+  def update(nav, net):
+      net = Network("A single curved edge")
+  
+      src = EllipseNode("SRC", 40, 40, pos=QPointF(-80, 0))
+      src['FILL_COLOR'] = Qt.yellow
+      src["BORDER_COLOR"] = Qt.black
+      src['BORDER_WIDTH'] = 2
+  
+      tgt = EllipseNode("TGT", 40, 40, pos=QPointF(80, 0))
+      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["BORDER_COLOR"] = Qt.black
+      tgt['BORDER_WIDTH'] = 2
+  
+      link = CurvedLink("LINK", src, tgt, width=4)
+      link["CP_POS_X"] = 0
+      link["CP_POS_Y"] = -80
+  
+      label_src = TextLabel(src, "A")
+      label_src["FONT_SIZE"] = 20
+      label_src["TEXT_COLOR"] = Qt.black
+      label_src.align()
+  
+      label_tgt = TextLabel(tgt, "B")
+      label_tgt["FONT_SIZE"] = 20
+      label_tgt["TEXT_COLOR"] = Qt.black
+      label_tgt.align()
+  
+      net.add_node(src)
+      net.add_node(tgt)
+      net.add_link(link)
+      net.add_label(label_src)
+      net.add_label(label_tgt)
+  
+      nav.append_item(net)
+  ```
+
+  </td>
+  </tr>
+
 </table>
 
 
