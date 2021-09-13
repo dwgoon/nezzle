@@ -934,7 +934,6 @@
   </td>
   </tr>
 
-
   <tr>
   <td>
   <img src="images/label02.png" alt="Drawing" width="300px"/>
@@ -993,6 +992,69 @@
 
   </td>
   </tr>
+
+  <tr>
+  <td>
+  <img src="images/label03.png" alt="Drawing" width="300px"/>
+  </td>
+  <td>
+
+  ```python
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  from qtpy.QtGui import QFont
+  
+  from nezzle.graphics import RectangleNode
+  from nezzle.graphics import TextLabel
+  from nezzle.graphics import Network
+  
+  
+  def update(nav, net):
+      net = Network("Font settings using QFont")
+  
+      font_settings =  [
+          ("Arial", QFont.Thin, False),
+          ("Consolas", QFont.Thin, False),
+          ("Franklin Gothic Heavy", QFont.Thin, False),
+          ("Arial", QFont.Normal, False),
+          ("Consolas", QFont.Normal, False),
+          ("Franklin Gothic Heavy", QFont.Normal, False),
+          ("Arial", QFont.Bold, True),
+          ("Consolas", QFont.Bold, True),
+          ("Franklin Gothic Heavy", QFont.Bold, True)
+      ]
+  
+      for i, setting in enumerate(font_settings):
+          pos_x = 120 * (i % 3)
+          pos_y = 80 * (i // 3)
+  
+          node = RectangleNode(iden="NODE%d"%(i),
+                               width=80,
+                               height=40,
+                               pos=QPointF(pos_x, pos_y))
+          node['FILL_COLOR'] = Qt.white
+          node["BORDER_COLOR"] = Qt.black
+          node['BORDER_WIDTH'] = 2
+  
+          label = TextLabel(node, "Nezzle")
+          label["TEXT_COLOR"] = Qt.black
+          font = QFont(setting[0],
+                       16,
+                       setting[1],
+                       setting[2])
+          label["FONT"] = font
+          label.align()
+  
+          net.add_node(node)
+          net.add_label(label)
+      # end of for
+      nav.append_item(net)
+  ```
+
+  </td>
+  </tr>
+
+
 </table>
 
 
