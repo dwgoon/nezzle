@@ -1,7 +1,7 @@
-from .ellipsenode import EllipseNode
-from .ellipsenode import CircleNode
-from .rectanglenode import RectangleNode
-from .rectanglenode import SquareNode
+from nezzle.graphics.nodes.ellipsenode import EllipseNode
+from nezzle.graphics.nodes.ellipsenode import CircleNode
+from nezzle.graphics.nodes.rectanglenode import RectangleNode
+from nezzle.graphics.nodes.rectanglenode import SquareNode
 
 
 class NodeClassFactory(object):
