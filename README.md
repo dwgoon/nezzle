@@ -7,7 +7,8 @@
   [signaling networks](https://www.nature.com/articles/s41598-018-23643-5).
 - Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is similar to playing a puzzle.
 - Nezzle is currently under active development.
-
+-  Consider ["Cytoscape"](https://cytoscape.org/) or ["Gephi"](https://gephi.org/) for large-scale networks.
+ 
 ## Features
 - Lightweight, programmable, detailed visualization of small-scale networks for high quality figures.
 - Highly customizable visualization of networks with user-defined source codes.
