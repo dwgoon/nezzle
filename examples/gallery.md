@@ -495,8 +495,6 @@
   </td>
   </tr>
 
-
-
   <tr>
   <td>
   <img src="images/link04.png" alt="Drawing" width="300px"/>
@@ -553,6 +551,71 @@
 
   </td>
   </tr>
+
+  <tr>
+  <td>
+  <img src="images/link5.png" alt="Drawing" width="300px"/>
+  </td>
+  <td>
+
+  ```python
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  from qtpy.QtGui import QColor
+  
+  from nezzle.graphics import EllipseNode
+  from nezzle.graphics import TextLabel
+  from nezzle.graphics import StraightLink
+  from nezzle.graphics import Triangle
+  from nezzle.graphics import Hammer
+  from nezzle.graphics import Network
+  
+  
+  def update(nav, net):
+      net = Network("Straight links with different alpha values")
+      arrows = [Triangle(20, 20), Hammer(24, 8)]
+  
+      link_colors = [QColor(255, 0, 0, 100), QColor(0, 0, 255, 100)]
+  
+      for i in range(2):
+          pos_src = QPointF(-80, 100 * i)
+          src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=pos_src)
+          src['FILL_COLOR'] = Qt.white
+          src["BORDER_COLOR"] = Qt.black
+          src['BORDER_WIDTH'] = 2
+  
+          pos_tgt = QPointF(80, 100 * (1 - i))
+          tgt = EllipseNode("TGT%d"%(i + 1), 40, 40, pos=pos_tgt)
+          tgt['FILL_COLOR'] = Qt.white
+          tgt["BORDER_COLOR"] = Qt.black
+          tgt['BORDER_WIDTH'] = 2
+  
+          arrow = arrows[i]
+          link = StraightLink("LINK%d"%(i + 1), src, tgt, width=8, head=arrow)
+          link["FILL_COLOR"] = link_colors[i]
+  
+          label_src = TextLabel(src, "S%d"%(i + 1))
+          label_src["FONT_SIZE"] = 20
+          label_src["TEXT_COLOR"] = Qt.black
+          label_src.align()
+  
+          label_tgt = TextLabel(tgt, "T%d"%(i + 1))
+          label_tgt["FONT_SIZE"] = 20
+          label_tgt["TEXT_COLOR"] = Qt.black
+          label_tgt.align()
+  
+          net.add_node(src)
+          net.add_node(tgt)
+          net.add_link(link)
+          net.add_label(label_src)
+          net.add_label(label_tgt)
+      # end of for
+      nav.append_item(net)
+  ```
+
+  </td>
+  </tr>
+
 </table>
 
 
