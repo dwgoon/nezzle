@@ -878,8 +878,62 @@
 </table>
 
 ## Labels
+<table>
+  <tr>
+    <th> Visualization </th>
+    <th> Code </th>
+  </tr>
 
+  <tr>
+  <td>
+  <img src="images/label01.png" alt="Drawing" width="300px"/>
+  </td>
+  <td>
 
+  ```python
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  
+  from nezzle.graphics import EllipseNode
+  from nezzle.graphics import TextLabel
+  from nezzle.graphics import Network
+  
+  
+  def update(nav, net):
+      net = Network("Labels of different alignment modes")
+  
+      align_modes = ["left", "center", "right",
+                     "top", "middle", "bottom",
+                     "top-left", "middle-left", "bottom-left",
+                     "top-center", "middle-center", "bottom-center",
+                     "top-right", "middle-right", "bottom-right"]
+  
+      for i, mode in enumerate(align_modes):
+          pos_x = 150 * (i % 3)
+          pos_y = 80 * (i // 3)
+          node = EllipseNode(iden="NODE_%s"%(mode.upper()),
+                             width=120,
+                             height=40,
+                             pos=QPointF(pos_x, pos_y))
+          node['FILL_COLOR'] = Qt.white
+          node["BORDER_COLOR"] = Qt.gray
+          node['BORDER_WIDTH'] = 2
+  
+          label = TextLabel(node, mode)
+          label["FONT_SIZE"] = 16
+          label["TEXT_COLOR"] = Qt.black
+  
+          label.align(mode)
+  
+          net.add_node(node)
+          net.add_label(label)
+      # end of for
+      nav.append_item(net)
+  ```
+
+  </td>
+  </tr>
+</table>
 ## Files
 
 ## Applications
