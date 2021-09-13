@@ -774,12 +774,15 @@
       for i in range(5):
           for j in range(2):
               idx = 2*i + j
-              src = EllipseNode("SRC%d"%(idx + 1), 40, 40, pos=QPointF(-80 + 250*j, 80*i))
+              
+              pos_src = QPointF(-80 + 250*j, 80*i)
+              src = EllipseNode("SRC%d"%(idx + 1), 40, 40, pos=pos_src)
               src['FILL_COLOR'] = "#33ccff"
               src["BORDER_COLOR"] = Qt.black
               src['BORDER_WIDTH'] = 2
   
-              tgt = EllipseNode("TGT%d"%(idx + 1), 40, 40, pos=QPointF(80 + 250*j, 80*i))
+              pos_tgt = QPointF(80 + 250*j, 80*i)
+              tgt = EllipseNode("TGT%d"%(idx + 1), 40, 40, pos=pos_tgt)
               tgt['FILL_COLOR'] = "#ff9933"
               tgt["BORDER_COLOR"] = Qt.black
               tgt['BORDER_WIDTH'] = 2
