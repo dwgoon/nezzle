@@ -1055,6 +1055,65 @@
   </tr>
 
 
+
+  <tr>
+  <td>
+  <img src="images/label04.png" alt="Drawing" width="300px"/>
+  </td>
+  <td>
+
+  ```python
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  from qtpy.QtGui import QFont
+  
+  from nezzle.graphics import EllipseNode
+  from nezzle.graphics import TextLabel
+  from nezzle.graphics import Network
+  
+  
+  def update(nav, net):
+      net = Network("Labels of different colors")
+  
+      font_settings =  [
+          ("A", "#FF0000"),
+          ("B", "#FF7F00"),
+          ("C", "#FFFF00"),
+          ("D", "#00FF00"),
+          ("E", "#0000FF"),
+          ("F", "#4B0082"),
+          ("G", "#9400D3"),
+          ("H", "#33CCFF"),
+          ("I", "#FF66CC"),
+      ]
+  
+      for i, setting in enumerate(font_settings):
+          pos_x = 80 * (i % 3)
+          pos_y = 80 * (i // 3)
+  
+          node = EllipseNode(iden="NODE%d"%(i),
+                               width=50,
+                               height=50,
+                               pos=QPointF(pos_x, pos_y))
+          node['FILL_COLOR'] = Qt.white
+          node["BORDER_COLOR"] = Qt.black
+          node['BORDER_WIDTH'] = 2
+  
+          name = setting[0]
+          label = TextLabel(node, name)
+          label["TEXT_COLOR"] = setting[1]
+          font = QFont("Arial", 20, QFont.Bold)
+          label["FONT"] = font
+          label.align()
+  
+          net.add_node(node)
+          net.add_label(label)
+      # end of for
+      nav.append_item(net)
+  ```
+
+  </td>
+  </tr>
 </table>
 
 
