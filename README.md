@@ -20,16 +20,42 @@
 
 
 ## Installation
+First, clone the recent version of this repository.
+
+```
+git clone https://github.com/dwgoon/nezzle.git nezzle
+```
+
+Now, we need to install Nezzle as a module.
+
+```
+cd nezzle
+python setup.py install
+```
+
+## Execution
+
+```
+python nezzle.py
+```
 
 ## Examples
 
-### Adjust network graphics through GUI
+### Mapping dynamics data to graphics 
+<p>
+  <img src="examples/images/2nnfl-time-series.png" alt="Drawing" width="400px"/>
+</p>
+<p>
+  <img src="examples/images/2nnfl-network.gif" alt="Drawing" width="400px"/>
+</p>
+
+### Adjusting network graphics through GUI
 <img src="assets/demo01.gif" alt="Drawing" width="700px"/>
 
-### Adjust network graphics by programming with REPL
+### Adjusting network graphics by programming with REPL
 <img src="assets/demo02.gif" alt="Drawing" width="700px"/>
 
-### Create network graphics by running a code
+### Creating network graphics by running a code
 <img src="assets/demo03.gif" alt="Drawing" width="700px"/>
 
 <br/>
