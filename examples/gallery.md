@@ -1404,7 +1404,10 @@
           net = create_network(pos_x, pos_y, s)
           fpath = "2nnfl-dynamics-%03d.png"%(i)
           fpaths.append(fpath)
-          write_image(net, fpath, transparent=False, scale_width=200, scale_height=200)
+          write_image(net,
+                      fpath,
+                      transparent=False,
+                      scale_width=200, scale_height=200)
       # end of for
       
       create_movie(fpaths, "2nnfl-dynamics.gif")
