@@ -103,14 +103,13 @@ def update(nav, net):
     y0 = np.array([1., 1.])
     sol = odeint(ode, y0, t)
 
-    abs_s = np.abs(sol)
-    norm_abs_s = abs_s / abs_s.max()
+    norm_s = sol / sol.max()
 
     pos_x = np.array([-80.0, 80.0])
     pos_y = np.array([0.0, 0.0])
 
     fpaths = []
-    for i, s in enumerate(norm_abs_s):
+    for i, s in enumerate(norm_s):
         net = create_network(pos_x, pos_y, s)
         fpath = "2nnfl-dynamics-%03d.png"%(i)
         fpaths.append(fpath)
