@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import odeint
-import imageio
+import moviepy.editor as mpy
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
@@ -42,7 +42,6 @@ def create_network(pos_x, pos_y, s):
     net.add_link(link2)
 
     for i, node in enumerate([src, tgt]):
-        name = str(i)
         abs_s = np.abs(s)
         norm_abs_s = abs_s / abs_s.max()
         if s[i] > 0:
@@ -56,8 +55,8 @@ def create_network(pos_x, pos_y, s):
         node["BORDER_WIDTH"] = 2
         node["WIDTH"] = node["HEIGHT"] = 20 + 50 * norm_abs_s[i]
     
-        label_name = TextLabel(node, name)
-        label_name["FONT_SIZE"] = 10 + norm_abs_s[i]
+        label_name = TextLabel(node, node.iden)
+        label_name["FONT_SIZE"] = 10 + 30 * norm_abs_s[i]
         label_name["TEXT_COLOR"] = Qt.white
         label_name.align()
     
@@ -75,10 +74,15 @@ def create_network(pos_x, pos_y, s):
 
 
 def create_movie(fpaths, fout):
-    images = []
+    clips = []
     for fpath in fpaths:
-        images.append(imageio.imread(fpath))
-        imageio.mimsave(fout, images)
+        img = mpy.ImageClip(fpath).set_duration(0.2)
+        clips.append(img)
+
+    concat_clip = mpy.concatenate_videoclips(clips,
+                                             bg_color=(255, 255, 255),
+                                             method="compose")
+    concat_clip.write_gif(fout, fps=30)
 
 
 def update(nav, net):
@@ -109,9 +113,8 @@ def update(nav, net):
     fpaths = []
     for i, s in enumerate(sol):
         net = create_network(pos_x, pos_y, s)
-        nav.append_item(net)
-        fpath = "2nnfl-dynamics-%03d.jpg"%(i)
+        fpath = "2nnfl-dynamics-%03d.png"%(i)
         fpaths.append(fpath)
-        write_image(net, fpath, scale_width=200, scale_height=200)
+        write_image(net, fpath, transparent=False, scale_width=200, scale_height=200)
     # end of for
     create_movie(fpaths, "2nnfl-dynamics.gif")

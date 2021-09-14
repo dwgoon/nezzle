@@ -263,7 +263,7 @@ def write_json(net, fpath):
 
 def write_image(net,
                 fpath,
-                is_transparent=True,
+                transparent=True,
                 quality=100,
                 scale_width=100, scale_height=100,
                 dpi_width=350, dpi_height=350,
@@ -291,7 +291,7 @@ def write_image(net,
     bbrush = scene.backgroundBrush()
 
     painter = QPainter(image)
-    if not is_transparent or fext in ['jpeg']:
+    if not transparent or fext in ["jpeg", "jpg"]:
         image.fill(Qt.white)
         painter.setPen(Qt.NoPen)
         painter.setBrush(bbrush.color())
