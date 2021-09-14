@@ -30,7 +30,7 @@ Now, we need to install Nezzle as a module.
 
 ```
 cd nezzle
-pip install -r requirement.txt
+pip install -r requirements.txt
 python setup.py install
 ```
 
