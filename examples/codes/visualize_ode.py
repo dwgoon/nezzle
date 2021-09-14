@@ -42,21 +42,20 @@ def create_network(pos_x, pos_y, s):
     net.add_link(link2)
 
     for i, node in enumerate([src, tgt]):
-        abs_s = np.abs(s)
-        norm_abs_s = abs_s / abs_s.max()
-        if s[i] > 0:
-            color = color_white + norm_abs_s[i] * (color_up - color_white)
-        elif s[i] <= 0:
-            color = color_white + norm_abs_s[i] * (color_dn - color_white)
+
+        if s[i] > 0.5:
+            color = color_white + s[i] * (color_up - color_white)
+        else:
+            color = color_white + s[i] * (color_dn - color_white)
 
         color[3] = 255
         node["FILL_COLOR"] = QColor(*color)
         node["BORDER_COLOR"] = Qt.black
         node["BORDER_WIDTH"] = 2
-        node["WIDTH"] = node["HEIGHT"] = 20 + 50 * norm_abs_s[i]
+        node["WIDTH"] = node["HEIGHT"] = 20 + 50 * s[i]
 
         label_name = TextLabel(node, node.iden)
-        label_name["FONT_SIZE"] = 10 + 30 * norm_abs_s[i]
+        label_name["FONT_SIZE"] = 10 + 30 * s[i]
         label_name["TEXT_COLOR"] = Qt.white
         label_name.align()
 
@@ -105,13 +104,14 @@ def update(nav, net):
     y0 = np.array([1., 1.])
     sol = odeint(ode, y0, t)
 
-    sol = sol - np.median(sol)
+    abs_s = np.abs(sol)
+    norm_abs_s = abs_s / abs_s.max()
 
     pos_x = np.array([-80.0, 80.0])
     pos_y = np.array([0.0, 0.0])
 
     fpaths = []
-    for i, s in enumerate(sol):
+    for i, s in enumerate(norm_abs_s):
         net = create_network(pos_x, pos_y, s)
         fpath = "2nnfl-dynamics-%03d.png"%(i)
         fpaths.append(fpath)
