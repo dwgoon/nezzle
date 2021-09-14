@@ -19,6 +19,8 @@
   (abstracted by [`QtPy`](https://github.com/spyder-ide/qtpy) in this project).
 
 
+## Installation
+
 ## Examples
 
 ### Adjust network graphics through GUI

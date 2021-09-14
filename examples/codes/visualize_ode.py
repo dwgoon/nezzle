@@ -18,7 +18,7 @@ def create_network(pos_x, pos_y, s):
     color_white = np.array([255, 255, 255, 0])
     color_up = np.array([255, 0, 0, 0])
     color_dn = np.array([0, 0, 255, 0])
-    
+
     net = Network('2NNFL')
     src = EllipseNode('A', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
     tgt = EllipseNode('B', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
@@ -48,18 +48,18 @@ def create_network(pos_x, pos_y, s):
             color = color_white + norm_abs_s[i] * (color_up - color_white)
         elif s[i] <= 0:
             color = color_white + norm_abs_s[i] * (color_dn - color_white)
-    
+
         color[3] = 255
         node["FILL_COLOR"] = QColor(*color)
         node["BORDER_COLOR"] = Qt.black
         node["BORDER_WIDTH"] = 2
         node["WIDTH"] = node["HEIGHT"] = 20 + 50 * norm_abs_s[i]
-    
+
         label_name = TextLabel(node, node.iden)
         label_name["FONT_SIZE"] = 10 + 30 * norm_abs_s[i]
         label_name["TEXT_COLOR"] = Qt.white
         label_name.align()
-    
+
         lightness = QColor(node["FILL_COLOR"]).lightness()
         if lightness < 200:
             label_name["TEXT_COLOR"] = Qt.white
@@ -67,7 +67,7 @@ def create_network(pos_x, pos_y, s):
         else:
             label_name["TEXT_COLOR"] = Qt.black
             label_name["FONT_BOLD"] = False
-    
+
         net.add_label(label_name)
     # end of for
     return net
@@ -108,7 +108,7 @@ def update(nav, net):
     sol = sol - np.median(sol)
 
     pos_x = np.array([-80.0, 80.0])
-    pos_y = np.array([0.0, 0.0]) 
+    pos_y = np.array([0.0, 0.0])
 
     fpaths = []
     for i, s in enumerate(sol):
@@ -117,4 +117,5 @@ def update(nav, net):
         fpaths.append(fpath)
         write_image(net, fpath, transparent=False, scale_width=200, scale_height=200)
     # end of for
+
     create_movie(fpaths, "2nnfl-dynamics.gif")

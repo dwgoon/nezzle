@@ -1278,7 +1278,7 @@
   <tr>
   <td>
   <p>
-  <img src="images/2nnfl-time-series.gif" alt="Drawing" width="300px"/>
+  <img src="images/2nnfl-time-series.png" alt="Drawing" width="300px"/>
   </p>
   <p>
   <img src="images/2nnfl-network.gif" alt="Drawing" width="300px"/>
@@ -1406,6 +1406,7 @@
           fpaths.append(fpath)
           write_image(net, fpath, transparent=False, scale_width=200, scale_height=200)
       # end of for
+      
       create_movie(fpaths, "2nnfl-dynamics.gif")
   ```
 
