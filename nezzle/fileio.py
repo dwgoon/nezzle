@@ -264,21 +264,21 @@ def write_json(net, fpath):
 def write_image(net,
                 fpath,
                 is_transparent=True,
-                quality=-1,
+                quality=100,
                 scale_width=100, scale_height=100,
                 dpi_width=350, dpi_height=350,
                 pad_width=10, pad_height=10):
-
 
     fname, fext = extract_name_and_ext(fpath)
 
     scene = net.scene
     scene.clearSelection()
+    scene.clearFocus()
     brect = scene.itemsBoundingRect()
     brect.adjust(-pad_width, -pad_height, +2*pad_width, +2*pad_height)
 
-    image = QImage((scale_width/100.0)*brect.width(),
-                   (scale_height/100.0)*brect.height(),
+    image = QImage((scale_width/100.0) * brect.width(),
+                   (scale_height/100.0) * brect.height(),
                    QImage.Format_ARGB32_Premultiplied)
 
     # [REF] http://stackoverflow.com/a/13425280/4136588
@@ -304,7 +304,7 @@ def write_image(net,
                            | QPainter.SmoothPixmapTransform
                            | QPainter.HighQualityAntialiasing)
 
-    scene.render(painter, source=brect)
+    scene.render(painter)
     image.save(fpath, fext.upper(), quality)
     painter.end()
 
