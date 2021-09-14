@@ -114,14 +114,15 @@ class CodeManager(QObject):
             for net in nets:
                 self.mw.nt_manager.append_item(net.copy())
 
-
     def process_code(self, fpath):
         fname, fext = extract_name_and_ext(fpath)
 
         if not fname:
             raise RuntimeError("The path for the Python module is not valid.")
 
-        reload_modules(fpath)
+
+        #print("fpath:", fpath)
+        #reload_modules(fpath)
 
         # [REF] https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
         spec = importlib.util.spec_from_file_location(fname, fpath)

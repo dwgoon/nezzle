@@ -142,6 +142,7 @@ class NetworkTreeManager(QObject):
         model = self.tree_view.model()
         root = model.invisibleRootItem()
         indexes = self.tree_view.selectedIndexes()
+
         while len(indexes) > 0:
             ind = indexes[0]
             model.removeRow(ind.row(), ind.parent())
@@ -152,3 +153,8 @@ class NetworkTreeManager(QObject):
             self.mw.hv_manager.clear()
         else:
             self.on_selection_changed([], [])
+
+
+    def clear(self):
+        self.tree_view.selectAll()
+        self.remove_selected_items()

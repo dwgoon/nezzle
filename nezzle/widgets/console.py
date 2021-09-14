@@ -101,7 +101,6 @@ class ConsoleWidget(RichJupyterWidget):
         super().reset(clear)
 
 
-
 class ConsoleTabWidget(QTabWidget):
 
         def __init__(self, *args, **kwargs):

@@ -44,4 +44,9 @@ class HistoryViewManager(QObject):
         selected = scene.selectedItems()
 
     def clear(self):
-        self.stack.clear()
+        if self._history:
+            try:
+                self._history.stack.clear()
+            except RuntimeError as err:
+                print(id(self._history.stack))
+                print(err)
