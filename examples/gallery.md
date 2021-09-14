@@ -59,7 +59,7 @@
 
 ### Nodes
 
-<table style="background-color:white;">
+<table>
   <tr>
     <th> Visualization </th>
     <th> Code </th>
