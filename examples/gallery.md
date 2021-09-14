@@ -1394,7 +1394,7 @@
       for i, s in enumerate(sol):
           net = create_network(pos_x, pos_y, s)
           nav.append_item(net)
-          fpath = "2nnfl-dynamics-%03d.png"%(i)
+          fpath = "2nnfl-dynamics-%03d.jpg"%(i)
           fpaths.append(fpath)
           write_image(net, fpath, scale_width=200, scale_height=200)
       # end of for
