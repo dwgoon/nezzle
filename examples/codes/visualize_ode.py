@@ -85,7 +85,6 @@ def create_movie(fpaths, fout):
 
 
 def update(nav, net):
-    nav.clear()
 
     # Solve the ODE of 2-node negative feedback loop model
     def ode(y, t):
