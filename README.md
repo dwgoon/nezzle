@@ -47,7 +47,7 @@ python nezzle.py
   <img src="examples/images/2nnfl-time-series.png" alt="Drawing" width="400px"/>
 </p>
 <p>
-  <img src="examples/images/2nnfl-network.gif" alt="Drawing" width="400px"/>
+  <img src="examples/images/2nnfl-network-dynamics.gif" alt="Drawing" width="400px"/>
 </p>
 
 <br/>
