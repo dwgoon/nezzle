@@ -42,22 +42,25 @@ python nezzle.py
 
 ## Examples
 
-### Mapping dynamics data to graphics 
-<p>
-  <img src="examples/images/2nnfl-time-series.png" alt="Drawing" width="400px"/>
-</p>
-<p>
-  <img src="examples/images/2nnfl-network-dynamics.gif" alt="Drawing" width="400px"/>
-</p>
-
-<br/>
-
-<p>
-  <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="400px"/>
-</p>
-<p>
-  <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="400px"/>
-</p>
+### Mapping dynamics data to graphics
+<table>
+  <tr>
+  <p>
+    <img src="examples/images/2nnfl-time-series.png" alt="Drawing" width="400px"/>
+  </p>
+  <p>
+    <img src="examples/images/2nnfl-network-dynamics.gif" alt="Drawing" width="400px"/>
+  </p>
+  </tr>
+  <tr>
+  <p>
+    <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="400px"/>
+  </p>
+  <p>
+    <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="400px"/>
+  </p>
+  </tr>
+</table>
 
 ### Adjusting network graphics through GUI
 <img src="assets/demo01.gif" alt="Drawing" width="700px"/>
