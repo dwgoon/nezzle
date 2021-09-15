@@ -37,11 +37,11 @@ def update(nav, net):
 
         if np.random.randn() < 0.5:
             head = Triangle(width=10, height=10, offset=4)
-            link = CurvedLink("LINK(%d+%d)", src, tgt, width=4, head=head)
+            link = CurvedLink("LINK%d(%s+%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
 
         else:
             head = Hammer(width=16, height=3, offset=4)
-            link = CurvedLink("LINK(%d-%d)", src, tgt, width=4, head=head)
+            link = CurvedLink("LINK%d(%s-%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
 
         link["FILL_COLOR"] = Qt.black
         link["CP_POS_X"] = -10
