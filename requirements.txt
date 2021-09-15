@@ -3,5 +3,3 @@ ipython
 qtconsole
 numpy
 networkx
-matplotlib
-seaborn
