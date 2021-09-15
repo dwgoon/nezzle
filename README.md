@@ -50,6 +50,15 @@ python nezzle.py
   <img src="examples/images/2nnfl-network.gif" alt="Drawing" width="400px"/>
 </p>
 
+<br/>
+
+<p>
+  <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="400px"/>
+</p>
+<p>
+  <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="400px"/>
+</p>
+
 ### Adjusting network graphics through GUI
 <img src="assets/demo01.gif" alt="Drawing" width="700px"/>
 
