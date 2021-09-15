@@ -47,10 +47,10 @@ python nezzle.py
 <table>
   <tr>
   <td>  
-    <img src="examples/images/2nnfl-time-series.png" alt="Drawing" width="400px"/>  
+    <img src="examples/images/2nnfl-time-series.png" alt="Drawing" width="320px"/>  
   </td>
   <td>  
-    <img src="examples/images/2nnfl-network-dynamics.gif" alt="Drawing" width="400px"/>
+    <img src="examples/images/2nnfl-network-dynamics.gif" alt="Drawing" width="320px"/>
   </td>
   </tr>
 </table>
@@ -58,10 +58,10 @@ python nezzle.py
 <table>
   <tr>
   <td>  
-    <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="400px"/>  
+    <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="320px"/>  
   </td>
   <td>  
-    <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="400px"/>
+    <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="320px"/>
   </td>
   </tr>
 </table>
