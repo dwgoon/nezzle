@@ -1281,7 +1281,7 @@
   <img src="images/2nnfl-time-series.png" alt="Drawing" width="300px"/>
   </p>
   <p>
-  <img src="images/2nnfl-network.gif" alt="Drawing" width="300px"/>
+  <img src="images/2nnfl-network-dynamics.gif" alt="Drawing" width="300px"/>
   </p>
   </td>
   <td>
