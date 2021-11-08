@@ -2,7 +2,7 @@ import os
 import os.path as osp
 from setuptools import setup, find_packages
 
-with open("VERSION", "rt") as fin:
+with open("nezzle/VERSION", "rt") as fin:
     version = fin.read().strip()
 
 scripts = []
@@ -23,6 +23,6 @@ setup (
     author_email='daewon4you@gmail.com',
     license='',
     packages=find_packages(),
-    package_data={'': ['*.ui', '*.sif', '*.json'], },
+    package_data={'': ['VERSION', '*.ui', '*.sif', '*.json'], },
     scripts=scripts,
 )
