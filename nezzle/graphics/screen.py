@@ -20,11 +20,6 @@ from nezzle.graphics.nodes.basenode import BaseNode
 
 class GraphicsView(QGraphicsView):
 
-    #items_moved = Signal(list, list)
-    #items_moved_by_mouse = Signal(list)
-    #items_moved_by_key = Signal(list)
-    #items_removed = Signal(list)
-
     def __init__(self, main_window=None, parent=None):
         super().__init__(parent)
         self.mw = main_window
