@@ -103,7 +103,7 @@ def create_movie(fpaths, fout):
     concat_clip = mpy.concatenate_videoclips(clips,
                                              bg_color=(255, 255, 255),
                                              method="compose")
-    concat_clip.write_gif(fout, fps=15)
+    concat_clip.write_gif(fout, fps=10)
 
 
 def update(nav, net):
@@ -134,8 +134,8 @@ def update(nav, net):
         fpaths.append(fpath)
         write_image(net,
                     fpath,
-                    scale_width=150,
-                    scale_height=150)
+                    scale_width=200,
+                    scale_height=200)
     # end of for
 
     create_movie(fpaths, "lorenz-dynamics.gif")
