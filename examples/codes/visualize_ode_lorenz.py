@@ -135,7 +135,7 @@ def update(nav, net):
         write_image(net,
                     fpath,
                     transparent=False,
-                    scale_width=200, scale_height=200)
+                    scale_width=100, scale_height=100)
     # end of for
 
     create_movie(fpaths, "lorenz-dynamics.gif")
