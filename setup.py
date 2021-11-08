@@ -2,6 +2,8 @@ import os
 import os.path as osp
 from setuptools import setup, find_packages
 
+with open("VERSION", "rt") as fin:
+    version = fin.read().strip()
 
 scripts = []
 if os.name == 'nt':
@@ -16,7 +18,7 @@ setup (
     name='nezzle',
     description="Nezzle: a programmable and interactive visualization software",
     url='',
-    version='0.0.1',
+    version=version,
     author='Daewon Lee',
     author_email='daewon4you@gmail.com',
     license='',
