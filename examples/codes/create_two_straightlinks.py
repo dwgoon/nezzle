@@ -18,8 +18,8 @@ def update(nav, net):
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     LinkClass = LinkClassFactory.create("STRAIGHT_LINK")
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
-    HammerClass = ArrowClassFactory.create('HAMMER')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
+    HammerClass = ArrowClassFactory.create("HAMMER")
 
     # Create four nodes
     x0 = -70.0
@@ -29,14 +29,14 @@ def update(nav, net):
     y1 = 0.0
 
     src1 = NodeClass('SRC1', 40, 40, pos=QPoint(x0, y0))
-    src1['FILL_COLOR'] = Qt.yellow
+    src1["FILL_COLOR"] = Qt.yellow
     src1["BORDER_COLOR"] = Qt.black
-    src1['BORDER_WIDTH'] = 2
+    src1["BORDER_WIDTH"] = 2
 
     tgt1 = NodeClass('TGT1', 40, 40, pos=QPoint(x1, y1))
-    tgt1['FILL_COLOR'] = Qt.yellow
+    tgt1["FILL_COLOR"] = Qt.yellow
     tgt1["BORDER_COLOR"] = Qt.black
-    tgt1['BORDER_WIDTH'] = 2
+    tgt1["BORDER_WIDTH"] = 2
 
 
     x0 = -70.0
@@ -46,14 +46,14 @@ def update(nav, net):
     y1 = 100.0
 
     src2 = NodeClass('SRC2', 40, 40, pos=QPoint(x0, y0))
-    src2['FILL_COLOR'] = QColor(255, 165, 0)
+    src2["FILL_COLOR"] = QColor(255, 165, 0)
     src2["BORDER_COLOR"] = Qt.black
-    src2['BORDER_WIDTH'] = 2
+    src2["BORDER_WIDTH"] = 2
 
     tgt2 = NodeClass('TGT2', 40, 40, pos=QPoint(x1, y1))
-    tgt2['FILL_COLOR'] = QColor(255, 165, 0)
+    tgt2["FILL_COLOR"] = QColor(255, 165, 0)
     tgt2["BORDER_COLOR"] = Qt.black
-    tgt2['BORDER_WIDTH'] = 2
+    tgt2["BORDER_WIDTH"] = 2
 
     new_net.add_node(src1)
     new_net.add_node(tgt1)

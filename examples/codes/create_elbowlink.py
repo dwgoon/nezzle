@@ -31,19 +31,19 @@ def update(nav, net):
     src = NodeClass('source1', 80, 40, pos=QPoint(x1, y1))
     tgt = NodeClass('target1', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = QColor(100, 100, 200) #, 100) #Qt.cyan
-    tgt['FILL_COLOR'] = QColor(100, 100, 200) #, 100) #Qt.cyan
+    src["FILL_COLOR"] = QColor(100, 100, 200) #, 100) #Qt.cyan
+    tgt["FILL_COLOR"] = QColor(100, 100, 200) #, 100) #Qt.cyan
 
     LinkClass = LinkClassFactory.create("VERTICAL_ELBOW_LINK")
 
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass(width=10, height=10, offset=4)
     #head = None
 
     elbow = LinkClass("LINK_1", src, tgt, width=4, head=head)
-    elbow['FILL_COLOR'] = QColor(255, 0, 0)
+    elbow["FILL_COLOR"] = QColor(255, 0, 0)
     elbow['BORDER_COLOR'] = QColor(255, 0, 0)
-    elbow['BORDER_WIDTH'] = 2
+    elbow["BORDER_WIDTH"] = 2
 
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
 
@@ -70,19 +70,19 @@ def update(nav, net):
     src = NodeClass('source2', 80, 40, pos=QPoint(x1, y1))
     tgt = NodeClass('target2', 80, 40, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = QColor(100, 150, 100) #, 100)  # Qt.cyan
-    tgt['FILL_COLOR'] = QColor(100, 150, 100) #, 100)  # Qt.cyan
+    src["FILL_COLOR"] = QColor(100, 150, 100) #, 100)  # Qt.cyan
+    tgt["FILL_COLOR"] = QColor(100, 150, 100) #, 100)  # Qt.cyan
 
     LinkClass = LinkClassFactory.create("HORIZONTAL_ELBOW_LINK")
 
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass(width=10, height=10, offset=4)
     # head = None
 
     elbow = LinkClass("LINK_2", src, tgt, width=4, head=head)
-    elbow['FILL_COLOR'] = QColor(255, 0, 0)
+    elbow["FILL_COLOR"] = QColor(255, 0, 0)
     elbow['BORDER_COLOR'] = QColor(255, 0, 0)
-    elbow['BORDER_WIDTH'] = 2
+    elbow["BORDER_WIDTH"] = 2
 
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
 

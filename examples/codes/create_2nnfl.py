@@ -23,19 +23,19 @@ def update(nav, net):
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     LinkClass = LinkClassFactory.create("CURVED_LINK")
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
-    HammerClass = ArrowClassFactory.create('HAMMER')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
+    HammerClass = ArrowClassFactory.create("HAMMER")
 
     # Create two nodes
     src = NodeClass('SRC', 40, 40, pos=QPointF(x0, y0))
-    src['FILL_COLOR'] = Qt.yellow
+    src["FILL_COLOR"] = Qt.yellow
     src["BORDER_COLOR"] = Qt.black
-    src['BORDER_WIDTH'] = 2
+    src["BORDER_WIDTH"] = 2
 
     tgt = NodeClass('TGT', 40, 40, pos=QPointF(x1, y1))
-    tgt['FILL_COLOR'] = Qt.yellow
+    tgt["FILL_COLOR"] = Qt.yellow
     tgt["BORDER_COLOR"] = Qt.black
-    tgt['BORDER_WIDTH'] = 2
+    tgt["BORDER_WIDTH"] = 2
 
     new_net.add_node(src)
     new_net.add_node(tgt)

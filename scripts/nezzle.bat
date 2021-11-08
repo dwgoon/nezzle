@@ -1,2 +1,2 @@
 @echo off
-python -m "sfv.app"
+python -m "nezzle.app"

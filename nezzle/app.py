@@ -9,7 +9,7 @@ from qtpy import QtCore
 from qtpy.QtCore import QFile
 from qtpy.QtCore import QTextStream
 from qtpy import QtGui
-from qtpy import QtWidgets
+from qtpy.QtWidgets import QApplication
 from qtpy.QtWidgets import QStyleFactory
 from qtpy.QtGui import QIcon
 from qtpy.QtCore import QFileInfo, QSize
@@ -21,17 +21,17 @@ os.chdir(base_dir)
 
 
 def main(args=None):
-    libpaths = QtWidgets.QApplication.libraryPaths()
-    libpaths.append(os.getcwd())
-    #libpaths.append(".../site-packages/qtpy/Qt/plugins")
-    QtWidgets.QApplication.setLibraryPaths(libpaths)
-
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-    app = QtWidgets.QApplication(sys.argv)
-    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+
+    libpaths = QApplication.libraryPaths()
+    libpaths.append(os.getcwd())
+    QApplication.setLibraryPaths(libpaths)
+    QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+
+    app = QApplication(sys.argv)
 
     # It is possible to choose the theme of GUI
-    #QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
+    # QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
 
     mw = MainWindow()
     mw.setWindowTitle("Nezzle")
@@ -54,4 +54,6 @@ def main(args=None):
 
     sys.exit(app.exec())
 
-    
+
+if __name__ == '__main__':
+    main()

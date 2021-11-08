@@ -176,11 +176,11 @@ class PainterOptionItem(GeometryChangeItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._attr.set_trigger('BORDER_WIDTH', self._trigger_set_border_width)
+        self._attr.set_trigger("BORDER_WIDTH", self._trigger_set_border_width)
         self._attr.set_trigger('BORDER_COLOR', self._trigger_set_border_color)
         self._attr.set_trigger('BORDER_JOIN', self._trigger_set_border_join)
         self._attr.set_trigger('BORDER_LINE', self._trigger_set_border_line)
-        self._attr.set_trigger('FILL_COLOR', self._trigger_set_fill_color)
+        self._attr.set_trigger("FILL_COLOR", self._trigger_set_fill_color)
 
         self._pen = QPen()
         self._pen.setBrush(Qt.transparent)

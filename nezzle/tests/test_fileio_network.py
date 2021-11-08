@@ -63,9 +63,9 @@ def test_create_network():
 
     node = NodeClass('ID_NODE_1', 30, pos=QPointF(100, 100))
     net.add_node(node)
-    node['FILL_COLOR'] = QColor(100, 50, 150, 100)
+    node["FILL_COLOR"] = QColor(100, 50, 150, 100)
     node['BORDER_COLOR'] = Qt.red
-    node['BORDER_WIDTH'] = 2
+    node["BORDER_WIDTH"] = 2
     node['BORDER_LINE_TYPE'] = Qt.DotLine
     attr = node.to_dict()
 
@@ -103,7 +103,7 @@ def test_create_network():
     assert node3.to_dict() != node4.to_dict()
 
     # Create CurvedLink
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass()
     LinkClass = LinkClassFactory.create('CURVED_LINK')
     link = LinkClass('ID_LINK_1', node, node2, head=head)
@@ -115,13 +115,13 @@ def test_create_network():
     net.add_link(link2)
 
     # Create StraightLink
-    ArrowClass = ArrowClassFactory.create('HAMMER')
+    ArrowClass = ArrowClassFactory.create("HAMMER")
     head = ArrowClass()
     LinkClass = LinkClassFactory.create('STRAIGHT_LINK')
     link3 = LinkClass('ID_LINK_3', node, node2, head=head)
     net.add_link(link3)
 
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass()
     link4 = LinkClass.from_dict(link3.to_dict(), node, node2)
     link4.iden = 'ID_LINK_4'

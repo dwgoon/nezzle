@@ -1,5 +1,3 @@
-from qtpy.QtCore import QEvent
-from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QGraphicsItem
 
 from nezzle.systemstate import get_system_state

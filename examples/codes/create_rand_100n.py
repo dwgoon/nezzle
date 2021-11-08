@@ -18,9 +18,9 @@ def update(nav, net):
     positions = np.random.uniform(-1000, 1000, size=(num_nodes, 2))
     for i, pos in enumerate(positions):
         node = EllipseNode(str(i), 40, 40, pos=QPointF(pos[0], pos[1]))
-        node['FILL_COLOR'] = Qt.white
+        node["FILL_COLOR"] = Qt.white
         node["BORDER_COLOR"] = Qt.black
-        node['BORDER_WIDTH'] = 2
+        node["BORDER_WIDTH"] = 2
 
         label = TextLabel(node, node.iden)
         label["FONT_SIZE"] = 20

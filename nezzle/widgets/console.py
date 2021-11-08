@@ -1,54 +1,22 @@
 # [REF] http://stackoverflow.com/a/41070191
 
-import os
-import sys
-import tornado
-
-
-from threading import Thread
-
-from IPython import get_ipython
-from ipykernel.kernelapp import IPKernelApp
-
-from qtpy.QtCore import QObject
 from qtpy import QtCore
-from qtpy.QtCore import Slot, Signal
+from qtpy.QtCore import Slot
 from qtpy.QtWidgets import QMenu
-from qtpy.QtWidgets import QAction
 from qtpy.QtWidgets import QTabWidget
-from qtpy.QtCore import QThread
 
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 from qtconsole.inprocess import QtInProcessKernelManager
-from qtconsole import console_widget
-
-
-# def background(f):
-#     """
-#     Call a function in a simple thread, to prevent blocking
-#
-#     Taken from the Jupyter Qtconsole project
-#     """
-#     t = Thread(target=f)
-#     t.start()
-#     return t
-
 
 class ConsoleWidget(RichJupyterWidget):
 
     def __init__(self, *args,  **kwargs):
         super().__init__(*args, **kwargs)
 
-        # if banner:
-        #     self.banner = banner
-        #     self.font_size = 12
-
-        #self.kernel_manager = QtKernelManager(config=None, autorestart=True)
         self.kernel_manager = QtInProcessKernelManager()
-        #self.kernel_manager.load_connection_file()
         self.kernel_manager.start_kernel(show_banner=False)
         self.kernel_manager.kernel.gui = 'qt'
-        #kernel_manager.kernel.shell.cache_size = 10
+        self.kernel_manager.kernel.shell.cache_size = 50000
 
         def _abort_queues(kernel):
             pass

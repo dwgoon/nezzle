@@ -62,9 +62,9 @@ def to_graphics(dg, iden, no_link_type=False):
                     attr_head = link_data.pop('HEAD')
                     ArrowClass = ArrowClassFactory.create(attr_head['TYPE'])
                     head = ArrowClass.from_dict(attr_head)
-                    # if dict_head['TYPE'] == 'TRIANGLE':
+                    # if dict_head['TYPE'] == "TRIANGLE":
                     #     str_link_type = '+'
-                    # elif dict_head['TYPE'] == 'HAMMER':
+                    # elif dict_head['TYPE'] == "HAMMER":
                     #     str_link_type = '-'
                 else:
                     str_link_type = link_data.pop('HEAD')
@@ -108,8 +108,8 @@ def to_graphics(dg, iden, no_link_type=False):
             src = NodeClass(str_src, width=width, height=height,
                             pos=QPointF(sx, sy))
 
-            if 'FILL_COLOR' not in dg.nodes[str_src]:
-                src['FILL_COLOR'] = color_node
+            if "FILL_COLOR" not in dg.nodes[str_src]:
+                src["FILL_COLOR"] = color_node
 
             if 'BORDER_COLOR' not in dg.nodes[str_src]:
                 src['BORDER_COLOR'] = Qt.darkGray
@@ -125,8 +125,8 @@ def to_graphics(dg, iden, no_link_type=False):
             tgt = NodeClass(str_tgt, width=width, height=height,
                             pos=QPointF(tx, ty))
 
-            if 'FILL_COLOR' not in dg.nodes[str_tgt]:
-                tgt['FILL_COLOR'] = color_node
+            if "FILL_COLOR" not in dg.nodes[str_tgt]:
+                tgt["FILL_COLOR"] = color_node
 
             if 'BORDER_COLOR' not in dg.nodes[str_tgt]:
                 tgt['BORDER_COLOR'] = Qt.darkGray
@@ -142,10 +142,10 @@ def to_graphics(dg, iden, no_link_type=False):
             if no_link_type:
                 ArrowClass = None
             elif str_link_type == '+':
-                head_type = 'TRIANGLE'
+                head_type = "TRIANGLE"
                 ArrowClass = ArrowClassFactory.create(head_type)
             elif str_link_type == '-':
-                head_type = 'HAMMER'
+                head_type = "HAMMER"
                 ArrowClass = ArrowClassFactory.create(head_type)
             else:
                 pass  # This logic is processed just below.
@@ -162,8 +162,8 @@ def to_graphics(dg, iden, no_link_type=False):
                              node=src,
                              head=head)
 
-            if 'FILL_COLOR' not in link_data:
-                link['FILL_COLOR'] = QColor(100, 100, 100, 100)
+            if "FILL_COLOR" not in link_data:
+                link["FILL_COLOR"] = QColor(100, 100, 100, 100)
 
             # Update extra data in nezzle.graphics.Link object.
             link.update(link_data)
@@ -175,8 +175,8 @@ def to_graphics(dg, iden, no_link_type=False):
                              source=src, target=tgt,
                              head=head)
 
-            if 'FILL_COLOR' not in link_data:
-                link['FILL_COLOR'] = Qt.black
+            if "FILL_COLOR" not in link_data:
+                link["FILL_COLOR"] = Qt.black
 
             # Update extra data in nezzle.graphics.Link object.
             link.update(link_data)
@@ -247,9 +247,9 @@ def to_networkx(net):
         # Set sign information if head exists.
         if link.head:
             sign_link = 0
-            if link.head.TYPE == 'TRIANGLE':
+            if link.head.TYPE == "TRIANGLE":
                 sign_link = +1
-            elif link.head.TYPE == 'HAMMER':
+            elif link.head.TYPE == "HAMMER":
                 sign_link = -1
 
             link_data['SIGN'] = sign_link

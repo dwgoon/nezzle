@@ -72,15 +72,8 @@ class CurvedLink(StraightLink):
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
 
-        ## [DEBUG] Draw the bounding rect
-        #rect = self.boundingRect()
-        #painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
-        #painter.drawRect(rect)
-        #######################
-
         if self.isSelected():
             painter.setBrush(Qt.red)
-            # painter.setBrush(QBrush(QColor(0, 255, 0, 100)))
             painter.drawEllipse(-2.5, -2.5, 5, 5)
             painter.setPen(QColor(50, 50, 50, 100))
 
@@ -88,25 +81,6 @@ class CurvedLink(StraightLink):
                 # Draw control lines
                 painter.drawLine(self.pos_ctrl, self.pos_src)
                 painter.drawLine(self.pos_ctrl, self.pos_tgt)
-
-        ## [DEBUG]
-        # if self.head:
-        #     painter.setPen(Qt.black)
-        #     painter.setBrush(Qt.white)
-        #     painter.drawEllipse(-0.5 + self.pos_head.x(), -0.5 + self.pos_head.y(), 1, 1)
-        #
-        #     painter.setPen(Qt.green)
-        #     painter.setBrush(Qt.green)
-        #     for i in range(0, 3):
-        #         elem = self._path_head.elementAt(i)
-        #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
-        #
-        #     painter.setPen(Qt.blue)
-        #     painter.setBrush(Qt.blue)
-        #     for i in range(3, self._path_head.elementCount()):
-        #         elem = self._path_head.elementAt(i)
-        #         painter.drawEllipse(-0.5+elem.x, -0.5+elem.y, 1, 1)
-        ##########################################################
 
     def is_straight(self):
         v1 = self.pos_src - self.ctrl_point.pos()

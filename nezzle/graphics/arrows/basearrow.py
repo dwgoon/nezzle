@@ -110,7 +110,7 @@ class BaseArrow(object):
 
 class Triangle(BaseArrow):
 
-    TYPE = 'TRIANGLE'
+    TYPE = "TRIANGLE"
 
     def __init__(self, width=10, height=10, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
@@ -142,7 +142,7 @@ class Triangle(BaseArrow):
 
 class Hammer(BaseArrow):
 
-    TYPE = 'HAMMER'
+    TYPE = "HAMMER"
 
     def __init__(self, width=14, height=2, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)

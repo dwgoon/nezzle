@@ -135,7 +135,7 @@ def read_sif(fpath, link_map=None):
                 src = NodeClass(str_src, width=width, height=height,
                                 pos=QPointF(sx, sy))
 
-                src['FILL_COLOR'] = color
+                src["FILL_COLOR"] = color
                 src['BORDER_COLOR'] = Qt.darkGray
                 nodes[str_src] = src
             # end of else
@@ -147,7 +147,7 @@ def read_sif(fpath, link_map=None):
                 tgt = NodeClass(str_tgt, width=width, height=height,
                                 pos=QPointF(tx, ty))
 
-                tgt['FILL_COLOR'] = color
+                tgt["FILL_COLOR"] = color
                 tgt['BORDER_COLOR'] = Qt.darkGray
                 nodes[str_tgt] = tgt
             # end of else
@@ -172,7 +172,7 @@ def read_sif(fpath, link_map=None):
                                  node=src,
                                  head=head)
 
-                link['FILL_COLOR'] = QColor(100, 100, 100, 100)
+                link["FILL_COLOR"] = QColor(100, 100, 100, 100)
 
             else:
                 LinkClass = LinkClassFactory.create('CURVED_LINK')
@@ -182,7 +182,7 @@ def read_sif(fpath, link_map=None):
                                  source=src, target=tgt,
                                  head=head)
 
-                link['FILL_COLOR'] = Qt.black
+                link["FILL_COLOR"] = Qt.black
 
             src.add_link(link)
             tgt.add_link(link)

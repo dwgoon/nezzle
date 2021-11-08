@@ -32,17 +32,17 @@ def update(nav, net):
     src = NodeClass('ID_NODE_1', 40, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 40, 20, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.blue
-    tgt['FILL_COLOR'] = Qt.blue
+    src["FILL_COLOR"] = Qt.blue
+    tgt["FILL_COLOR"] = Qt.blue
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass(width=10, height=10, offset=4)
     curve = LinkClass("ID_LINK_1", src, tgt, width=4, head=head)
-    curve['FILL_COLOR'] = QColor(255, 0, 0)
+    curve["FILL_COLOR"] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_WIDTH'] = 2
+    curve["BORDER_WIDTH"] = 2
 
     _net.add_link(curve)
     _net.add_node(src)
@@ -60,17 +60,17 @@ def update(nav, net):
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.blue
-    tgt['FILL_COLOR'] = Qt.blue
+    src["FILL_COLOR"] = Qt.blue
+    tgt["FILL_COLOR"] = Qt.blue
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
-    ArrowClass = ArrowClassFactory.create('HAMMER')
+    ArrowClass = ArrowClassFactory.create("HAMMER")
     head = ArrowClass(width=80, height=5, offset=4)
     curve = LinkClass("ID_LINK_2", src, tgt, width=4, head=head)
-    curve['FILL_COLOR'] = QColor(255, 0, 0)
+    curve["FILL_COLOR"] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(255, 0, 0)
-    curve['BORDER_WIDTH'] = 2
+    curve["BORDER_WIDTH"] = 2
 
     _net.add_link(curve)
     _net.add_node(src)

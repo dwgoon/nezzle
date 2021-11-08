@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import math
 import random
 
@@ -10,14 +8,16 @@ from qtpy.QtGui import QFont
 
 import networkx as nx
 
-from .nodes.nodefactory import NodeClassFactory
-from .links.linkfactory import LinkClassFactory
-from .labels.labelfactory import LabelClassFactory
+import nezzle
+
+from nezzle.graphics.nodes.nodefactory import NodeClassFactory
+from nezzle.graphics.links.linkfactory import LinkClassFactory
+from nezzle.graphics.labels.labelfactory import LabelClassFactory
 from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
 
-from .links.baselink import BaseLink
-from .labels.textlabel import TextLabel
-from .nodes.basenode import BaseNode
+from nezzle.graphics.links.baselink import BaseLink
+from nezzle.graphics.labels.textlabel import TextLabel
+from nezzle.graphics.nodes.basenode import BaseNode
 
 from nezzle.graphics import SelfloopLink
 from nezzle.graphics.baseitem import MappableItem
@@ -204,26 +204,13 @@ class Network(MappableItem):
         del self.labels[iden]
 
     def copy(self):
-        # obj = self.__class__()
-        # obj.name = self.name
-        # obj._scene.setSceneRect(0, 0, self.scene.width(), self.scene.height())
-        # obj._scene.setBackgroundBrush(self.scene.backgroundBrush())
-        #
-        # for iden, nodes in self.nodes.items():
-        #     obj.add_node(nodes.copy())
-        # for iden, links in self.links.items():
-        #     obj.add_link(links.copy())
-        # for iden, labels in self.labels.items():
-        #     obj.add_label(labels.copy())
-        #
-        # return obj
         return self.from_dict(self.to_dict())
 
     def to_dict(self):
         dict_net = {}
 
         # TODO: Use a global variable for setting the version
-        dict_net["NEZZLE_VERSION"] = (0, 0, 1)
+        dict_net["NEZZLE_VERSION"] = tuple(nezzle.__version__.split('.'))
         dict_net["NAME"] = self.name
 
         bg_color = self.scene.backgroundBrush().color()
@@ -363,8 +350,8 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
 
     if not msc:
         msc = {}
-        msc['+'] = ArrowClassFactory.create('TRIANGLE')
-        msc['-'] = ArrowClassFactory.create('HAMMER')
+        msc['+'] = ArrowClassFactory.create("TRIANGLE")
+        msc['-'] = ArrowClassFactory.create("HAMMER")
 
 
     ir, ic = A.nonzero()

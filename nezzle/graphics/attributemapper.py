@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 
@@ -16,11 +14,6 @@ class AttributeMapper(object):
         self._map_to_qt['BORDER_JOIN']['MITER'] = Qt.MiterJoin
         self._map_to_qt['BORDER_JOIN']['ROUND'] = Qt.RoundJoin
 
-        # self._map_to_str['BORDER_JOIN'] = {}
-        # self._map_to_str['BORDER_JOIN'][Qt.BevelJoin] = 'BEVEL'
-        # self._map_to_str['BORDER_JOIN'][Qt.MiterJoin] = 'MITER'
-        # self._map_to_str['BORDER_JOIN'][Qt.RoundJoin] = 'ROUND'
-
         # LINE_TYPE
         self._map_to_qt['BORDER_LINE'] = {}
         self._map_to_qt['BORDER_LINE']['SOLID'] = Qt.SolidLine
@@ -36,7 +29,6 @@ class AttributeMapper(object):
             d = {qtobj:strval for strval, qtobj in options.items()}
             self._map_to_str[attr] = d
 
-        
     def to_qt(self, attr, val):
         """
         e.g.) to_qt('BORDER_JOIN', 'BEVEL') => Qt.BevelJoin
@@ -56,7 +48,6 @@ class AttributeMapper(object):
             return self._map_to_qt[attr][val]
         else:
             raise AttributeError("It is not a valid attribute.")
-
 
     def to_str(self, attr, obj):
 
