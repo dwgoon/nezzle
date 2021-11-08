@@ -363,8 +363,8 @@ def from_adj_to_net(A, i2n, name='network', msc=None, nodes=None):
 
     if not msc:
         msc = {}
-        msc['+'] = ArrowClassFactory.create('TRIANGLE')
-        msc['-'] = ArrowClassFactory.create('HAMMER')
+        msc['+'] = ArrowClassFactory.create("TRIANGLE")
+        msc['-'] = ArrowClassFactory.create("HAMMER")
 
 
     ir, ic = A.nonzero()

@@ -23,8 +23,8 @@ def update(nav, net):
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     LinkClass = LinkClassFactory.create("STRAIGHT_LINK")
-    TriangleClass = ArrowClassFactory.create('TRIANGLE')
-    HammerClass = ArrowClassFactory.create('HAMMER')
+    TriangleClass = ArrowClassFactory.create("TRIANGLE")
+    HammerClass = ArrowClassFactory.create("HAMMER")
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
 
     x0 = -70.0
@@ -34,9 +34,9 @@ def update(nav, net):
     y1 = 0.0
 
     src = NodeClass('SRC1', 40, 40, pos=QPointF(x0, y0))
-    src['FILL_COLOR'] = QColor(51, 102, 255)
+    src["FILL_COLOR"] = QColor(51, 102, 255)
     src["BORDER_COLOR"] = Qt.black
-    src['BORDER_WIDTH'] = 2
+    src["BORDER_WIDTH"] = 2
     new_net.add_node(src)
 
     label = LabelClass(src, "A")
@@ -46,9 +46,9 @@ def update(nav, net):
     new_net.add_label(label)
 
     tgt = NodeClass('TGT1', 40, 40, pos=QPointF(x1, y1))
-    tgt['FILL_COLOR'] = QColor(255, 153, 51)
+    tgt["FILL_COLOR"] = QColor(255, 153, 51)
     tgt["BORDER_COLOR"] = Qt.black
-    tgt['BORDER_WIDTH'] = 2
+    tgt["BORDER_WIDTH"] = 2
     new_net.add_node(tgt)
 
     label = LabelClass(tgt, "B")
@@ -69,9 +69,9 @@ def update(nav, net):
     y1 = 50.0
 
     src = NodeClass('SRC2', 40, 40, pos=QPointF(x0, y0))
-    src['FILL_COLOR'] = QColor(51, 102, 255)
+    src["FILL_COLOR"] = QColor(51, 102, 255)
     src["BORDER_COLOR"] = Qt.black
-    src['BORDER_WIDTH'] = 2
+    src["BORDER_WIDTH"] = 2
     new_net.add_node(src)
 
     label = LabelClass(src, "C")
@@ -81,9 +81,9 @@ def update(nav, net):
     new_net.add_label(label)
 
     tgt = NodeClass('TGT2', 40, 40, pos=QPointF(x1, y1))
-    tgt['FILL_COLOR'] = QColor(255, 153, 51)
+    tgt["FILL_COLOR"] = QColor(255, 153, 51)
     tgt["BORDER_COLOR"] = Qt.black
-    tgt['BORDER_WIDTH'] = 2
+    tgt["BORDER_WIDTH"] = 2
     new_net.add_node(tgt)
 
     label = LabelClass(tgt, "D")

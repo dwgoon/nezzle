@@ -40,17 +40,17 @@ def add_curve(view):
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
     tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))
 
-    src['FILL_COLOR'] = Qt.darkCyan
-    tgt['FILL_COLOR'] = Qt.cyan
+    src["FILL_COLOR"] = Qt.darkCyan
+    tgt["FILL_COLOR"] = Qt.cyan
 
     LinkClass = LinkClassFactory.create("CURVED_LINK")
 
-    ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass(width=10, height=10, offset=4)
     curve = LinkClass("ID_LINK_1", src, tgt, width=4, head=head)
-    curve['FILL_COLOR'] = QColor(255, 0, 0)
+    curve["FILL_COLOR"] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(25, 50, 100)
-    curve['BORDER_WIDTH'] = 2
+    curve["BORDER_WIDTH"] = 2
 
     net.add_link(curve)
     net.add_node(src)
@@ -60,31 +60,31 @@ def add_curve(view):
     #
     # # Two-nodes negative feedback loop
     # NodeClass = NodeClassFactory.create('ELLIPSE_NODE')
-    # ArrowClass = ArrowClassFactory.create('HAMMER')
+    # ArrowClass = ArrowClassFactory.create("HAMMER")
     # head = ArrowClass(width=16, height=4, offset=4)
     # src = NodeClass('ID_NODE_3', 30, 20, pos=QPoint(x0, y0 + 20))
     # tgt = NodeClass('ID_NODE_4', 20, 30, pos=QPoint(x1, y1 + 20))
     #
-    # src['FILL_COLOR'] = QColor(100, 50, 150, 50)
+    # src["FILL_COLOR"] = QColor(100, 50, 150, 50)
     # src['BORDER_COLOR'] = Qt.red
-    # src['BORDER_WIDTH'] = 2
+    # src["BORDER_WIDTH"] = 2
     # src['BORDER_LINE_TYPE'] = Qt.DotLine
-    # tgt['FILL_COLOR'] = QColor(100, 50, 150, 50)
+    # tgt["FILL_COLOR"] = QColor(100, 50, 150, 50)
     # tgt['BORDER_COLOR'] = Qt.yellow
-    # tgt['BORDER_WIDTH'] = 2
+    # tgt["BORDER_WIDTH"] = 2
     # tgt['BORDER_LINE_TYPE'] = 'DASH'
     #
     # curve = LinkClass("ID_LINK_2", src, tgt, width=4, head=head)
-    # curve['FILL_COLOR'] = QColor(0, 0, 255)
+    # curve["FILL_COLOR"] = QColor(0, 0, 255)
     # curve['BORDER_COLOR'] = '#ffa500'
     #
     # net.add_link(curve)
     #
-    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=10, height=10, offset=4)
     # curve = LinkClass("ID_LINK_3", tgt, src, width=2, head=head)
-    # curve['FILL_COLOR'] = QColor(0, 0, 255)
-    # curve['BORDER_WIDTH'] = 1
+    # curve["FILL_COLOR"] = QColor(0, 0, 255)
+    # curve["BORDER_WIDTH"] = 1
     # curve['BORDER_COLOR'] = QColor(255, 0, 0)
     # curve['BORDER_JOIN'] = 'ROUND'
     #
@@ -95,21 +95,21 @@ def add_curve(view):
     # src = NodeClass('ID_NODE_5', 20, 40, pos=QPoint(x0, y0 - 50))
     # tgt = NodeClass('ID_NODE_6', 20, 40, pos=QPoint(x1, y1 - 50))
     #
-    # src['FILL_COLOR'] = Qt.green
+    # src["FILL_COLOR"] = Qt.green
     # src['BORDER_COLOR'] = Qt.magenta
-    # src['BORDER_WIDTH'] = 3
-    # tgt['FILL_COLOR'] = Qt.blue
+    # src["BORDER_WIDTH"] = 3
+    # tgt["FILL_COLOR"] = Qt.blue
     # tgt['BORDER_COLOR'] = Qt.magenta
     # tgt.pen = QPen()  # Previously defined border options are ignored
     #
     # curve = LinkClass("ID_LINK_4", tgt, src, width=4, head=None)
-    # curve['FILL_COLOR'] = QColor(25, 150, 155)
+    # curve["FILL_COLOR"] = QColor(25, 150, 155)
     #
     # LinkClass = LinkClassFactory.create("STRAIGHT_LINK")
-    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=10, height=10, offset=4)
     # straight = LinkClass("ID_LINK_5", src, tgt, width=4, head=head)
-    # straight['FILL_COLOR'] = Qt.magenta
+    # straight["FILL_COLOR"] = Qt.magenta
     # net.add_link(straight)
     #
     # net.add_link(curve)
@@ -133,75 +133,75 @@ def add_curve(view):
     #
     # # Create arrow headed selfloop link for a circle nodes
     # nodes = NodeClass('ID_NODE_7', 100, 100, pos=QPoint(x0, y0 - 100))
-    # nodes['FILL_COLOR'] = QColor(100, 150, 150, 100)
+    # nodes["FILL_COLOR"] = QColor(100, 150, 150, 100)
     #
-    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=10, height=10, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
     # link = LinkClass('ID_LINK_6', nodes, width=6, head=head)
-    # #link['BORDER_WIDTH'] = 2
+    # #link["BORDER_WIDTH"] = 2
     # #link['BORDER_COLOR'] = QColor(255, 100, 100, 200)
-    # link['FILL_COLOR'] = QColor(100, 100, 255, 100)
+    # link["FILL_COLOR"] = QColor(100, 100, 255, 100)
     # net.add_link(link)
     # net.add_node(nodes)
     #
     # # Create hammer headed selfloop link for ellipse nodes (width-major)
     # nodes = NodeClass('ID_NODE_7', 100, 80, pos=QPoint(x0-20, y0-100))
-    # nodes['FILL_COLOR'] = QColor(200, 200, 255, 100)
+    # nodes["FILL_COLOR"] = QColor(200, 200, 255, 100)
     #
-    # ArrowClass = ArrowClassFactory.create('HAMMER')
+    # ArrowClass = ArrowClassFactory.create("HAMMER")
     # head = ArrowClass(width=14, height=4, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
     # link = LinkClass('ID_LINK_7', nodes, width=6, head=head)
-    # #link['BORDER_WIDTH'] = 2
+    # #link["BORDER_WIDTH"] = 2
     # #link['BORDER_COLOR'] = QColor(200, 200, 255, 150)
-    # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
+    # link["FILL_COLOR"] = QColor(255, 100, 100, 250)
     # net.add_link(link)
     # net.add_node(nodes)
     #
     # # Create arrow headed selfloop link for ellipse nodes (width-major)
     # nodes = NodeClass('ID_NODE_8', 40, 30, pos=QPoint(x0 - 40, y0 - 150))
-    # nodes['FILL_COLOR'] = QColor(100, 255, 100, 200)
+    # nodes["FILL_COLOR"] = QColor(100, 255, 100, 200)
     #
-    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=5, height=5, offset=4)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
     # link = LinkClass('ID_LINK_8', nodes, width=2, head=head)
-    # #link['BORDER_WIDTH'] = 1
+    # #link["BORDER_WIDTH"] = 1
     # #link['BORDER_COLOR'] = QColor(200, 200, 255, 150)
-    # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
+    # link["FILL_COLOR"] = QColor(255, 100, 100, 250)
     # net.add_link(link)
     # net.add_node(nodes)
     #
     #
     # # Create hammer headed selfloop link for ellipse nodes (height-major)
     # nodes = NodeClass('ID_NODE_9', 80, 100, pos=QPoint(x0-40, y0-120))
-    # nodes['FILL_COLOR'] = QColor(200, 200, 255, 100)
+    # nodes["FILL_COLOR"] = QColor(200, 200, 255, 100)
     #
-    # ArrowClass = ArrowClassFactory.create('HAMMER')
+    # ArrowClass = ArrowClassFactory.create("HAMMER")
     # head = ArrowClass(width=14, height=4, offset=2)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
     # link = LinkClass('ID_LINK_10', nodes, width=6, head=head)
     #
-    # link['FILL_COLOR'] = QColor(255, 150, 150, 250)
+    # link["FILL_COLOR"] = QColor(255, 150, 150, 250)
     # net.add_link(link)
     # net.add_node(nodes)
     #
     # # Create arrow headed selfloop link for ellipse nodes (height-major)
     # nodes = NodeClass('ID_NODE_10', 20, 40, pos=QPoint(x0 - 80, y0 - 180))
-    # nodes['FILL_COLOR'] = QColor(200, 255, 200, 200)
+    # nodes["FILL_COLOR"] = QColor(200, 255, 200, 200)
     #
-    # ArrowClass = ArrowClassFactory.create('TRIANGLE')
+    # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=5, height=5, offset=2)
     #
     # LinkClass = LinkClassFactory.create("SELFLOOP_LINK")
     # link = LinkClass('ID_LINK_11', nodes, width=2, head=head)
     #
-    # link['FILL_COLOR'] = QColor(255, 100, 100, 250)
+    # link["FILL_COLOR"] = QColor(255, 100, 100, 250)
     # net.add_link(link)
     # net.add_node(nodes)
 

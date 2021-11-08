@@ -82,9 +82,9 @@
       net = Network("A single node")  # Overwrite the "net" variable.
 
       node = EllipseNode("NODE", 40, 40, pos=QPointF(0, 0))
-      node['FILL_COLOR'] = Qt.yellow
+      node["FILL_COLOR"] = Qt.yellow
       node["BORDER_COLOR"] = Qt.black
-      node['BORDER_WIDTH'] = 2
+      node["BORDER_WIDTH"] = 2
       net.add_node(node)
 
       nav.append_item(net)
@@ -112,9 +112,9 @@
       net = Network("A single node with a label")
   
       node = EllipseNode("NODE", 40, 40, pos=QPointF(0, 0))
-      node['FILL_COLOR'] = Qt.yellow
+      node["FILL_COLOR"] = Qt.yellow
       node["BORDER_COLOR"] = Qt.black
-      node['BORDER_WIDTH'] = 2
+      node["BORDER_WIDTH"] = 2
   
       label = TextLabel(node, "A")
       label["FONT_SIZE"] = 20
@@ -155,9 +155,9 @@
                              width=40,
                              height=40,
                              pos=QPointF(-80 + 80*i, -80 + 80*i))
-          node['FILL_COLOR'] = node_colors[i]
+          node["FILL_COLOR"] = node_colors[i]
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label = TextLabel(node, name)
           label["FONT_SIZE"] = 20
@@ -198,9 +198,9 @@
                              20 + 10*i,
                              40,
                              pos=QPointF(-200 + 80*i, -100 + 20*i))
-          node['FILL_COLOR'] = QColor(153, 0, 153)
+          node["FILL_COLOR"] = QColor(153, 0, 153)
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label = TextLabel(node, name)
           label["FONT_SIZE"] = 16 + 2*i
@@ -240,9 +240,9 @@
                              20 + 10 * i,
                              40,
                              pos=QPointF(-200 + 80 * i, 100 - 20 * i))
-          node['FILL_COLOR'] = QColor(153, 51, 0)
+          node["FILL_COLOR"] = QColor(153, 51, 0)
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label = TextLabel(node, name)
           label["FONT_SIZE"] = 16 + 2 * i
@@ -299,16 +299,16 @@
               color = color_white + norm_abs_z[i] * (color_dn - color_white)
   
           color[3] = 255
-          node['FILL_COLOR'] = QColor(*color)
+          node["FILL_COLOR"] = QColor(*color)
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label_name = TextLabel(node, name)
           label_name["FONT_SIZE"] = 16
           label_name["TEXT_COLOR"] = Qt.white
           label_name.align()
   
-          lightness = QColor(node['FILL_COLOR']).lightness()
+          lightness = QColor(node["FILL_COLOR"]).lightness()
           if lightness < 200:
               label_name['TEXT_COLOR'] = Qt.white
               label_name['FONT_BOLD'] = True
@@ -351,14 +351,14 @@
       net = Network("A single straight edge")
   
       src = EllipseNode("SRC", 40, 40, pos=QPointF(-60, 0))
-      src['FILL_COLOR'] = Qt.yellow
+      src["FILL_COLOR"] = Qt.yellow
       src["BORDER_COLOR"] = Qt.black
-      src['BORDER_WIDTH'] = 2
+      src["BORDER_WIDTH"] = 2
   
       tgt = EllipseNode("TGT", 40, 40, pos=QPointF(60, 0))
-      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["FILL_COLOR"] = Qt.yellow
       tgt["BORDER_COLOR"] = Qt.black
-      tgt['BORDER_WIDTH'] = 2
+      tgt["BORDER_WIDTH"] = 2
   
       link = StraightLink("LINK", src, tgt, width=4)
   
@@ -404,14 +404,14 @@
       net = Network("A single curved edge")
   
       src = EllipseNode("SRC", 40, 40, pos=QPointF(-80, 0))
-      src['FILL_COLOR'] = Qt.yellow
+      src["FILL_COLOR"] = Qt.yellow
       src["BORDER_COLOR"] = Qt.black
-      src['BORDER_WIDTH'] = 2
+      src["BORDER_WIDTH"] = 2
   
       tgt = EllipseNode("TGT", 40, 40, pos=QPointF(80, 0))
-      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["FILL_COLOR"] = Qt.yellow
       tgt["BORDER_COLOR"] = Qt.black
-      tgt['BORDER_WIDTH'] = 2
+      tgt["BORDER_WIDTH"] = 2
   
       link = CurvedLink("LINK", src, tgt, width=4)
       link["CP_POS_X"] = 0
@@ -460,14 +460,14 @@
       net = Network("A single curved edge")
   
       src = EllipseNode("SRC", 40, 40, pos=QPointF(-80, 0))
-      src['FILL_COLOR'] = Qt.yellow
+      src["FILL_COLOR"] = Qt.yellow
       src["BORDER_COLOR"] = Qt.black
-      src['BORDER_WIDTH'] = 2
+      src["BORDER_WIDTH"] = 2
   
       tgt = EllipseNode("TGT", 40, 40, pos=QPointF(80, 0))
-      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["FILL_COLOR"] = Qt.yellow
       tgt["BORDER_COLOR"] = Qt.black
-      tgt['BORDER_WIDTH'] = 2
+      tgt["BORDER_WIDTH"] = 2
   
       link = CurvedLink("LINK", src, tgt, width=4)
       link["CP_POS_X"] = 0
@@ -515,14 +515,14 @@
       net = Network("A single horizontal elbow edge")
   
       src = EllipseNode("SRC", 40, 40, pos=QPointF(0, -80))
-      src['FILL_COLOR'] = Qt.yellow
+      src["FILL_COLOR"] = Qt.yellow
       src["BORDER_COLOR"] = Qt.black
-      src['BORDER_WIDTH'] = 2
+      src["BORDER_WIDTH"] = 2
   
       tgt = EllipseNode("TGT", 40, 40, pos=QPointF(0, 80))
-      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["FILL_COLOR"] = Qt.yellow
       tgt["BORDER_COLOR"] = Qt.black
-      tgt['BORDER_WIDTH'] = 2
+      tgt["BORDER_WIDTH"] = 2
   
       link = HorizontalElbowLink("LINK", src, tgt, width=4)
       link["CP0_POS_X"] = -40
@@ -580,15 +580,15 @@
       for i in range(2):
           pos_src = QPointF(-80, 100 * i)
           src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=pos_src)
-          src['FILL_COLOR'] = Qt.white
+          src["FILL_COLOR"] = Qt.white
           src["BORDER_COLOR"] = Qt.black
-          src['BORDER_WIDTH'] = 2
+          src["BORDER_WIDTH"] = 2
   
           pos_tgt = QPointF(80, 100 * (1 - i))
           tgt = EllipseNode("TGT%d"%(i + 1), 40, 40, pos=pos_tgt)
-          tgt['FILL_COLOR'] = Qt.white
+          tgt["FILL_COLOR"] = Qt.white
           tgt["BORDER_COLOR"] = Qt.black
-          tgt['BORDER_WIDTH'] = 2
+          tgt["BORDER_WIDTH"] = 2
   
           arrow = arrows[i]
           link = StraightLink("LINK%d"%(i + 1), src, tgt, width=8, head=arrow)
@@ -654,14 +654,14 @@
   
       for i in range(2):
           src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=QPointF(-80, 80 * i))
-          src['FILL_COLOR'] = "#33ccff"
+          src["FILL_COLOR"] = "#33ccff"
           src["BORDER_COLOR"] = Qt.black
-          src['BORDER_WIDTH'] = 2
+          src["BORDER_WIDTH"] = 2
   
           tgt = EllipseNode("TGT%d"%(i + 1), 40, 40, pos=QPointF(80, 80 * i))
-          tgt['FILL_COLOR'] = "#ff9933"
+          tgt["FILL_COLOR"] = "#ff9933"
           tgt["BORDER_COLOR"] = Qt.black
-          tgt['BORDER_WIDTH'] = 2
+          tgt["BORDER_WIDTH"] = 2
   
           arrow = arrows[i]
           link = CurvedLink("LINK%d"%(i + 1), src, tgt, width=4, head=arrow)
@@ -712,14 +712,14 @@
   
       for i in range(5):
           src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=QPointF(-80, 80*i))
-          src['FILL_COLOR'] = "#33ccff"
+          src["FILL_COLOR"] = "#33ccff"
           src["BORDER_COLOR"] = Qt.black
-          src['BORDER_WIDTH'] = 2
+          src["BORDER_WIDTH"] = 2
   
           tgt = EllipseNode("TGT%d"%(i + 1), 40, 40, pos=QPointF(80, 80*i))
-          tgt['FILL_COLOR'] = "#ff9933"
+          tgt["FILL_COLOR"] = "#ff9933"
           tgt["BORDER_COLOR"] = Qt.black
-          tgt['BORDER_WIDTH'] = 2
+          tgt["BORDER_WIDTH"] = 2
   
           arrow = Triangle(10 + 4*i, 10 + 4*i)
           link = CurvedLink("LINK%d"%(i + 1), src, tgt, width=4, head=arrow)
@@ -772,14 +772,14 @@
   
       for i in range(5):
           src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=QPointF(-80, 80*i))
-          src['FILL_COLOR'] = "#33ccff"
+          src["FILL_COLOR"] = "#33ccff"
           src["BORDER_COLOR"] = Qt.black
-          src['BORDER_WIDTH'] = 2
+          src["BORDER_WIDTH"] = 2
   
           tgt = EllipseNode("TGT%d"%(i + 1), 40, 40, pos=QPointF(80, 80*i))
-          tgt['FILL_COLOR'] = "#ff9933"
+          tgt["FILL_COLOR"] = "#ff9933"
           tgt["BORDER_COLOR"] = Qt.black
-          tgt['BORDER_WIDTH'] = 2
+          tgt["BORDER_WIDTH"] = 2
   
           arrow = Hammer(14 + 6*i, 2 + 2*i)
           link = CurvedLink("LINK%d"%(i + 1), src, tgt, width=4, head=arrow)
@@ -841,15 +841,15 @@
               
               pos_src = QPointF(-80 + 250*j, 80*i)
               src = EllipseNode("SRC%d"%(idx + 1), 40, 40, pos=pos_src)
-              src['FILL_COLOR'] = "#33ccff"
+              src["FILL_COLOR"] = "#33ccff"
               src["BORDER_COLOR"] = Qt.black
-              src['BORDER_WIDTH'] = 2
+              src["BORDER_WIDTH"] = 2
   
               pos_tgt = QPointF(80 + 250*j, 80*i)
               tgt = EllipseNode("TGT%d"%(idx + 1), 40, 40, pos=pos_tgt)
-              tgt['FILL_COLOR'] = "#ff9933"
+              tgt["FILL_COLOR"] = "#ff9933"
               tgt["BORDER_COLOR"] = Qt.black
-              tgt['BORDER_WIDTH'] = 2
+              tgt["BORDER_WIDTH"] = 2
   
               arrow = arrows[j]
               link = StraightLink("LINK%d"%(idx + 1), src, tgt, width=4, head=arrow)
@@ -916,9 +916,9 @@
                              width=120,
                              height=40,
                              pos=QPointF(pos_x, pos_y))
-          node['FILL_COLOR'] = Qt.white
+          node["FILL_COLOR"] = Qt.white
           node["BORDER_COLOR"] = Qt.gray
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label = TextLabel(node, mode)
           label["FONT_SIZE"] = 16
@@ -973,9 +973,9 @@
                                width=80,
                                height=40,
                                pos=QPointF(pos_x, pos_y))
-          node['FILL_COLOR'] = Qt.white
+          node["FILL_COLOR"] = Qt.white
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label = TextLabel(node, "Nezzle")
           label["TEXT_COLOR"] = Qt.black
@@ -1033,9 +1033,9 @@
                                width=80,
                                height=40,
                                pos=QPointF(pos_x, pos_y))
-          node['FILL_COLOR'] = Qt.white
+          node["FILL_COLOR"] = Qt.white
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           label = TextLabel(node, "Nezzle")
           label["TEXT_COLOR"] = Qt.black
@@ -1096,9 +1096,9 @@
                                width=50,
                                height=50,
                                pos=QPointF(pos_x, pos_y))
-          node['FILL_COLOR'] = Qt.white
+          node["FILL_COLOR"] = Qt.white
           node["BORDER_COLOR"] = Qt.black
-          node['BORDER_WIDTH'] = 2
+          node["BORDER_WIDTH"] = 2
   
           name = setting[0]
           label = TextLabel(node, name)
@@ -1151,14 +1151,14 @@
   
       # Create two nodes
       src = EllipseNode('A', 40, 40, pos=QPointF(-70, 0))
-      src['FILL_COLOR'] = Qt.yellow
+      src["FILL_COLOR"] = Qt.yellow
       src["BORDER_COLOR"] = Qt.black
-      src['BORDER_WIDTH'] = 2
+      src["BORDER_WIDTH"] = 2
   
       tgt = EllipseNode('B', 40, 40, pos=QPointF(70, 0))
-      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["FILL_COLOR"] = Qt.yellow
       tgt["BORDER_COLOR"] = Qt.black
-      tgt['BORDER_WIDTH'] = 2
+      tgt["BORDER_WIDTH"] = 2
   
       net.add_node(src)
       net.add_node(tgt)
@@ -1218,14 +1218,14 @@
   
       # Create two nodes
       src = EllipseNode('A', 40, 40, pos=QPointF(-70, 0))
-      src['FILL_COLOR'] = Qt.yellow
+      src["FILL_COLOR"] = Qt.yellow
       src["BORDER_COLOR"] = Qt.black
-      src['BORDER_WIDTH'] = 2
+      src["BORDER_WIDTH"] = 2
   
       tgt = EllipseNode('B', 40, 40, pos=QPointF(70, 0))
-      tgt['FILL_COLOR'] = Qt.yellow
+      tgt["FILL_COLOR"] = Qt.yellow
       tgt["BORDER_COLOR"] = Qt.black
-      tgt['BORDER_WIDTH'] = 2
+      tgt["BORDER_WIDTH"] = 2
   
       net.add_node(src)
       net.add_node(tgt)

@@ -18,21 +18,21 @@ app = QtWidgets.QApplication([])
 def test_copy_node():
     NodeClass = NodeClassFactory.create("CIRCLE_NODE")
     n1 = NodeClass("ID1", 5, pos=QPointF(10, -20))
-    n1['FILL_COLOR'] = '#FFEEAA'
+    n1["FILL_COLOR"] = '#FFEEAA'
     n2 = n1.copy()
 
     assert n1.iden == n2.iden
-    assert n1['FILL_COLOR'] == n2['FILL_COLOR']
+    assert n1["FILL_COLOR"] == n2["FILL_COLOR"]
     assert n1.pos() == n2.pos()
     assert n1.to_dict() == n2.to_dict()
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     n1 = NodeClass("ID1", 100, 20, pos=QPointF(10, -20))
-    n1['FILL_COLOR'] = Qt.black
+    n1["FILL_COLOR"] = Qt.black
     n2 = n1.copy()
 
     assert n1.iden == n2.iden
-    assert n1['FILL_COLOR'] == n2['FILL_COLOR']
+    assert n1["FILL_COLOR"] == n2["FILL_COLOR"]
     assert n1.pos() == n2.pos()
     assert n1.to_dict() == n2.to_dict()
 
@@ -52,7 +52,7 @@ def test_copy_link():
 
     LinkClass = LinkClassFactory.create('CURVED_LINK')
     link1 = LinkClass(iden="ID3", source=n1, target=n2, width=3, head=head)
-    link1['FILL_COLOR'] = QColor(10, 100, 10)
+    link1["FILL_COLOR"] = QColor(10, 100, 10)
     link1['WIDTH'] = 5
 
     link2 = link1.copy()
@@ -63,7 +63,7 @@ def test_copy_link():
     assert link1.iden == link2.iden
     assert link1.source == link2.source
     assert link1.target == link2.target
-    assert link1['FILL_COLOR'] == link2['FILL_COLOR']
+    assert link1["FILL_COLOR"] == link2["FILL_COLOR"]
     assert link1['WIDTH'] == link2['WIDTH']
     assert link1.to_dict() == link2.to_dict()
 
