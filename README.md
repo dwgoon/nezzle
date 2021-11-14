@@ -20,6 +20,29 @@
 
 
 ## Installation
+
+Anaconda is recommended to use and develop Nezzle.
+
+
+### Dependency
+Check packages and versions in 
+[requirements](https://github.com/dwgoon/nezzle/blob/main/requirements.txt). 
+
+We can install all the dependencies using pip with `-r` option.
+
+```
+pip install -r requirements.txt
+```
+
+### Install from PyPI
+The simplest way to install Nezzle is using pip.
+
+```
+pip install nezzle
+```
+
+
+### Install from GitHub repository
 First, clone the recent version of this repository.
 
 ```
@@ -35,6 +58,13 @@ python setup.py install
 ```
 
 ## Execution
+In a terminal, we can just type "nezzle" that is in the "Scripts" sub-directory of a Python environment.
+
+```
+nezzle
+```
+
+Alternatively, we can execute the program in the local repository as follows. 
 
 ```
 python nezzle.py

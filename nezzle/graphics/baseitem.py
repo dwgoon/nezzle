@@ -3,7 +3,13 @@
 - http://stackoverflow.com/a/11604577
 - http://stackoverflow.com/a/12144823
 """
-from collections import MutableMapping
+
+import sys
+
+if sys.version_info.minor > 9:
+    from collections.abc import MutableMapping
+else:
+    from collections import MutableMapping
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF

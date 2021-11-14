@@ -18,8 +18,7 @@ with open('README.md') as fin:
 
 with open("nezzle/VERSION", "rt") as fin:
     version = fin.read().strip()
-
-    version = version + "b"
+    version = version + ".1"
     print("[VERSION]", version)
 
 scripts = []
@@ -54,20 +53,13 @@ setup (
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    install_requires=[
-        "pyqt5>=5",
-        "qtpy>=1.5.0",
-        "ipython>=7.6.0",
-        "qtconsole>=5.2.0",
-        "numpy>=1.18",
-        "networkx>=2"
-    ],
     packages=find_packages(),
-    package_data={'': ["VERSION", "*.ui", "*.sif", "*.json"], },
-    scripts=scripts,
-    entry_points = {
-        'gui_scripts': [
-            'nezzle = nezzle.app:main'
-        ],
-    }
+    package_data={
+        "": ["VERSION", "*.ui", "*.sif", "*.json"],
+        "nezzle.resources": ["icon.png", "logo.png"],
+    },
+    entry_points={
+        "console_scripts": ["nezzle = nezzle.app:main"],
+    },
+    scripts = scripts,
 )
