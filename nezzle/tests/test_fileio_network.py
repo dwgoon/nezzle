@@ -1,3 +1,5 @@
+# [DEPRECATED TESTS]
+
 import os
 import sys
 import json
