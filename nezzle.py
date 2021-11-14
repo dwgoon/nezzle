@@ -1,6 +1,3 @@
-import cgitb
-cgitb.enable(format='text')
-
 import argparse
 
 from nezzle.app import main

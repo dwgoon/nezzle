@@ -31,7 +31,7 @@ def main(args=None):
     app = QApplication(sys.argv)
 
     # It is possible to choose the theme of GUI
-    # QtWidgets.QApplication.setStyle(QStyleFactory.create("plastique"))
+    # QApplication.setStyle(QStyleFactory.create("plastique"))
 
     mw = MainWindow()
     mw.setWindowTitle("Nezzle")

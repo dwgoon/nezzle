@@ -4,7 +4,7 @@ from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtGui import QPainterPath
 
 from nezzle.graphics.mixins import Lockable
-from .basenode import BaseNode
+from nezzle.graphics.nodes.basenode import BaseNode
 
 @Lockable
 class EllipseNode(BaseNode):

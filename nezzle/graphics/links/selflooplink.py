@@ -1,15 +1,9 @@
 import math
 
-from qtpy.QtCore import Qt
 from qtpy.QtCore import QRectF
 from qtpy.QtGui import QPainterPath
-from qtpy.QtWidgets import QGraphicsItem
 
-from qtpy.QtGui import QColor
-from qtpy.QtGui import QBrush
-
-from .baselink import BaseLink
-from nezzle.graphics import ArrowClassFactory
+from nezzle.graphics.links.baselink import BaseLink
 from nezzle.graphics.mixins import Lockable
 
 

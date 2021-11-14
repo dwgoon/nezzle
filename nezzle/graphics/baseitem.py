@@ -12,7 +12,7 @@ from qtpy.QtWidgets import QStyle
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
 
-from .attributemapper import AttributeMapper
+from nezzle.graphics.attributemapper import AttributeMapper
 from nezzle.utils import TriggerDict
 
 

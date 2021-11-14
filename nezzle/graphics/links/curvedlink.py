@@ -5,8 +5,8 @@ from qtpy.QtCore import QRectF
 from qtpy.QtGui import QBrush, QColor, QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
-from .straightlink import StraightLink
-from .controlpoint import ControlPoint
+from nezzle.graphics.links.straightlink import StraightLink
+from nezzle.graphics.links.controlpoint import ControlPoint
 
 from nezzle.utils import dot
 from nezzle.utils import internal_division

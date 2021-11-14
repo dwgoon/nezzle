@@ -1,4 +1,5 @@
-from .textlabel import TextLabel
+from nezzle.graphics.labels.textlabel import TextLabel
+
 
 class LabelClassFactory(object):
 
