@@ -1,3 +1,4 @@
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QMainWindow
 
 from nezzle.ui.ui_mainwindow import Ui_MainWindow
@@ -26,27 +27,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # The MenuActionHandler object should be created after creating all managers.
         self.ma_handler = MenuActionHandler(self)
-    # end of __init__
 
+        self.setAttribute(Qt.WA_DeleteOnClose)
+
+    # end of __init__
 
     def closeEvent(self, event):
         self.ct_manager.tab_widget.removeTab(0)
         self.ct_manager.console_widget.stop()
         event.accept()
-        # reply = QMessageBox.question(self,
-        #                              "Exit the program",
-        #                              "Are you sure to quit?",
-        #                              QMessageBox.Yes, QMessageBox.No)
-        #
-        # if reply == QMessageBox.Yes:
-        #     self.ct_manager.console_widget.stop()
-        #     event.accept()
-        # else:
-        #     event.ignore()
-
-#
-# main_window = MainWindow()
-#
-# def get_main_window():
-#     global main_window
-#     return main_window

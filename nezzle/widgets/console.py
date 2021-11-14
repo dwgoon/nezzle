@@ -1,12 +1,13 @@
 # [REF] http://stackoverflow.com/a/41070191
 
-from qtpy import QtCore
+from qtpy.QtCore import Qt
 from qtpy.QtCore import Slot
 from qtpy.QtWidgets import QMenu
 from qtpy.QtWidgets import QTabWidget
 
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 from qtconsole.inprocess import QtInProcessKernelManager
+
 
 class ConsoleWidget(RichJupyterWidget):
 
@@ -28,6 +29,8 @@ class ConsoleWidget(RichJupyterWidget):
 
         self.buffer_size = 1000
         self.exit_requested.connect(self.stop)
+
+        self.setAttribute(Qt.WA_DeleteOnClose)
 
 
     @Slot()
@@ -80,7 +83,7 @@ class ConsoleTabWidget(QTabWidget):
             self.tabCloseRequested.connect(self.closeTab)
                         
             # Set button context menu policy
-            self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            self.setContextMenuPolicy(Qt.CustomContextMenu)
             self.customContextMenuRequested.connect(self.onContextMenu)
 
             # Create context menu

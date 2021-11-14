@@ -120,10 +120,6 @@ class CodeManager(QObject):
         if not fname:
             raise RuntimeError("The path for the Python module is not valid.")
 
-
-        #print("fpath:", fpath)
-        #reload_modules(fpath)
-
         # [REF] https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
         spec = importlib.util.spec_from_file_location(fname, fpath)
         mod = importlib.util.module_from_spec(spec)
