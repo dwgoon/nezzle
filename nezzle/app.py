@@ -4,15 +4,13 @@
 import os
 from os.path import join as pjoin
 import sys
+import argparse
 
 from qtpy import QtCore
-from qtpy.QtCore import QFile
-from qtpy.QtCore import QTextStream
-from qtpy import QtGui
+
 from qtpy.QtWidgets import QApplication
 from qtpy.QtWidgets import QStyleFactory
 from qtpy.QtGui import QIcon
-from qtpy.QtCore import QFileInfo, QSize
 
 from nezzle.mainwindow import MainWindow
 
@@ -20,7 +18,15 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(base_dir)
 
 
-def main(args=None):
+def main():
+    argparser = argparse.ArgumentParser(description="Nezzle arguments for CUI execution")
+    argparser.add_argument('-fc', '--fpath-code',
+                           action='store',
+                           dest='fpath_code',
+                           default=None,
+                           help="Designate the absolute file path of a source code file.")
+    args = argparser.parse_args()
+
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
     libpaths = QApplication.libraryPaths()
@@ -55,5 +61,5 @@ def main(args=None):
     sys.exit(app.exec())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
