@@ -41,6 +41,9 @@ The simplest way to install Nezzle is using pip.
 pip install nezzle
 ```
 
+However, the installed package with pip do not contain the examples.
+To explore the examples, install from this GitHub repository.
+
 
 ### Install from GitHub repository
 First, clone the recent version of this repository.

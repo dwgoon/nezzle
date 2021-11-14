@@ -18,8 +18,6 @@ with open('README.md') as fin:
 
 with open("nezzle/VERSION", "rt") as fin:
     version = fin.read().strip()
-    version = version + ".1"
-    print("[VERSION]", version)
 
 scripts = []
 if os.name == 'nt':
