@@ -1,0 +1,6 @@
+pyqt
+qtpy>=1.5.0
+ipython>=7.6.0
+qtconsole>=5.1.0
+numpy>=1.18
+networkx>=2

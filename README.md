@@ -7,7 +7,7 @@
   [signaling networks](https://www.nature.com/articles/s41598-018-23643-5).
 - Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is similar to doing a puzzle.
 - Nezzle is currently under active development.
--  Consider ["Cytoscape"](https://cytoscape.org/) or ["Gephi"](https://gephi.org/) for large-scale networks.
+- Consider ["Cytoscape"](https://cytoscape.org/) or ["Gephi"](https://gephi.org/) for large-scale networks.
  
 ## Features
 - Lightweight, programmable, detailed visualization of small-scale networks for high quality figures.
@@ -21,17 +21,44 @@
 
 ## Installation
 
-Anaconda is recommended to use and develop Nezzle.
+[Anaconda](https://www.anaconda.com) is recommended to use and develop Nezzle.
 
+
+### Anaconda virtual environment
+
+After installing anaconda, create a conda virtual environment for Nezzle.
+
+```
+conda create -n nezzle
+```
+
+Now, we can activate our virtual environment for Nezzle as follows.
+
+```
+conda activate nezzle
+```
+
+Install `pip` for installing the dependencies.
+
+```
+conda install pip
+```
 
 ### Dependency
 Check packages and versions in 
-[requirements](https://github.com/dwgoon/nezzle/blob/main/requirements.txt). 
+[requirements](https://github.com/dwgoon/nezzle/blob/main/requirements.txt) or
+[requirements for conda](https://github.com/dwgoon/nezzle/blob/main/requirements_conda.txt). 
 
 We can install all the dependencies using pip with `-r` option.
 
 ```
 pip install -r requirements.txt
+```
+
+We can also install the dependencies using conda with `--file` option.
+
+```
+conda install -y --file requirements_conda.txt
 ```
 
 ### Install from PyPI
