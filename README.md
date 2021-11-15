@@ -27,9 +27,11 @@
 ### Anaconda virtual environment
 
 After installing anaconda, create a conda virtual environment for Nezzle.
+In the following command, you can change the Python version
+(e.g.,`python=3.7` or `python=3.9`).
 
 ```
-conda create -n nezzle
+conda create -n nezzle python=3.8
 ```
 
 Now, we can activate our virtual environment for Nezzle as follows.
