@@ -49,7 +49,7 @@ Check packages and versions in
 [requirements](https://github.com/dwgoon/nezzle/blob/main/requirements.txt) or
 [requirements for conda](https://github.com/dwgoon/nezzle/blob/main/requirements_conda.txt). 
 
-We can install all the dependencies using pip with `-r` option.
+We can install all the dependencies using `pip` with `-r` option.
 
 ```
 pip install -r requirements.txt
@@ -62,13 +62,13 @@ conda install -y --file requirements_conda.txt
 ```
 
 ### Install from PyPI
-The simplest way to install Nezzle is using pip.
+The simplest way to install Nezzle is using `pip`.
 
 ```
 pip install nezzle
 ```
 
-However, the installed package with pip do not contain the examples.
+However, the installed package with `pip` do not contain the examples.
 To explore the examples, install from this GitHub repository.
 
 
