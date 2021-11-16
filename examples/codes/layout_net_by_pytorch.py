@@ -3,28 +3,13 @@ import os.path as osp
 from datetime import datetime
 
 import numpy as np
-import moviepy.editor as mpy
-
-from qtpy.QtCore import Qt
-from qtpy.QtCore import QPointF
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import moviepy.editor as mpy
 
 from nezzle.fileio import write_image
-from nezzle.graphics import EllipseNode
-from nezzle.graphics import TextLabel
-from nezzle.graphics import StraightLink
-from nezzle.graphics import CurvedLink
-from nezzle.graphics import Triangle, Hammer
-from nezzle.graphics import Network
-
-import numpy as np
-import torch
-import torch.nn as nn
-import torch.optim as optim
 
 
 class MeanPairwiseDistances(nn.Module):
@@ -49,7 +34,6 @@ def create_movie(fpaths, fout):
         img_clip = img_clip.set_duration(duration)
         img_clip = img_clip.resize(width=412, height=412)
         img_clip = img_clip.margin(100, color=(255, 255, 255))
-        # img_clip = img_clip.resize(width=256, height=256)
 
         txt_clip = mpy.TextClip("Epoch=%03d"%(epoch), fontsize=16, color='black')
         txt_clip = txt_clip.set_duration(duration)

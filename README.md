@@ -104,7 +104,7 @@ python nezzle.py
 
 ## Examples
 
-### Mapping dynamics data to graphics
+### [Mapping dynamics data to graphics](examples/gallery.md#Applications)
 
 <table>
   <tr>

@@ -1,28 +1,22 @@
 import os
 import os.path as osp
+
 import numpy as np
-import moviepy.editor as mpy
-
-from qtpy.QtCore import Qt
-from qtpy.QtCore import QPointF
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import moviepy.editor as mpy
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
 
 from nezzle.fileio import write_image
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import StraightLink
 from nezzle.graphics import CurvedLink
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
 
-import numpy as np
-import torch
-import torch.nn as nn
-import torch.optim as optim
 
 
 class MeanPairwiseDistances(nn.Module):
