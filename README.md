@@ -132,6 +132,12 @@ python nezzle.py
 <table>
   <tr>
   <td>  
+    <img src="examples/images/layout-dynamics.png" alt="Drawing" width="320px"/>
+    <p align="center">
+      Original network
+    </p>
+  </td>
+  <td>  
     <img src="examples/images/layout-dynamics.gif" alt="Drawing" width="320px"/>  
   </td>
   </tr>
