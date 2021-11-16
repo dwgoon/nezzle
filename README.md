@@ -128,13 +128,14 @@ python nezzle.py
   </tr>
 </table>
 
-### Finding suboptimal positions by maximizing all pairwise distances (PyTorch)
+### [Finding suboptimal positions by maximizing all pairwise distances (PyTorch)](examples/gallery.md#Applications)
 <table>
   <tr>
   <td>  
     <img src="examples/images/layout-dynamics.png" alt="Drawing" width="320px"/>
+    <br/>
     <p align="center">
-      Original network
+      Original network before messing up the layout
     </p>
   </td>
   <td>  

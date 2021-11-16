@@ -1576,8 +1576,12 @@
   <td>
   <p>
   <img src="images/layout-dynamics.png" alt="Drawing" width="300px"/>
+  <br/>
+  <p align="center">
+  Original network before messing up the layout  
   </p>
-  <p>
+  </p>
+  <p>  
   <img src="images/layout-dynamics.gif" alt="Drawing" width="300px"/>
   </p>
   </td>
