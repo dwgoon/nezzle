@@ -1,3 +1,6 @@
+import os
+import os.path as osp
+
 import numpy as np
 from scipy.integrate import odeint
 import moviepy.editor as mpy
@@ -108,10 +111,13 @@ def update(nav, net):
     pos_x = np.array([-80.0, 80.0])
     pos_y = np.array([0.0, 0.0])
 
+    dpath = osp.join(osp.dirname(__file__), "2nnfl-dynamics-results")
+    os.makedirs(dpath, exist_ok=True)
+
     fpaths = []
     for i, s in enumerate(norm_s):
         net = create_network(pos_x, pos_y, s)
-        fpath = "2nnfl-dynamics-%03d.png"%(i)
+        fpath = osp.join(dpath, "2nnfl-dynamics-%03d.png"%(i))
         fpaths.append(fpath)
         write_image(net,
                     fpath,
@@ -119,4 +125,4 @@ def update(nav, net):
                     scale_width=200, scale_height=200)
     # end of for
 
-    create_movie(fpaths, "2nnfl-dynamics.gif")
+    create_movie(fpaths, osp.join(dpath, "2nnfl-dynamics.gif"))

@@ -60,16 +60,18 @@ def update(nav, net):
     model = MeanPairwiseDistances(positions)
     optimizer = optim.SGD(model.parameters(), lr=2e-1, momentum=0.5)
 
-    dpath = osp.join(osp.dirname(__file__), "temp-images")
+    dpath = osp.join(osp.dirname(__file__), "net-layout-by-pytorch-results")
     os.makedirs(dpath, exist_ok=True)
 
     fpaths_img = []
     n_epoch = 1000
+    arr_loss = np.zeros(n_epoch)
     for epoch in range(n_epoch):
         optimizer.zero_grad()
 
         loss = -1 * model()
         print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+        arr_loss[epoch] = loss.item()
 
         loss.backward()
         optimizer.step()
@@ -91,6 +93,7 @@ def update(nav, net):
         # end of if
     # end of for
 
+    np.savetxt(osp.join(dpath, "loss_curve.csv"), arr_loss, delimiter=",")
     create_movie(fpaths_img, osp.join(dpath, "%s-layout-dynamics.gif")%(net.name))
 
     time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

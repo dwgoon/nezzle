@@ -1,3 +1,6 @@
+import os
+import os.path as osp
+
 import numpy as np
 from scipy.integrate import odeint
 import moviepy.editor as mpy
@@ -126,6 +129,9 @@ def update(nav, net):
     pos_x = np.array([-100.0, 100.0, 0.0])
     pos_y = np.array([0.0, 0.0, 120.0])
 
+    dpath = osp.join(osp.dirname(__file__), "lorenz-dynamics-results")
+    os.makedirs(dpath, exist_ok=True)
+
     fpaths = []
     for i, (state, norm_abs_state) in enumerate(zip(s, norm_abs_s)):
         net = create_network(pos_x, pos_y, state, norm_abs_state)
@@ -138,4 +144,4 @@ def update(nav, net):
                     scale_height=200)
     # end of for
 
-    create_movie(fpaths, "lorenz-dynamics.gif")
+    create_movie(fpaths, osp.join(dpath, "lorenz-dynamics.gif"))

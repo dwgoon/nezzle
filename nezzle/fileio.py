@@ -263,6 +263,7 @@ def write_json(net, fpath):
 
 def write_image(net,
                 fpath,
+                image_width=None, image_height=None,
                 transparent=True,
                 quality=100,
                 scale_width=100, scale_height=100,
@@ -277,9 +278,14 @@ def write_image(net,
     brect = scene.itemsBoundingRect()
     brect.adjust(-pad_width, -pad_height, +2*pad_width, +2*pad_height)
 
-    image = QImage((scale_width/100.0) * brect.width(),
-                   (scale_height/100.0) * brect.height(),
-                   QImage.Format_ARGB32_Premultiplied)
+    if image_width and image_height:
+        image = QImage(image_width,
+                       image_height,
+                       QImage.Format_ARGB32_Premultiplied)
+    else:
+        image = QImage((scale_width/100.0) * brect.width(),
+                       (scale_height/100.0) * brect.height(),
+                       QImage.Format_ARGB32_Premultiplied)
 
     # [REF] http://stackoverflow.com/a/13425280/4136588
     # dpm = 300 / 0.0254 # ~300 DPI

@@ -108,7 +108,7 @@ def update(nav, net):
     model = MeanPairwiseDistances(positions)
     optimizer = optim.SGD(model.parameters(), lr=1e-1, momentum=0.9)
 
-    dpath = osp.join(osp.dirname(__file__), "temp-images")
+    dpath = osp.join(osp.dirname(__file__), "randnet-layout-by-pytorch-results")
     os.makedirs(dpath, exist_ok=True)
 
     fpaths_img = []
