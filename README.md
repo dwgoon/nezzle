@@ -149,10 +149,10 @@ python nezzle.py
 <table>
   <tr>
   <td>  
-    <img src="examples/images/iris-dataset-pca.jpg" alt="Drawing" width="320px"/>
+    <img src="examples/images/iris-dataset-pca.jpg" alt="Drawing" width="330px"/>
     <br/>
     <p align="center">
-      Iris dataset visualized with principal components     
+      Principal component view of Iris dataset
     </p>
   </td>
   <td>  
@@ -160,6 +160,7 @@ python nezzle.py
   </td>
   </tr>
 </table>
+
 
 
 ### Adjusting network graphics through GUI

@@ -1700,7 +1700,7 @@
   <img src="images/iris-dataset-pca.jpg" alt="Drawing" width="300px"/>
   <br/>
   <p align="center">
-  Original network before messing up the layout  
+  Principal component view of Iris dataset
   </p>
   </p>
   <p>  
