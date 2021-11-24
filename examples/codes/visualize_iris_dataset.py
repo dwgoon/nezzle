@@ -169,10 +169,7 @@ def update(nav, net):
 
             fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
             fpaths_img.append((epoch, fpath))
-            write_image(net,
-                        fpath,
-                        scale_width=200,
-                        scale_height=200)
+            write_image(net, fpath, scale_width=100, scale_height=100)
         # end of if
     # end of for
 
