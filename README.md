@@ -152,7 +152,7 @@ python nezzle.py
     <img src="examples/images/iris-dataset-pca.jpg" alt="Drawing" width="320px"/>
     <br/>
     <p align="center">
-      Iris dataset visualized with principal components.      
+      Iris dataset visualized with principal components     
     </p>
   </td>
   <td>  
