@@ -74,7 +74,7 @@ def create_movie(fpaths, fout):
         img_clip = img_clip.resize(width=412, height=412)
         img_clip = img_clip.margin(100, color=(255, 255, 255))
 
-        txt_clip = mpy.TextClip("Epoch=%03d"%(epoch), fontsize=16, color='black')
+        txt_clip = mpy.TextClip("Epoch=%04d"%(epoch), fontsize=16, color='black')
         txt_clip = txt_clip.set_duration(duration)
         txt_clip = txt_clip.set_position(("center", "bottom"))
 
@@ -141,7 +141,7 @@ def update(nav, net):
                 node["POS_X"] = positions[i, 0]
                 node["POS_Y"] = positions[i, 1]
 
-            fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
+            fpath = osp.join(dpath, "iris-layout-%04d.jpg" % (epoch))
             fpaths_img.append((epoch, fpath))
             write_image(net,
                         fpath,
