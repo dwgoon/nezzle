@@ -18,7 +18,6 @@ from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
 
 
-
 class MeanPairwiseDistances(nn.Module):
 
     def __init__(self, pos, device="cpu"):

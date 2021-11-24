@@ -128,7 +128,7 @@ python nezzle.py
   </tr>
 </table>
 
-### [Finding suboptimal positions by maximizing all pairwise distances (PyTorch)](examples/gallery.md#Applications)
+### [Finding suboptimal positions by maximizing mean pairwise distances (PyTorch)](examples/gallery.md#Applications)
 <table>
   <tr>
   <td>  
@@ -143,6 +143,24 @@ python nezzle.py
   </td>
   </tr>
 </table>
+
+
+### [Iris dataset layout dynamics (scikit-learn + PyTorch)](examples/gallery.md#Applications)
+<table>
+  <tr>
+  <td>  
+    <img src="examples/images/iris-dataset-pca.jpg" alt="Drawing" width="320px"/>
+    <br/>
+    <p align="center">
+      Iris dataset visualized with principal components.      
+    </p>
+  </td>
+  <td>  
+    <img src="examples/images/iris-layout-dynamics.gif" alt="Drawing" width="320px"/>  
+  </td>
+  </tr>
+</table>
+
 
 ### Adjusting network graphics through GUI
 <img src="assets/demo01.gif" alt="Drawing" width="700px"/>
