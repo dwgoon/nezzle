@@ -1323,7 +1323,8 @@
       for src in neurons[l - 1]:
           for tgt in neurons[l]:
               head = Triangle(width=12, height=12, offset=8)
-              link = StraightLink("%s-%s"%(src.iden, tgt.iden), src, tgt, width=4, head=head)
+              iden = "%s-%s"%(src.iden, tgt.iden)
+              link = StraightLink(iden, src, tgt, width=4, head=head)           
               link["FILL_COLOR"] = QColor(0, 0, 0, 50)
               net.add_link(link)
   
