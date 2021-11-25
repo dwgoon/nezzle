@@ -22,7 +22,7 @@ def create_network(pos_x, pos_y, state, norm_abs_state):
     color_up = np.array([255, 0, 0, 0])
     color_dn = np.array([0, 0, 255, 0])
 
-    net = Network('2NNFL')
+    net = Network('Lorenz network')
     x = EllipseNode('X', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
     y = EllipseNode('Y', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
     z = EllipseNode('Z', 40, 40, pos=QPointF(pos_x[2], pos_y[2]))
@@ -137,7 +137,7 @@ def update(nav, net):
         net = create_network(pos_x, pos_y, state, norm_abs_state)
         fpath = osp.join(dpath, "lorenz-dynamics-%03d.png"%(i))
         fpaths.append(fpath)
-        write_image(net, fpath, scale_width=200, scale_height=300)
+        write_image(net, fpath, scale_width=200, scale_height=200)
     # end of for
 
     create_movie(fpaths, osp.join(dpath, "lorenz-dynamics.gif"))
