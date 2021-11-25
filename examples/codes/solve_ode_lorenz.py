@@ -14,7 +14,7 @@ def ode(s, t):
     x, y, z = s
     return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
 
-t = np.arange(0, 100, 0.1)
+t = np.arange(0, 50, 0.1)
 y0 = np.array([0, 1, 1.05])
 y = odeint(ode, y0, t)
 

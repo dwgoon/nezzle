@@ -119,7 +119,7 @@ def update(nav, net):
         x, y, z = s
         return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
     
-    t = np.arange(0, 100, 0.1)
+    t = np.arange(0, 50, 0.1)
     y0 = np.array([0, 1, 1.05])
     s = odeint(ode, y0, t)
 
@@ -135,13 +135,9 @@ def update(nav, net):
     fpaths = []
     for i, (state, norm_abs_state) in enumerate(zip(s, norm_abs_s)):
         net = create_network(pos_x, pos_y, state, norm_abs_state)
-        nav.append_item(net)
-        fpath = "lorenz-dynamics-%03d.png"%(i)
+        fpath = osp.join(dpath, "lorenz-dynamics-%03d.png"%(i))
         fpaths.append(fpath)
-        write_image(net,
-                    fpath,
-                    scale_width=200,
-                    scale_height=200)
+        write_image(net, fpath, dpi_width=300, dpi_height=300)
     # end of for
 
     create_movie(fpaths, osp.join(dpath, "lorenz-dynamics.gif"))
