@@ -1372,7 +1372,9 @@
       os.makedirs(dpath, exist_ok=True)
       fpath = osp.join(dpath, "neural-network-n%d.jpg" % (sum(layers)))
   
-      write_image(net, fpath, scale_width=50, scale_height=50, dpi_width=300, dpi_height=300)
+      write_image(net, fpath,
+                  scale_width=50, scale_height=50,
+                  dpi_width=300, dpi_height=300)
   
       nav.append_item(net)
   ```
