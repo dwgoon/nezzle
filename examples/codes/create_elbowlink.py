@@ -1,20 +1,12 @@
-import os
-import networkx as nx
-import numpy as np
-
-from qtpy.QtWidgets import QApplication
-from qtpy.QtCore import QPoint, Qt
+from qtpy.QtCore import QPoint
 from qtpy.QtGui import QColor
-from qtpy.QtGui import QPen
 
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
-from nezzle.graphics import GraphicsView
-from nezzle.graphics import GraphicsScene
 from nezzle.graphics import Network
-from nezzle.fileio import write_image
+
 
 def update(nav, net):
     _net = Network('TestNetwork')

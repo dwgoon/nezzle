@@ -16,6 +16,7 @@ def update(nav, net):
     num_nodes = 100
     num_links = 400
     positions = np.random.uniform(-1000, 1000, size=(num_nodes, 2))
+
     for i, pos in enumerate(positions):
         node = EllipseNode(str(i), 40, 40, pos=QPointF(pos[0], pos[1]))
         node["FILL_COLOR"] = Qt.white
@@ -28,7 +29,7 @@ def update(nav, net):
 
         net.add_node(node)
         net.add_label(label)
-        # end of for
+    # end of for
 
     connections = np.random.randint(0, num_nodes, size=(num_links, 2))
     for i, conn in enumerate(connections):
