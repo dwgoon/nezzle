@@ -124,7 +124,7 @@ python nezzle.py
     <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="320px"/>  
   </td>
   <td>  
-    <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="320px"/>
+    <img src="examples/images/lorenz-dynamics.gif" alt="Drawing" width="320px"/>
   </td>
   </tr>
 </table>

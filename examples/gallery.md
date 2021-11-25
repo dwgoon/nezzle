@@ -1535,7 +1535,7 @@
   <img src="images/lorenz-time-series.png" alt="Drawing" width="300px"/>
   </p>
   <p>
-  <img src="images/lorenz-network-dynamics.gif" alt="Drawing" width="300px"/>
+  <img src="images/lorenz-dynamics.gif" alt="Drawing" width="300px"/>
   </p>
   </td>
   <td>
