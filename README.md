@@ -6,6 +6,7 @@
 - Nezzle was initially developed to visualize biological networks such as 
   [signaling networks](https://www.nature.com/articles/s41598-018-23643-5).
 - Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is similar to doing a puzzle.
+- Find helpful tutorials in Nezzle's YouTube channel [:tv:](https://www.youtube.com/channel/UC4TV7k-8ItSIvD7wUd7Hl1Q)
 
  
 ## Features
