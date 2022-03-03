@@ -2,16 +2,17 @@
 
 
 ## Introduction 
-- Nezzle is an interactive and programmable visualization software for small-scale networks (N < 100).
+- Nezzle is an interactive and programmable network visualization software.
 - Nezzle was initially developed to visualize biological networks such as 
   [signaling networks](https://www.nature.com/articles/s41598-018-23643-5).
 - Nezzle repesents **Ne**t + Pu**zzle**, because adjusting nodes and edges of a network for visualization is similar to doing a puzzle.
-- Nezzle is currently under active development.
-- Consider ["Cytoscape"](https://cytoscape.org/) or ["Gephi"](https://gephi.org/) for large-scale networks.
+- Find helpful tutorials in Nezzle's YouTube channel [:tv:](https://www.youtube.com/channel/UC4TV7k-8ItSIvD7wUd7Hl1Q)
+
  
 ## Features
-- Lightweight, programmable, detailed visualization of small-scale networks for high quality figures.
+- Lightweight, programmable, detailed visualization of complex networks for high quality figures.
 - Highly customizable visualization of networks with user-defined source codes.
+- Easy and efficient plug-in development enabled by powerful Python ecosystem.
 - Manual curation of the positions of nodes and edges by adjusting the graphics in GUI.
 - Interactive programming to modify both data and graphics of networks in the GUI console.
 - The GUI depends on Python bindings for [`Qt`](https://www.qt.io/)
@@ -27,9 +28,11 @@
 ### Anaconda virtual environment
 
 After installing anaconda, create a conda virtual environment for Nezzle.
+In the following command, you can change the Python version
+(e.g.,`python=3.7` or `python=3.9`).
 
 ```
-conda create -n nezzle
+conda create -n nezzle python=3.8
 ```
 
 Now, we can activate our virtual environment for Nezzle as follows.
@@ -102,7 +105,7 @@ python nezzle.py
 
 ## Examples
 
-### Mapping dynamics data to graphics
+### [Mapping dynamics data to graphics](examples/gallery.md#Applications)
 
 <table>
   <tr>
@@ -121,10 +124,44 @@ python nezzle.py
     <img src="examples/images/lorenz-time-series.png" alt="Drawing" width="320px"/>  
   </td>
   <td>  
-    <img src="examples/images/lorenz-network-dynamics.gif" alt="Drawing" width="320px"/>
+    <img src="examples/images/lorenz-dynamics.gif" alt="Drawing" width="320px"/>
   </td>
   </tr>
 </table>
+
+### [Finding suboptimal positions by maximizing mean pairwise distances (PyTorch)](examples/gallery.md#Applications)
+<table>
+  <tr>
+  <td>  
+    <img src="examples/images/layout-dynamics.png" alt="Drawing" width="320px"/>
+    <br/>
+    <p align="center">
+      Original network before messing up the layout
+    </p>
+  </td>
+  <td>  
+    <img src="examples/images/layout-dynamics.gif" alt="Drawing" width="320px"/>  
+  </td>
+  </tr>
+</table>
+
+
+### [Iris dataset layout dynamics (scikit-learn + PyTorch)](examples/gallery.md#Applications)
+<table>
+  <tr>
+  <td>  
+    <img src="examples/images/iris-dataset-pca.jpg" alt="Drawing" width="330px"/>
+    <br/>
+    <p align="center">
+      Principal component view of Iris dataset
+    </p>
+  </td>
+  <td>  
+    <img src="examples/images/iris-layout-dynamics.gif" alt="Drawing" width="320px"/>  
+  </td>
+  </tr>
+</table>
+
 
 
 ### Adjusting network graphics through GUI

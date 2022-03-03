@@ -14,7 +14,9 @@
     - [Arrows](#Arrows)
     - [Labels](#Labels)
     - [Files](#Files)
+    - [Networks](#Networks)
     - [Applications](#Applications)
+    
 
 
 # GUI Examples
@@ -56,8 +58,7 @@
 - Any Python module and package can be a plugin for extending the functionality of Nezzle.
   <p><img src="images/nezzle_plugin.png" alt="Drawing" width="600px"/></p>
 
-
-### Nodes
+## Nodes
 
 <table>
   <tr>
@@ -1266,6 +1267,123 @@
 
 </table>
 
+
+## Networks
+
+<table>
+  <tr>
+    <th> Visualization </th>
+    <th> Code </th>
+  </tr>
+  <tr>
+  <td>
+  <p>
+  <img src="images/neural-network-n37.jpg" alt="Drawing" width="300px"/>
+  </p>
+  </td>
+
+  <td>
+
+  ```python
+  import os
+  import os.path as osp
+  
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  from qtpy.QtGui import QColor
+  
+  from nezzle.graphics import EllipseNode
+  from nezzle.graphics import StraightLink
+  from nezzle.graphics import Triangle
+  from nezzle.graphics import Network
+  from nezzle.fileio import write_image
+  
+  
+  def add_node(net, iden, x, y):
+      node = EllipseNode(iden, 40, 40, pos=QPointF(x, y))
+  
+      node["FILL_COLOR"] = Qt.green
+      node["BORDER_COLOR"] = Qt.black
+      node["BORDER_WIDTH"] = 4
+  
+      net.add_node(node)
+      return node
+  
+  
+  def add_links(net, neurons, l):
+      """Connect (l-1)-th layer to l-th layer.
+  
+      Args:
+          layers: the number of neurons in each layer.
+          l: layer number (l-th layer).
+      """
+      if l < 1:
+          return
+  
+      for src in neurons[l - 1]:
+          for tgt in neurons[l]:
+              head = Triangle(width=12, height=12, offset=8)
+              iden = "%s-%s"%(src.iden, tgt.iden)
+              link = StraightLink(iden, src, tgt, width=4, head=head)           
+              link["FILL_COLOR"] = QColor(0, 0, 0, 50)
+              net.add_link(link)
+  
+  
+  def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
+      """Create a fully-connected neural network without activation functions.
+  
+      Args:
+          layers: the number of neurons in each layer.
+          r: node radius for a single neuron.
+          vs: vertical space between neurons.
+          hs: horizontal space between neurons.
+      """
+  
+      neurons = [[] for _ in range(len(layers))]
+  
+      net = Network("Neural network")
+  
+      ox, oy = op
+      for l, nn in enumerate(layers):
+          # l: l-th layer
+          # nn: the number of neurons in l-th layer.
+          x = ox + l * (2 * r + hs)
+  
+          if nn % 2 == 0:  # nn is even.
+              y = oy - ( (r + vs / 2) + (nn // 2) * (2 * r + vs) )
+          else:  # nn is odd.
+              y = oy - ((nn // 2 + 1) * (2 * r + vs))
+  
+          for k in range(nn):
+              y = y + (2 * r + (vs / 2))
+              node = add_node(net, "%s%s"%(l, k), x, y)
+              neurons[l].append(node)
+  
+          add_links(net, neurons, l)
+  
+      return net
+  
+  
+  def update(nav, net):
+      layers = [3, 6, 9, 9, 6, 3, 1]
+      net = create_network(layers)
+  
+      dpath = osp.join(osp.dirname(__file__), "neural-networks")
+      os.makedirs(dpath, exist_ok=True)
+      fpath = osp.join(dpath, "neural-network-n%d.jpg" % (sum(layers)))
+  
+      write_image(net, fpath,
+                  scale_width=50, scale_height=50,
+                  dpi_width=300, dpi_height=300)
+  
+      nav.append_item(net)
+  ```
+
+  </td>
+  </tr>
+  
+</table>
+  
 ## Applications
 
 <table>
@@ -1420,7 +1538,7 @@
   <img src="images/lorenz-time-series.png" alt="Drawing" width="300px"/>
   </p>
   <p>
-  <img src="images/lorenz-network-dynamics.gif" alt="Drawing" width="300px"/>
+  <img src="images/lorenz-dynamics.gif" alt="Drawing" width="300px"/>
   </p>
   </td>
   <td>
@@ -1571,5 +1689,332 @@
 
   </td>
   </tr>
+
+  <tr>
+  <td>
+  <p>
+  <img src="images/layout-dynamics.png" alt="Drawing" width="300px"/>
+  <br/>
+  <p align="center">
+  Original network before messing up the layout  
+  </p>
+  </p>
+  <p>  
+  <img src="images/layout-dynamics.gif" alt="Drawing" width="300px"/>
+  </p>
+  </td>
+  <td>
+
+  ```python
+  import os
+  import os.path as osp
+  from datetime import datetime
+  
+  import numpy as np
+  import torch
+  import torch.nn as nn
+  import torch.optim as optim
+  import torch.nn.functional as F
+  import moviepy.editor as mpy
+  
+  from nezzle.fileio import write_image
+  
+  
+  class MeanPairwiseDistances(nn.Module):
+  
+      def __init__(self, pos, device="cpu"):
+          super().__init__()
+  
+          self.pos = nn.Parameter(torch.tensor(pos),
+                                  requires_grad=True)
+  
+          self.pos = self.pos.to(device)
+  
+      def forward(self):
+          return F.pdist(self.pos).mean()
+  
+  
+  def create_movie(fpaths, fout):
+      clips = []
+      duration = 0.05
+      for (epoch, fpath) in fpaths:
+          img_clip = mpy.ImageClip(fpath)
+          img_clip = img_clip.set_duration(duration)
+          img_clip = img_clip.resize(width=412, height=412)
+          img_clip = img_clip.margin(100, color=(255, 255, 255))
+  
+          txt_clip = mpy.TextClip("Epoch=%03d"%(epoch), fontsize=16, color='black')
+          txt_clip = txt_clip.set_duration(duration)
+          txt_clip = txt_clip.set_position(("center", "bottom"))
+  
+          clip = mpy.CompositeVideoClip([img_clip, txt_clip], bg_color=(255, 255, 255))
+          clips.append(clip)
+  
+      concat_clip = mpy.concatenate_videoclips(clips,
+                                               bg_color=(255, 255, 255),
+                                               method="compose")
+      concat_clip.write_gif(fout, fps=10)
+  
+  
+  def update(nav, net):
+      num_nodes = len(net.nodes)
+      positions = np.zeros((num_nodes, 2))
+  
+      for i, (iden, node) in enumerate(net.nodes.items()):
+          positions[i, :] = (node["POS_X"], node["POS_Y"])
+      # end of for
+  
+      # Layout by maximizing mean pairwise distances (MPD) (== minimizing the negative MPD).
+      model = MeanPairwiseDistances(positions)
+      optimizer = optim.SGD(model.parameters(), lr=2e-1, momentum=0.5)
+  
+      dpath = osp.join(osp.dirname(__file__), "temp-images")
+      os.makedirs(dpath, exist_ok=True)
+  
+      fpaths_img = []
+      n_epoch = 1000
+      for epoch in range(n_epoch):
+          optimizer.zero_grad()
+  
+          loss = -1 * model()
+          print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+  
+          loss.backward()
+          optimizer.step()
+  
+          if epoch % 5 == 0:
+              positions = model.pos.cpu().detach().numpy()
+  
+              net = net.copy()
+              for i, (iden, node) in enumerate(net.nodes.items()):
+                  node["POS_X"] = positions[i, 0]
+                  node["POS_Y"] = positions[i, 1]
+  
+              fpath = osp.join(dpath, "%s-layout-%03d.jpg" % (net.name, epoch))
+              fpaths_img.append((epoch, fpath))
+              write_image(net,
+                          fpath,
+                          scale_width=200,
+                          scale_height=200)
+          # end of if
+      # end of for
+  
+      create_movie(fpaths_img, osp.join(dpath, "%s-layout-dynamics.gif")%(net.name))
+  
+      time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+      net.name = "%s (%s)"%(net.name, time_stamp)
+      nav.append_item(net)
+
+  ```
+
+  </td>
+  </tr>
+
+
+
+  <tr>
+  <td>
+  <p>
+  <img src="images/iris-dataset-pca.jpg" alt="Drawing" width="300px"/>
+  <br/>
+  <p align="center">
+  Principal component view of Iris dataset
+  </p>
+  </p>
+  <p>  
+  <img src="images/iris-layout-dynamics.gif" alt="Drawing" width="300px"/>
+  </p>
+  </td>
+  <td>
+
+  ```python
+  import os
+  import os.path as osp
+  from datetime import datetime
+  
+  import numpy as np
+  import pandas as pd
+  import torch
+  import torch.nn as nn
+  import torch.optim as optim
+  import torch.nn.functional as F
+  from sklearn.datasets import load_iris
+  from sklearn.preprocessing import StandardScaler
+  from sklearn.decomposition import PCA
+  import moviepy.editor as mpy
+  
+  from qtpy.QtCore import Qt
+  from qtpy.QtCore import QPointF
+  from nezzle.graphics import EllipseNode
+  from nezzle.graphics import TextLabel
+  from nezzle.graphics import Network
+  from nezzle.fileio import write_image
+  
+  
+  class MeanPairwiseDistances(nn.Module):
+  
+      def __init__(self, pos, device="cpu"):
+          super().__init__()
+  
+          self.pos = nn.Parameter(torch.tensor(pos),
+                                  requires_grad=True)
+  
+          self.pos = self.pos.to(device)
+  
+      def forward(self):
+          return F.pdist(self.pos).mean()
+  
+  
+  def create_network(name, df):
+      net = Network(name)
+  
+      for i, (pc1, pc2, target) in df.iterrows():
+          x = 500 * pc1
+          y = 500 * pc2
+  
+          node = EllipseNode(i, 40, 40, pos=QPointF(x, y))
+          fill_color = Qt.white
+          if target == "setosa":
+              fill_color = Qt.red
+          elif target == "versicolor":
+              fill_color = Qt.green
+          elif target == "virginica":
+              fill_color = Qt.blue
+  
+          node["FILL_COLOR"] = fill_color
+          node["BORDER_COLOR"] = Qt.black
+          node["BORDER_WIDTH"] = 2
+  
+          label = TextLabel(node, str(node.iden))
+          label["FONT_SIZE"] = 12
+          label["TEXT_COLOR"] = Qt.black
+          label.align()
+  
+          net.add_node(node)
+  
+      return net
+  
+  
+  def create_movie(fpaths, fout):
+      clips = []
+      duration = 0.05
+      for (epoch, fpath) in fpaths:
+          img_clip = mpy.ImageClip(fpath)
+          img_clip = img_clip.set_duration(duration)
+          img_clip = img_clip.resize(width=412, height=412)
+          img_clip = img_clip.margin(100, color=(255, 255, 255))
+  
+          txt_clip = mpy.TextClip("Epoch=%03d"%(epoch), fontsize=16, color='black')
+          txt_clip = txt_clip.set_duration(duration)
+          txt_clip = txt_clip.set_position(("center", "bottom"))
+  
+          clip = mpy.CompositeVideoClip([img_clip, txt_clip], bg_color=(255, 255, 255))
+          clips.append(clip)
+  
+      concat_clip = mpy.concatenate_videoclips(clips,
+                                               bg_color=(255, 255, 255),
+                                               method="compose")
+      concat_clip.write_gif(fout, fps=10)
+  
+  
+  def update(nav, net):
+  
+      iris = load_iris()
+      print(iris.data.shape)
+  
+      df_data = pd.DataFrame(iris.data, columns=iris.feature_names)
+      scaler = StandardScaler()
+      result = scaler.fit_transform(df_data)
+      df_scaled = pd.DataFrame(result, columns=iris.feature_names)
+  
+      pca = PCA(n_components=2)
+      result = pca.fit_transform(df_scaled)
+      df_pc = pd.DataFrame(result, columns=["pc1", "pc2"])
+  
+      target = pd.DataFrame(iris.target, columns=['type'])
+      target['type'] = target['type'].apply(lambda x: iris.target_names[x])
+      df = pd.concat([df_pc, target], axis=1)
+  
+      net = create_network("Iris dataset (PCA)", df)
+      nav.append_item(net)
+  
+      num_nodes = len(net.nodes)
+      positions = np.zeros((num_nodes, 2))
+  
+      for i, (iden, node) in enumerate(net.nodes.items()):
+          positions[i, :] = (node["POS_X"], node["POS_Y"])
+      # end of for
+  
+      # Layout by maximizing mean pairwise distances (MPD) (== minimizing the negative MPD).
+      model = MeanPairwiseDistances(positions)
+      optimizer = optim.SGD(model.parameters(), lr=1e2, momentum=0.25)
+  
+      dpath = osp.join(osp.dirname(__file__), "iris-layout-dynamics-results")
+      os.makedirs(dpath, exist_ok=True)
+  
+      fpaths_img = []
+      n_epoch = 1200
+      for epoch in range(n_epoch):
+          optimizer.zero_grad()
+  
+          loss = model()
+          print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+  
+          loss.backward()
+          optimizer.step()
+  
+          if epoch % 5 == 0:
+              positions = model.pos.cpu().detach().numpy()
+  
+              net = net.copy()
+              for i, (iden, node) in enumerate(net.nodes.items()):
+                  node["POS_X"] = positions[i, 0]
+                  node["POS_Y"] = positions[i, 1]
+  
+              fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
+              fpaths_img.append((epoch, fpath))
+              write_image(net,
+                          fpath,
+                          scale_width=200,
+                          scale_height=200)
+          # end of if
+      # end of for
+  
+      for epoch in range(n_epoch, 2*n_epoch):
+          optimizer.zero_grad()
+  
+          loss = -1 * model()
+          print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+  
+          loss.backward()
+          optimizer.step()
+  
+          if epoch % 5 == 0:
+              positions = model.pos.cpu().detach().numpy()
+  
+              net = net.copy()
+              for i, (iden, node) in enumerate(net.nodes.items()):
+                  node["POS_X"] = positions[i, 0]
+                  node["POS_Y"] = positions[i, 1]
+  
+              fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
+              fpaths_img.append((epoch, fpath))
+              write_image(net,
+                          fpath,
+                          scale_width=200,
+                          scale_height=200)
+          # end of if
+      # end of for
+  
+      create_movie(fpaths_img, osp.join(dpath, "iris-layout-dynamics.gif"))
+      time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+      net.name = "%s (%s)"%(net.name, time_stamp)
+      nav.append_item(net)
+  
+  ```
+
+  </td>
+  </tr>
+
 
 </table>

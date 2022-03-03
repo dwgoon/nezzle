@@ -1,3 +1,6 @@
+import os
+import os.path as osp
+
 import numpy as np
 from scipy.integrate import odeint
 import moviepy.editor as mpy
@@ -19,7 +22,7 @@ def create_network(pos_x, pos_y, state, norm_abs_state):
     color_up = np.array([255, 0, 0, 0])
     color_dn = np.array([0, 0, 255, 0])
 
-    net = Network('2NNFL')
+    net = Network('Lorenz network')
     x = EllipseNode('X', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
     y = EllipseNode('Y', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
     z = EllipseNode('Z', 40, 40, pos=QPointF(pos_x[2], pos_y[2]))
@@ -116,7 +119,7 @@ def update(nav, net):
         x, y, z = s
         return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
     
-    t = np.arange(0, 100, 0.1)
+    t = np.arange(0, 20, 0.1)
     y0 = np.array([0, 1, 1.05])
     s = odeint(ode, y0, t)
 
@@ -126,16 +129,15 @@ def update(nav, net):
     pos_x = np.array([-100.0, 100.0, 0.0])
     pos_y = np.array([0.0, 0.0, 120.0])
 
+    dpath = osp.join(osp.dirname(__file__), "lorenz-dynamics-results")
+    os.makedirs(dpath, exist_ok=True)
+
     fpaths = []
     for i, (state, norm_abs_state) in enumerate(zip(s, norm_abs_s)):
         net = create_network(pos_x, pos_y, state, norm_abs_state)
-        nav.append_item(net)
-        fpath = "lorenz-dynamics-%03d.png"%(i)
+        fpath = osp.join(dpath, "lorenz-dynamics-%03d.png"%(i))
         fpaths.append(fpath)
-        write_image(net,
-                    fpath,
-                    scale_width=200,
-                    scale_height=200)
+        write_image(net, fpath, scale_width=200, scale_height=200)
     # end of for
 
-    create_movie(fpaths, "lorenz-dynamics.gif")
+    create_movie(fpaths, osp.join(dpath, "lorenz-dynamics.gif"))
