@@ -1,16 +1,13 @@
 import os
+import sys
 from traceback import format_exc
 
 from qtpy.QtCore import Qt
-from qtpy.QtCore import QSize
-from qtpy.QtCore import QRectF
 from qtpy.QtCore import QMimeData
 from qtpy.QtCore import QBuffer
-from qtpy.QtCore import QDataStream
 from qtpy.QtCore import QByteArray
 from qtpy.QtCore import QIODevice
-from qtpy.QtCore import Signal, Slot
-from qtpy.QtCore import QRectF
+from qtpy.QtCore import Slot
 
 from qtpy.QtWidgets import QWidget
 from qtpy.QtWidgets import QMessageBox
@@ -22,15 +19,9 @@ from qtpy.QtGui import QImage
 from qtpy.QtGui import QPainter
 from qtpy.QtGui import QClipboard
 
-
-
-from qtpy.QtSvg import QSvgGenerator
-
 from nezzle.dialogs.opennetworkdialog import OpenNetworkDialog
 from nezzle.dialogs.exportimagedialog import ExportImageDialog
 
-from nezzle.graphics.screen import GraphicsScene
-from nezzle.graphics.screen import GraphicsView
 from nezzle import fileio
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
@@ -201,32 +192,50 @@ class MenuActionHandler(QWidget):
         brect = scene.itemsBoundingRect()
         brect.adjust(-5, -5, +10, +10)
 
-        #print("[COPY] boundingRect:", brect, "sceneRect:", scene.sceneRect())
-
-        width = brect.width()
-        height = brect.height()
-
         # Create a buffer
         data = QByteArray()
-        b = QBuffer(data)
-        b.open(QIODevice.WriteOnly)
+        buffer = QBuffer(data)
+        buffer.open(QIODevice.WriteOnly)
 
-        # Create SVG
-        svg_gen = QSvgGenerator()
-        svg_gen.setOutputDevice(b)
-        svg_gen.setSize(QSize(width, height))
-        svg_gen.setViewBox(QRectF(0.0, 0.0, width, height))
+        scale_width = 200
+        scale_height = 200
+        dpi_width = 300
+        dpi_height = 300
+        image = QImage((scale_width / 100.0) * brect.width(),
+                       (scale_height / 100.0) * brect.height(),
+                       QImage.Format_ARGB32_Premultiplied)
+
+        # dpm = 300 / 0.0254 # ~300 DPI
+        dpm_width = dpi_width / 0.0254
+        dpm_height = dpi_height / 0.0254
+        image.setDotsPerMeterX(dpm_width)
+        image.setDotsPerMeterY(dpm_height)
+        # bbrush = scene.backgroundBrush()
+        # image.fill(bbrush.color())
+        image.fill(Qt.transparent)
 
         painter = QPainter()
-        painter.begin(svg_gen)
-        painter.setBackgroundMode(Qt.TransparentMode)  # Added
-        painter.setRenderHint(QPainter.HighQualityAntialiasing)
+        painter.begin(image)
+        painter.setOpacity(0.0)
+        painter.setRenderHints(QPainter.TextAntialiasing
+                               | QPainter.Antialiasing
+                               | QPainter.SmoothPixmapTransform
+                               | QPainter.HighQualityAntialiasing)
+
         scene.render(painter, source=brect)
         painter.end()
+        image.save(buffer, "PNG")
 
-        mimeData = QMimeData()
-        mimeData.setData("image/svg+xml", b.buffer())
-        QApplication.clipboard().setMimeData(mimeData, QClipboard.Clipboard)
+        cb = QApplication.clipboard()
+        mime_data = QMimeData()
+        if sys.platform == "win32":
+            mime_data.setData("PNG", buffer.buffer())
+            cb.setMimeData(mime_data, QClipboard.Clipboard)
+        else:
+            mime_data.setImageData(image)
+            cb.setImage(image, QClipboard.Clipboard)
+
+
 
     @Slot()
     def process_paste(self):

@@ -95,7 +95,9 @@ def read_sif(fpath, link_map=None):
     fname = os.path.basename(fpath)
     net = Network(fname)
     #net.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
-    net.scene.setBackgroundBrush(Qt.white)  #(Qt.transparent)
+    # net.scene.setBackgroundBrush(Qt.white)  #(Qt.transparent)
+
+    net.scene.setBackgroundBrush(Qt.transparent)
 
     with codecs.open(fpath, "r", encoding="utf-8-sig") as fin:
         NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
@@ -190,21 +192,16 @@ def read_sif(fpath, link_map=None):
         # end of for: reading each line of SIF file
 
         # Add nodes and labels in network
-        # font = QFont()
-        # font.setFamily("Tahoma")
-        # font.setPointSize(10)
         LabelClass = LabelClassFactory.create("TEXT_LABEL")
         for str_name, node in nodes.items():
             net.add_node(node)
             label = LabelClass(node, str_name)
-            #label.font = font
             label["FONT_FAMILY"] = "Tahoma"
             label["FONT_SIZE"] = 10
             rect = label.boundingRect()
             label.setPos(-rect.width()/2, -rect.height()/2)
             net.add_label(label)
             nodes[str_name] = node
-
     # end of with
 
     for src, tgt, attr in net.nxdg.edges(data=True):
