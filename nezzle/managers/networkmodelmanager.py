@@ -26,7 +26,6 @@ class NetworkModelManager(QObject):
     def root(self):
         return self._root
 
-    @Slot(QStandardItem)
     def on_item_changed(self, item):
         net = item.data()
         if net.name != item.text():
