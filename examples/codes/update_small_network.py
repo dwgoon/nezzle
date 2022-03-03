@@ -12,5 +12,5 @@ def update(nav, net):
     for iden, label in net.labels.items():
         label["FONT_FAMILY"] = "Arial"
         label["FONT_SIZE"] = 16
-        label["FONT_COLOR"] = "black"
+        label["TEXT_COLOR"] = "black"
         label.align()

@@ -46,7 +46,7 @@ def update(nav, net):
         label = TextLabel(node, node.iden)
         label["FONT_FAMILY"] = "Arial"
         label["FONT_SIZE"] = 16
-        label["FONT_COLOR"] = "black"
+        label["TEXT_COLOR"] = "black"
         label.align()
 
         net.add_node(node)

@@ -56,7 +56,7 @@ if __name__ == "__main__":
                 nx.draw_networkx_labels(G, pos,
                                         alpha=0.025,
                                         font_size=4,
-                                        font_color="#000000",
+                                        TEXT_COLOR="#000000",
                                         horizontalalignment="center",
                                         verticalalignment="center")
     

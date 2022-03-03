@@ -247,9 +247,9 @@ def to_networkx(net):
         # Set sign information if head exists.
         if link.head:
             sign_link = 0
-            if link.head.TYPE == "TRIANGLE":
+            if link.head.ITEM_TYPE == "TRIANGLE":
                 sign_link = +1
-            elif link.head.TYPE == "HAMMER":
+            elif link.head.ITEM_TYPE == "HAMMER":
                 sign_link = -1
 
             link_data['SIGN'] = sign_link
