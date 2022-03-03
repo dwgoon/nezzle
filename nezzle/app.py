@@ -43,7 +43,8 @@ def main():
     mw.setWindowTitle("Nezzle")
     droot_resources = pjoin(os.path.dirname(__file__), "resources")
     icon = QIcon(pjoin(droot_resources, "icon.png"))
-    mw.setWindowIcon(icon)
+    mw.setWindowIcon(icon)  # for Windows and Linux
+    app.setWindowIcon(icon)  # for macOS
 
     # Before showing the main window, process arguments.
     if args:
