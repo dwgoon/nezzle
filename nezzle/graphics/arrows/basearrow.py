@@ -4,12 +4,12 @@ from nezzle.utils import TriggerDict
 
 class BaseArrow(object):
 
-    TYPE = 'BASE_HEAD'
+    ITEM_TYPE = 'BASE_HEAD'
 
     def __init__(self, width, height, offset=4):
 
         self._attr = TriggerDict()
-        self._attr['TYPE'] = self.TYPE
+        self._attr['TYPE'] = self.ITEM_TYPE
 
         self._offset = offset
         self._height = height
@@ -90,7 +90,7 @@ class BaseArrow(object):
 
     def to_dict(self):
         dict_head = {}
-        dict_head['TYPE'] = self.TYPE
+        dict_head['TYPE'] = self.ITEM_TYPE
         dict_head['WIDTH'] = self.width
         dict_head['HEIGHT'] = self.height
         dict_head['OFFSET'] = self.offset
@@ -110,7 +110,7 @@ class BaseArrow(object):
 
 class Triangle(BaseArrow):
 
-    TYPE = "TRIANGLE"
+    ITEM_TYPE = "TRIANGLE"
 
     def __init__(self, width=10, height=10, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
@@ -142,7 +142,7 @@ class Triangle(BaseArrow):
 
 class Hammer(BaseArrow):
 
-    TYPE = "HAMMER"
+    ITEM_TYPE = "HAMMER"
 
     def __init__(self, width=14, height=2, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
