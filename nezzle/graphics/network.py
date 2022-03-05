@@ -100,7 +100,13 @@ class Network(MappableItem):
 
     def replace_node(self, old_node, new_node):
         while old_node.links:
-            link = old_node.links.pop()  # Remove all links from old node,
+            link = old_node.links.pop()  # Remove all links from old node
+
+            if isinstance(link, SelfloopLink):
+                link.node = new_node
+                new_node.add_link(link)
+                continue
+
             if id(link.source) == id(old_node):
                 link.source = new_node
                 new_node.add_link(link)
@@ -122,6 +128,7 @@ class Network(MappableItem):
         self.scene.removeItem(old_node)
 
     def replace_link(self, old_link, new_link):
+
         if isinstance(old_link, SelfloopLink):
             self.nxdg.remove_edge(old_link.node.iden, old_link.node.iden)
             self.nxdg.add_edge(new_link.node.iden, new_link.node.iden)

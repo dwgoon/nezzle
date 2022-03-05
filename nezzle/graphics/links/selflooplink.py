@@ -5,6 +5,7 @@ from qtpy.QtGui import QPainterPath
 
 from nezzle.graphics.links.baselink import BaseLink
 from nezzle.graphics.mixins import Lockable
+from nezzle.graphics.arrows.transform import Rotate
 
 
 @Lockable
@@ -18,6 +19,7 @@ class SelfloopLink(BaseLink):
         self._angle_offset = None
         self._angle_sweep = None
         self._angle_begin = None
+        self._head_transform = Rotate()
 
         super().__init__(iden, *args, **kwargs)
 
@@ -27,8 +29,14 @@ class SelfloopLink(BaseLink):
     def node(self):
         return self._node
 
+    @node.setter
+    def node(self, obj):
+        self._node = obj
+
     def initialize(self):
+        self._identify_pos()
         self._create_path()
+        self._update_bounding_rect()
 
     def _identify_pos(self):
         node_hw = self._node.width/2  # Half of nodes width
@@ -69,6 +77,7 @@ class SelfloopLink(BaseLink):
         line of head pos.
         """
         self._angle_head = self._angle_sweep - (self._angle_begin-90)
+        self._head_transform.angle = self._angle_head
 
     def _calculate_angle_begin(self):
         node_hw = self._node.width / 2  # Half of nodes width
@@ -108,7 +117,6 @@ class SelfloopLink(BaseLink):
         return path.currentPosition()
 
     def _create_path(self):
-
         self._identify_pos()
 
         # The calculating the angles, offset and sweep, should be done

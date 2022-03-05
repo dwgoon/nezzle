@@ -437,6 +437,10 @@ class MenuActionHandler(QWidget):
             if type(old_item) == linkclass:
                 continue
 
+            # Currently, SelfloopLink CANNOT be converted to any other type of link.
+            if type(old_item) == SelfloopLink:
+                continue
+
             new_item = LinkConverter.convert(old_item, linkclass)
             old_items.append(old_item)
             new_items.append(new_item)
