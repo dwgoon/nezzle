@@ -5,7 +5,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 from qtpy.QtGui import QColor
 
-from nezzle import fileio
+from nezzle.io import io
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import LinkClassFactory
 from nezzle.graphics import ArrowClassFactory
@@ -83,7 +83,7 @@ def test_copy_label():
 
 
 def test_copy_network():
-    net1 = fileio.read_network("jkwon_egfr_pathway.sif")
+    net1 = io.read_network("jkwon_egfr_pathway.sif")
     net2 = net1.copy()
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())

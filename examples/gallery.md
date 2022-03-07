@@ -1137,59 +1137,58 @@
 
   ```python
   from qtpy.QtCore import Qt
-  from qtpy.QtCore import QPointF
-  
-  from nezzle.graphics import EllipseNode
-  from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
-  from nezzle.graphics import Triangle, Hammer
-  from nezzle.graphics import Network
-  from nezzle.fileio import write_network
-  
-  
-  def update(nav, net):
-      net = Network('2NNFL')  # 2-node negative feedback loop (2NNFL)
-  
-      # Create two nodes
-      src = EllipseNode('A', 40, 40, pos=QPointF(-70, 0))
-      src["FILL_COLOR"] = Qt.yellow
-      src["BORDER_COLOR"] = Qt.black
-      src["BORDER_WIDTH"] = 2
-  
-      tgt = EllipseNode('B', 40, 40, pos=QPointF(70, 0))
-      tgt["FILL_COLOR"] = Qt.yellow
-      tgt["BORDER_COLOR"] = Qt.black
-      tgt["BORDER_WIDTH"] = 2
-  
-      net.add_node(src)
-      net.add_node(tgt)
-  
-      head = Triangle(width=10, height=10, offset=4)
-      link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
-      link1["FILL_COLOR"] = Qt.black
-      link1["CP_POS_X"] = -10
-      link1["CP_POS_Y"] = -50
-  
-      head = Hammer(width=16, height=3, offset=4)
-      link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
-      link2["FILL_COLOR"] = Qt.black
-      link2["CP_POS_X"] = 10
-      link2["CP_POS_Y"] = 50
-  
-      net.add_link(link1)
-      net.add_link(link2)
-  
-      for node in [src, tgt]:
-          label = TextLabel(node, node.iden)
-          label["FONT_SIZE"] = 20
-          label.align()
-          net.add_label(label)
-      # end of for
-  
-      
-      # Not appending the new network to the navigation.
-      # You should use *.json to save the graphics information.
-      write_network(net, "2nnfl.json")  
+from qtpy.QtCore import QPointF
+
+from nezzle.graphics import EllipseNode
+from nezzle.graphics import TextLabel
+from nezzle.graphics import CurvedLink
+from nezzle.graphics import Triangle, Hammer
+from nezzle.graphics import Network
+from nezzle.io.io import write_network
+
+
+def update(nav, net):
+    net = Network('2NNFL')  # 2-node negative feedback loop (2NNFL)
+
+    # Create two nodes
+    src = EllipseNode('A', 40, 40, pos=QPointF(-70, 0))
+    src["FILL_COLOR"] = Qt.yellow
+    src["BORDER_COLOR"] = Qt.black
+    src["BORDER_WIDTH"] = 2
+
+    tgt = EllipseNode('B', 40, 40, pos=QPointF(70, 0))
+    tgt["FILL_COLOR"] = Qt.yellow
+    tgt["BORDER_COLOR"] = Qt.black
+    tgt["BORDER_WIDTH"] = 2
+
+    net.add_node(src)
+    net.add_node(tgt)
+
+    head = Triangle(width=10, height=10, offset=4)
+    link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
+    link1["FILL_COLOR"] = Qt.black
+    link1["CP_POS_X"] = -10
+    link1["CP_POS_Y"] = -50
+
+    head = Hammer(width=16, height=3, offset=4)
+    link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
+    link2["FILL_COLOR"] = Qt.black
+    link2["CP_POS_X"] = 10
+    link2["CP_POS_Y"] = 50
+
+    net.add_link(link1)
+    net.add_link(link2)
+
+    for node in [src, tgt]:
+        label = TextLabel(node, node.iden)
+        label["FONT_SIZE"] = 20
+        label.align()
+        net.add_label(label)
+    # end of for
+
+    # Not appending the new network to the navigation.
+    # You should use *.json to save the graphics information.
+    write_network(net, "2nnfl.json")
 
   ```
 
@@ -1204,61 +1203,61 @@
 
   ```python
   from qtpy.QtCore import Qt
-  from qtpy.QtCore import QPointF
-  
-  from nezzle.graphics import EllipseNode
-  from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
-  from nezzle.graphics import Triangle, Hammer
-  from nezzle.graphics import Network
-  from nezzle.fileio import write_image
-  
-  
-  def update(nav, net):
-      net = Network('2NNFL')  # 2-node negative feedback loop (2NNFL)
-  
-      # Create two nodes
-      src = EllipseNode('A', 40, 40, pos=QPointF(-70, 0))
-      src["FILL_COLOR"] = Qt.yellow
-      src["BORDER_COLOR"] = Qt.black
-      src["BORDER_WIDTH"] = 2
-  
-      tgt = EllipseNode('B', 40, 40, pos=QPointF(70, 0))
-      tgt["FILL_COLOR"] = Qt.yellow
-      tgt["BORDER_COLOR"] = Qt.black
-      tgt["BORDER_WIDTH"] = 2
-  
-      net.add_node(src)
-      net.add_node(tgt)
-  
-      head = Triangle(width=10, height=10, offset=4)
-      link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
-      link1["FILL_COLOR"] = Qt.black
-      link1["CP_POS_X"] = -10
-      link1["CP_POS_Y"] = -50
-  
-      head = Hammer(width=16, height=3, offset=4)
-      link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
-      link2["FILL_COLOR"] = Qt.black
-      link2["CP_POS_X"] = 10
-      link2["CP_POS_Y"] = 50
-  
-      net.add_link(link1)
-      net.add_link(link2)
-  
-      for node in [src, tgt]:
-          label = TextLabel(node, node.iden)
-          label["FONT_SIZE"] = 20
-          label.align()
-          net.add_label(label)
-      # end of for
-  
-      # Not appending the new network to the navigation.
-      # Adjust DPI and scale for obtaining a high-quality image.
-      write_image(net,
-                  "2nnfl.png",
-                  dpi_width=300, dpi_height=300,
-                  scale_width=200, scale_height=200)
+from qtpy.QtCore import QPointF
+
+from nezzle.graphics import EllipseNode
+from nezzle.graphics import TextLabel
+from nezzle.graphics import CurvedLink
+from nezzle.graphics import Triangle, Hammer
+from nezzle.graphics import Network
+from nezzle.io.io import write_image
+
+
+def update(nav, net):
+    net = Network('2NNFL')  # 2-node negative feedback loop (2NNFL)
+
+    # Create two nodes
+    src = EllipseNode('A', 40, 40, pos=QPointF(-70, 0))
+    src["FILL_COLOR"] = Qt.yellow
+    src["BORDER_COLOR"] = Qt.black
+    src["BORDER_WIDTH"] = 2
+
+    tgt = EllipseNode('B', 40, 40, pos=QPointF(70, 0))
+    tgt["FILL_COLOR"] = Qt.yellow
+    tgt["BORDER_COLOR"] = Qt.black
+    tgt["BORDER_WIDTH"] = 2
+
+    net.add_node(src)
+    net.add_node(tgt)
+
+    head = Triangle(width=10, height=10, offset=4)
+    link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
+    link1["FILL_COLOR"] = Qt.black
+    link1["CP_POS_X"] = -10
+    link1["CP_POS_Y"] = -50
+
+    head = Hammer(width=16, height=3, offset=4)
+    link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
+    link2["FILL_COLOR"] = Qt.black
+    link2["CP_POS_X"] = 10
+    link2["CP_POS_Y"] = 50
+
+    net.add_link(link1)
+    net.add_link(link2)
+
+    for node in [src, tgt]:
+        label = TextLabel(node, node.iden)
+        label["FONT_SIZE"] = 20
+        label.align()
+        net.add_label(label)
+    # end of for
+
+    # Not appending the new network to the navigation.
+    # Adjust DPI and scale for obtaining a high-quality image.
+    write_image(net,
+                "2nnfl.png",
+                dpi_width=300, dpi_height=300,
+                scale_width=200, scale_height=200)
   ```
 
   </td>
@@ -1286,97 +1285,97 @@
 
   ```python
   import os
-  import os.path as osp
-  
-  from qtpy.QtCore import Qt
-  from qtpy.QtCore import QPointF
-  from qtpy.QtGui import QColor
-  
-  from nezzle.graphics import EllipseNode
-  from nezzle.graphics import StraightLink
-  from nezzle.graphics import Triangle
-  from nezzle.graphics import Network
-  from nezzle.fileio import write_image
-  
-  
-  def add_node(net, iden, x, y):
-      node = EllipseNode(iden, 40, 40, pos=QPointF(x, y))
-  
-      node["FILL_COLOR"] = Qt.green
-      node["BORDER_COLOR"] = Qt.black
-      node["BORDER_WIDTH"] = 4
-  
-      net.add_node(node)
-      return node
-  
-  
-  def add_links(net, neurons, l):
-      """Connect (l-1)-th layer to l-th layer.
-  
-      Args:
-          layers: the number of neurons in each layer.
-          l: layer number (l-th layer).
-      """
-      if l < 1:
-          return
-  
-      for src in neurons[l - 1]:
-          for tgt in neurons[l]:
-              head = Triangle(width=12, height=12, offset=8)
-              iden = "%s-%s"%(src.iden, tgt.iden)
-              link = StraightLink(iden, src, tgt, width=4, head=head)           
-              link["FILL_COLOR"] = QColor(0, 0, 0, 50)
-              net.add_link(link)
-  
-  
-  def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
-      """Create a fully-connected neural network without activation functions.
-  
-      Args:
-          layers: the number of neurons in each layer.
-          r: node radius for a single neuron.
-          vs: vertical space between neurons.
-          hs: horizontal space between neurons.
-      """
-  
-      neurons = [[] for _ in range(len(layers))]
-  
-      net = Network("Neural network")
-  
-      ox, oy = op
-      for l, nn in enumerate(layers):
-          # l: l-th layer
-          # nn: the number of neurons in l-th layer.
-          x = ox + l * (2 * r + hs)
-  
-          if nn % 2 == 0:  # nn is even.
-              y = oy - ( (r + vs / 2) + (nn // 2) * (2 * r + vs) )
-          else:  # nn is odd.
-              y = oy - ((nn // 2 + 1) * (2 * r + vs))
-  
-          for k in range(nn):
-              y = y + (2 * r + (vs / 2))
-              node = add_node(net, "%s%s"%(l, k), x, y)
-              neurons[l].append(node)
-  
-          add_links(net, neurons, l)
-  
-      return net
-  
-  
-  def update(nav, net):
-      layers = [3, 6, 9, 9, 6, 3, 1]
-      net = create_network(layers)
-  
-      dpath = osp.join(osp.dirname(__file__), "neural-networks")
-      os.makedirs(dpath, exist_ok=True)
-      fpath = osp.join(dpath, "neural-network-n%d.jpg" % (sum(layers)))
-  
-      write_image(net, fpath,
-                  scale_width=50, scale_height=50,
-                  dpi_width=300, dpi_height=300)
-  
-      nav.append_item(net)
+import os.path as osp
+
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
+from qtpy.QtGui import QColor
+
+from nezzle.graphics import EllipseNode
+from nezzle.graphics import StraightLink
+from nezzle.graphics import Triangle
+from nezzle.graphics import Network
+from nezzle.io.io import write_image
+
+
+def add_node(net, iden, x, y):
+    node = EllipseNode(iden, 40, 40, pos=QPointF(x, y))
+
+    node["FILL_COLOR"] = Qt.green
+    node["BORDER_COLOR"] = Qt.black
+    node["BORDER_WIDTH"] = 4
+
+    net.add_node(node)
+    return node
+
+
+def add_links(net, neurons, l):
+    """Connect (l-1)-th layer to l-th layer.
+
+    Args:
+        layers: the number of neurons in each layer.
+        l: layer number (l-th layer).
+    """
+    if l < 1:
+        return
+
+    for src in neurons[l - 1]:
+        for tgt in neurons[l]:
+            head = Triangle(width=12, height=12, offset=8)
+            iden = "%s-%s" % (src.iden, tgt.iden)
+            link = StraightLink(iden, src, tgt, width=4, head=head)
+            link["FILL_COLOR"] = QColor(0, 0, 0, 50)
+            net.add_link(link)
+
+
+def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
+    """Create a fully-connected neural network without activation functions.
+
+    Args:
+        layers: the number of neurons in each layer.
+        r: node radius for a single neuron.
+        vs: vertical space between neurons.
+        hs: horizontal space between neurons.
+    """
+
+    neurons = [[] for _ in range(len(layers))]
+
+    net = Network("Neural network")
+
+    ox, oy = op
+    for l, nn in enumerate(layers):
+        # l: l-th layer
+        # nn: the number of neurons in l-th layer.
+        x = ox + l * (2 * r + hs)
+
+        if nn % 2 == 0:  # nn is even.
+            y = oy - ((r + vs / 2) + (nn // 2) * (2 * r + vs))
+        else:  # nn is odd.
+            y = oy - ((nn // 2 + 1) * (2 * r + vs))
+
+        for k in range(nn):
+            y = y + (2 * r + (vs / 2))
+            node = add_node(net, "%s%s" % (l, k), x, y)
+            neurons[l].append(node)
+
+        add_links(net, neurons, l)
+
+    return net
+
+
+def update(nav, net):
+    layers = [3, 6, 9, 9, 6, 3, 1]
+    net = create_network(layers)
+
+    dpath = osp.join(osp.dirname(__file__), "neural-networks")
+    os.makedirs(dpath, exist_ok=True)
+    fpath = osp.join(dpath, "neural-network-n%d.jpg" % (sum(layers)))
+
+    write_image(net, fpath,
+                scale_width=50, scale_height=50,
+                dpi_width=300, dpi_height=300)
+
+    nav.append_item(net)
   ```
 
   </td>
@@ -1406,127 +1405,126 @@
 
   ```python
   import numpy as np
-  from scipy.integrate import odeint
-  import moviepy.editor as mpy
-  
-  from qtpy.QtCore import Qt
-  from qtpy.QtCore import QPointF
-  from qtpy.QtGui import QColor
-  
-  from nezzle.graphics import EllipseNode
-  from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
-  from nezzle.graphics import Triangle, Hammer
-  from nezzle.graphics import Network
-  from nezzle.fileio import write_image
-  
-  
-  def create_network(pos_x, pos_y, s):
-      color_white = np.array([255, 255, 255, 0])
-      color_up = np.array([255, 0, 0, 0])
-      color_dn = np.array([0, 0, 255, 0])
-  
-      net = Network('2NNFL')
-      src = EllipseNode('A', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
-      tgt = EllipseNode('B', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
-  
-      net.add_node(src)
-      net.add_node(tgt)
-  
-      head = Triangle(width=10, height=10, offset=4)
-      link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
-      link1["FILL_COLOR"] = Qt.black
-      link1["CP_POS_X"] = -10
-      link1["CP_POS_Y"] = -50
-  
-      head = Hammer(width=16, height=3, offset=4)
-      link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
-      link2["FILL_COLOR"] = Qt.black
-      link2["CP_POS_X"] = 10
-      link2["CP_POS_Y"] = 50
-  
-      net.add_link(link1)
-      net.add_link(link2)
-  
-      for i, node in enumerate([src, tgt]):
-  
-          if s[i] > 0.5:
-              color = color_white + s[i] * (color_up - color_white)
-          else:
-              color = color_white + s[i] * (color_dn - color_white)
-  
-          color[3] = 255
-          node["FILL_COLOR"] = QColor(*color)
-          node["BORDER_COLOR"] = Qt.black
-          node["BORDER_WIDTH"] = 2
-          node["WIDTH"] = node["HEIGHT"] = 20 + 50 * s[i]
-  
-          label_name = TextLabel(node, node.iden)
-          label_name["FONT_SIZE"] = 10 + 30 * s[i]
-          label_name["TEXT_COLOR"] = Qt.white
-          label_name.align()
-  
-          lightness = QColor(node["FILL_COLOR"]).lightness()
-          if lightness < 200:
-              label_name["TEXT_COLOR"] = Qt.white
-              label_name["FONT_BOLD"] = True
-          else:
-              label_name["TEXT_COLOR"] = Qt.black
-              label_name["FONT_BOLD"] = False
-  
-          net.add_label(label_name)
-      # end of for
-      return net
-  
-  
-  def create_movie(fpaths, fout):
-      clips = []
-      for fpath in fpaths:
-          img = mpy.ImageClip(fpath).set_duration(0.2)
-          clips.append(img)
-  
-      concat_clip = mpy.concatenate_videoclips(clips,
-                                               bg_color=(255, 255, 255),
-                                               method="compose")
-      concat_clip.write_gif(fout, fps=30)
-  
-  
-  def update(nav, net):
-  
-      # Solve the ODE of 2-node negative feedback loop model
-      def ode(y, t):
-          dydt = np.zeros(y.shape)
-          ka1 = 0.8
-          Km1 = 1.0
-          kd1 = 0.06
-          ka2 = 0.95
-          Km2 = 1.0
-          kd2 = 0.7
-          dydt[0] = ka1/(y[1]**4 + Km1**4) - kd1*y[0]
-          dydt[1] = ka2*y[1]*y[0]**2/(y[0]**2 + Km2**2) - kd2*y[1]
-          return dydt
-  
-      t = np.arange(0, 100, 1)
-      y0 = np.array([1., 1.])
-      sol = odeint(ode, y0, t)
-  
-      norm_s = sol / sol.max()
-  
-      pos_x = np.array([-80.0, 80.0])
-      pos_y = np.array([0.0, 0.0])
-  
-      fpaths = []
-      for i, s in enumerate(norm_s):
-          net = create_network(pos_x, pos_y, s)
-          fpath = "2nnfl-dynamics-%03d.png"%(i)
-          fpaths.append(fpath)
-          write_image(net,
-                      fpath,
-                      transparent=False,
-                      scale_width=200, scale_height=200)
-      # end of for
-  
-      create_movie(fpaths, "2nnfl-dynamics.gif")
+from scipy.integrate import odeint
+import moviepy.editor as mpy
+
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
+from qtpy.QtGui import QColor
+
+from nezzle.graphics import EllipseNode
+from nezzle.graphics import TextLabel
+from nezzle.graphics import CurvedLink
+from nezzle.graphics import Triangle, Hammer
+from nezzle.graphics import Network
+from nezzle.io.io import write_image
+
+
+def create_network(pos_x, pos_y, s):
+    color_white = np.array([255, 255, 255, 0])
+    color_up = np.array([255, 0, 0, 0])
+    color_dn = np.array([0, 0, 255, 0])
+
+    net = Network('2NNFL')
+    src = EllipseNode('A', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
+    tgt = EllipseNode('B', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
+
+    net.add_node(src)
+    net.add_node(tgt)
+
+    head = Triangle(width=10, height=10, offset=4)
+    link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
+    link1["FILL_COLOR"] = Qt.black
+    link1["CP_POS_X"] = -10
+    link1["CP_POS_Y"] = -50
+
+    head = Hammer(width=16, height=3, offset=4)
+    link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
+    link2["FILL_COLOR"] = Qt.black
+    link2["CP_POS_X"] = 10
+    link2["CP_POS_Y"] = 50
+
+    net.add_link(link1)
+    net.add_link(link2)
+
+    for i, node in enumerate([src, tgt]):
+
+        if s[i] > 0.5:
+            color = color_white + s[i] * (color_up - color_white)
+        else:
+            color = color_white + s[i] * (color_dn - color_white)
+
+        color[3] = 255
+        node["FILL_COLOR"] = QColor(*color)
+        node["BORDER_COLOR"] = Qt.black
+        node["BORDER_WIDTH"] = 2
+        node["WIDTH"] = node["HEIGHT"] = 20 + 50 * s[i]
+
+        label_name = TextLabel(node, node.iden)
+        label_name["FONT_SIZE"] = 10 + 30 * s[i]
+        label_name["TEXT_COLOR"] = Qt.white
+        label_name.align()
+
+        lightness = QColor(node["FILL_COLOR"]).lightness()
+        if lightness < 200:
+            label_name["TEXT_COLOR"] = Qt.white
+            label_name["FONT_BOLD"] = True
+        else:
+            label_name["TEXT_COLOR"] = Qt.black
+            label_name["FONT_BOLD"] = False
+
+        net.add_label(label_name)
+    # end of for
+    return net
+
+
+def create_movie(fpaths, fout):
+    clips = []
+    for fpath in fpaths:
+        img = mpy.ImageClip(fpath).set_duration(0.2)
+        clips.append(img)
+
+    concat_clip = mpy.concatenate_videoclips(clips,
+                                             bg_color=(255, 255, 255),
+                                             method="compose")
+    concat_clip.write_gif(fout, fps=30)
+
+
+def update(nav, net):
+    # Solve the ODE of 2-node negative feedback loop model
+    def ode(y, t):
+        dydt = np.zeros(y.shape)
+        ka1 = 0.8
+        Km1 = 1.0
+        kd1 = 0.06
+        ka2 = 0.95
+        Km2 = 1.0
+        kd2 = 0.7
+        dydt[0] = ka1 / (y[1] ** 4 + Km1 ** 4) - kd1 * y[0]
+        dydt[1] = ka2 * y[1] * y[0] ** 2 / (y[0] ** 2 + Km2 ** 2) - kd2 * y[1]
+        return dydt
+
+    t = np.arange(0, 100, 1)
+    y0 = np.array([1., 1.])
+    sol = odeint(ode, y0, t)
+
+    norm_s = sol / sol.max()
+
+    pos_x = np.array([-80.0, 80.0])
+    pos_y = np.array([0.0, 0.0])
+
+    fpaths = []
+    for i, s in enumerate(norm_s):
+        net = create_network(pos_x, pos_y, s)
+        fpath = "2nnfl-dynamics-%03d.png" % (i)
+        fpaths.append(fpath)
+        write_image(net,
+                    fpath,
+                    transparent=False,
+                    scale_width=200, scale_height=200)
+    # end of for
+
+    create_movie(fpaths, "2nnfl-dynamics.gif")
   ```
 
   </td>
@@ -1545,146 +1543,145 @@
 
   ```python
   import numpy as np
-  from scipy.integrate import odeint
-  import moviepy.editor as mpy
-  
-  from qtpy.QtCore import Qt
-  from qtpy.QtCore import QPointF
-  from qtpy.QtGui import QColor
-  
-  from nezzle.graphics import EllipseNode
-  from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
-  from nezzle.graphics import Triangle, Hammer
-  from nezzle.graphics import Network
-  from nezzle.fileio import write_image
-  
-  
-  def create_network(pos_x, pos_y, state, norm_abs_state):
-      color_white = np.array([255, 255, 255, 0])
-      color_up = np.array([255, 0, 0, 0])
-      color_dn = np.array([0, 0, 255, 0])
-  
-      net = Network('2NNFL')
-      x = EllipseNode('X', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
-      y = EllipseNode('Y', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
-      z = EllipseNode('Z', 40, 40, pos=QPointF(pos_x[2], pos_y[2]))
-  
-      net.add_node(x)
-      net.add_node(y)
-      net.add_node(z)
-  
-      head = Triangle(width=10, height=10, offset=4)
-      link1 = CurvedLink("LINK1", x, y, width=4, head=head)
-      link1["FILL_COLOR"] = Qt.black
-      link1["CP_POS_X"] = -10
-      link1["CP_POS_Y"] = -50
-  
-      head = Triangle(width=10, height=10, offset=4)
-      link2 = CurvedLink("LINK2", y, x, width=4, head=head)
-      link2["FILL_COLOR"] = Qt.black
-      link2["CP_POS_X"] = 10
-      link2["CP_POS_Y"] = 40
-      
-      head = Triangle(width=10, height=10, offset=4)
-      link3 = CurvedLink("LINK3", y, z, width=4, head=head)
-      link3["FILL_COLOR"] = Qt.black
-      link3["CP_POS_X"] = -28
-      link3["CP_POS_Y"] = -28
-      
-      head = Hammer(width=14, height=4, offset=4)
-      link4 = CurvedLink("LINK3", z, y, width=4, head=head)
-      link4["FILL_COLOR"] = Qt.black
-      link4["CP_POS_X"] = 45
-      link4["CP_POS_Y"] = 40
-      
-      head = Triangle(width=10, height=10, offset=4)
-      link5 = CurvedLink("LINK3", z, x, width=4, head=head)
-      link5["FILL_COLOR"] = Qt.black
-      link5["CP_POS_X"] = -45
-      link5["CP_POS_Y"] = 40
-      
-      net.add_link(link1)
-      net.add_link(link2)
-      net.add_link(link3)
-      net.add_link(link4)
-      net.add_link(link5)
-  
-      for i, node in enumerate([x, y, z]):
-          if state[i] > 0.0:
-              color = color_white + norm_abs_state[i] * (color_up - color_white)
-          else:
-              color = color_white + norm_abs_state[i] * (color_dn - color_white)
-  
-          color[3] = 255
-          node["FILL_COLOR"] = QColor(*color)
-          node["BORDER_COLOR"] = Qt.black
-          node["BORDER_WIDTH"] = 2
-          node["WIDTH"] = node["HEIGHT"] = 20 + 50 * norm_abs_state[i]
-  
-          label_name = TextLabel(node, node.iden)
-          label_name["FONT_SIZE"] = 10 + 30 * norm_abs_state[i]
-          label_name["TEXT_COLOR"] = Qt.white
-          label_name.align()
-  
-          lightness = QColor(node["FILL_COLOR"]).lightness()
-          if lightness < 200:
-              label_name["TEXT_COLOR"] = Qt.white
-              label_name["FONT_BOLD"] = True
-          else:
-              label_name["TEXT_COLOR"] = Qt.black
-              label_name["FONT_BOLD"] = False
-  
-          net.add_label(label_name)
-      # end of for
-      return net
-  
-  
-  def create_movie(fpaths, fout):
-      clips = []
-      for fpath in fpaths:
-          img = mpy.ImageClip(fpath).set_duration(0.2)
-          clips.append(img)
-  
-      concat_clip = mpy.concatenate_videoclips(clips,
-                                               bg_color=(255, 255, 255),
-                                               method="compose")
-      concat_clip.write_gif(fout, fps=30)
-  
-  
-  def update(nav, net):
-  
-      # Solve the ODE of Lorenz system
-      def ode(s, t):
-          sigma = 10
-          beta = 2.667
-          rho = 28
-          x, y, z = s
-          return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
-      
-      t = np.arange(0, 100, 0.1)
-      y0 = np.array([0, 1, 1.05])
-      s = odeint(ode, y0, t)
-  
-      abs_s = np.abs(s)
-      norm_abs_s = abs_s / abs_s.max(axis=0)
-  
-      pos_x = np.array([-100.0, 100.0, 0.0])
-      pos_y = np.array([0.0, 0.0, 120.0])
-  
-      fpaths = []
-      for i, (state, norm_abs_state) in enumerate(zip(s, norm_abs_s)):
-          net = create_network(pos_x, pos_y, state, norm_abs_state)
-          nav.append_item(net)
-          fpath = "lorenz-dynamics-%03d.png"%(i)
-          fpaths.append(fpath)
-          write_image(net,
-                      fpath,
-                      transparent=False,
-                      scale_width=200, scale_height=200)
-      # end of for
-  
-      create_movie(fpaths, "lorenz-dynamics.gif")
+from scipy.integrate import odeint
+import moviepy.editor as mpy
+
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
+from qtpy.QtGui import QColor
+
+from nezzle.graphics import EllipseNode
+from nezzle.graphics import TextLabel
+from nezzle.graphics import CurvedLink
+from nezzle.graphics import Triangle, Hammer
+from nezzle.graphics import Network
+from nezzle.io.io import write_image
+
+
+def create_network(pos_x, pos_y, state, norm_abs_state):
+    color_white = np.array([255, 255, 255, 0])
+    color_up = np.array([255, 0, 0, 0])
+    color_dn = np.array([0, 0, 255, 0])
+
+    net = Network('2NNFL')
+    x = EllipseNode('X', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
+    y = EllipseNode('Y', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
+    z = EllipseNode('Z', 40, 40, pos=QPointF(pos_x[2], pos_y[2]))
+
+    net.add_node(x)
+    net.add_node(y)
+    net.add_node(z)
+
+    head = Triangle(width=10, height=10, offset=4)
+    link1 = CurvedLink("LINK1", x, y, width=4, head=head)
+    link1["FILL_COLOR"] = Qt.black
+    link1["CP_POS_X"] = -10
+    link1["CP_POS_Y"] = -50
+
+    head = Triangle(width=10, height=10, offset=4)
+    link2 = CurvedLink("LINK2", y, x, width=4, head=head)
+    link2["FILL_COLOR"] = Qt.black
+    link2["CP_POS_X"] = 10
+    link2["CP_POS_Y"] = 40
+
+    head = Triangle(width=10, height=10, offset=4)
+    link3 = CurvedLink("LINK3", y, z, width=4, head=head)
+    link3["FILL_COLOR"] = Qt.black
+    link3["CP_POS_X"] = -28
+    link3["CP_POS_Y"] = -28
+
+    head = Hammer(width=14, height=4, offset=4)
+    link4 = CurvedLink("LINK3", z, y, width=4, head=head)
+    link4["FILL_COLOR"] = Qt.black
+    link4["CP_POS_X"] = 45
+    link4["CP_POS_Y"] = 40
+
+    head = Triangle(width=10, height=10, offset=4)
+    link5 = CurvedLink("LINK3", z, x, width=4, head=head)
+    link5["FILL_COLOR"] = Qt.black
+    link5["CP_POS_X"] = -45
+    link5["CP_POS_Y"] = 40
+
+    net.add_link(link1)
+    net.add_link(link2)
+    net.add_link(link3)
+    net.add_link(link4)
+    net.add_link(link5)
+
+    for i, node in enumerate([x, y, z]):
+        if state[i] > 0.0:
+            color = color_white + norm_abs_state[i] * (color_up - color_white)
+        else:
+            color = color_white + norm_abs_state[i] * (color_dn - color_white)
+
+        color[3] = 255
+        node["FILL_COLOR"] = QColor(*color)
+        node["BORDER_COLOR"] = Qt.black
+        node["BORDER_WIDTH"] = 2
+        node["WIDTH"] = node["HEIGHT"] = 20 + 50 * norm_abs_state[i]
+
+        label_name = TextLabel(node, node.iden)
+        label_name["FONT_SIZE"] = 10 + 30 * norm_abs_state[i]
+        label_name["TEXT_COLOR"] = Qt.white
+        label_name.align()
+
+        lightness = QColor(node["FILL_COLOR"]).lightness()
+        if lightness < 200:
+            label_name["TEXT_COLOR"] = Qt.white
+            label_name["FONT_BOLD"] = True
+        else:
+            label_name["TEXT_COLOR"] = Qt.black
+            label_name["FONT_BOLD"] = False
+
+        net.add_label(label_name)
+    # end of for
+    return net
+
+
+def create_movie(fpaths, fout):
+    clips = []
+    for fpath in fpaths:
+        img = mpy.ImageClip(fpath).set_duration(0.2)
+        clips.append(img)
+
+    concat_clip = mpy.concatenate_videoclips(clips,
+                                             bg_color=(255, 255, 255),
+                                             method="compose")
+    concat_clip.write_gif(fout, fps=30)
+
+
+def update(nav, net):
+    # Solve the ODE of Lorenz system
+    def ode(s, t):
+        sigma = 10
+        beta = 2.667
+        rho = 28
+        x, y, z = s
+        return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
+
+    t = np.arange(0, 100, 0.1)
+    y0 = np.array([0, 1, 1.05])
+    s = odeint(ode, y0, t)
+
+    abs_s = np.abs(s)
+    norm_abs_s = abs_s / abs_s.max(axis=0)
+
+    pos_x = np.array([-100.0, 100.0, 0.0])
+    pos_y = np.array([0.0, 0.0, 120.0])
+
+    fpaths = []
+    for i, (state, norm_abs_state) in enumerate(zip(s, norm_abs_s)):
+        net = create_network(pos_x, pos_y, state, norm_abs_state)
+        nav.append_item(net)
+        fpath = "lorenz-dynamics-%03d.png" % (i)
+        fpaths.append(fpath)
+        write_image(net,
+                    fpath,
+                    transparent=False,
+                    scale_width=200, scale_height=200)
+    # end of for
+
+    create_movie(fpaths, "lorenz-dynamics.gif")
   ```
 
   </td>
@@ -1707,103 +1704,103 @@
 
   ```python
   import os
-  import os.path as osp
-  from datetime import datetime
-  
-  import numpy as np
-  import torch
-  import torch.nn as nn
-  import torch.optim as optim
-  import torch.nn.functional as F
-  import moviepy.editor as mpy
-  
-  from nezzle.fileio import write_image
-  
-  
-  class MeanPairwiseDistances(nn.Module):
-  
-      def __init__(self, pos, device="cpu"):
-          super().__init__()
-  
-          self.pos = nn.Parameter(torch.tensor(pos),
-                                  requires_grad=True)
-  
-          self.pos = self.pos.to(device)
-  
-      def forward(self):
-          return F.pdist(self.pos).mean()
-  
-  
-  def create_movie(fpaths, fout):
-      clips = []
-      duration = 0.05
-      for (epoch, fpath) in fpaths:
-          img_clip = mpy.ImageClip(fpath)
-          img_clip = img_clip.set_duration(duration)
-          img_clip = img_clip.resize(width=412, height=412)
-          img_clip = img_clip.margin(100, color=(255, 255, 255))
-  
-          txt_clip = mpy.TextClip("Epoch=%03d"%(epoch), fontsize=16, color='black')
-          txt_clip = txt_clip.set_duration(duration)
-          txt_clip = txt_clip.set_position(("center", "bottom"))
-  
-          clip = mpy.CompositeVideoClip([img_clip, txt_clip], bg_color=(255, 255, 255))
-          clips.append(clip)
-  
-      concat_clip = mpy.concatenate_videoclips(clips,
-                                               bg_color=(255, 255, 255),
-                                               method="compose")
-      concat_clip.write_gif(fout, fps=10)
-  
-  
-  def update(nav, net):
-      num_nodes = len(net.nodes)
-      positions = np.zeros((num_nodes, 2))
-  
-      for i, (iden, node) in enumerate(net.nodes.items()):
-          positions[i, :] = (node["POS_X"], node["POS_Y"])
-      # end of for
-  
-      # Layout by maximizing mean pairwise distances (MPD) (== minimizing the negative MPD).
-      model = MeanPairwiseDistances(positions)
-      optimizer = optim.SGD(model.parameters(), lr=2e-1, momentum=0.5)
-  
-      dpath = osp.join(osp.dirname(__file__), "temp-images")
-      os.makedirs(dpath, exist_ok=True)
-  
-      fpaths_img = []
-      n_epoch = 1000
-      for epoch in range(n_epoch):
-          optimizer.zero_grad()
-  
-          loss = -1 * model()
-          print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
-  
-          loss.backward()
-          optimizer.step()
-  
-          if epoch % 5 == 0:
-              positions = model.pos.cpu().detach().numpy()
-  
-              net = net.copy()
-              for i, (iden, node) in enumerate(net.nodes.items()):
-                  node["POS_X"] = positions[i, 0]
-                  node["POS_Y"] = positions[i, 1]
-  
-              fpath = osp.join(dpath, "%s-layout-%03d.jpg" % (net.name, epoch))
-              fpaths_img.append((epoch, fpath))
-              write_image(net,
-                          fpath,
-                          scale_width=200,
-                          scale_height=200)
-          # end of if
-      # end of for
-  
-      create_movie(fpaths_img, osp.join(dpath, "%s-layout-dynamics.gif")%(net.name))
-  
-      time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-      net.name = "%s (%s)"%(net.name, time_stamp)
-      nav.append_item(net)
+import os.path as osp
+from datetime import datetime
+
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+import moviepy.editor as mpy
+
+from nezzle.io.io import write_image
+
+
+class MeanPairwiseDistances(nn.Module):
+
+    def __init__(self, pos, device="cpu"):
+        super().__init__()
+
+        self.pos = nn.Parameter(torch.tensor(pos),
+                                requires_grad=True)
+
+        self.pos = self.pos.to(device)
+
+    def forward(self):
+        return F.pdist(self.pos).mean()
+
+
+def create_movie(fpaths, fout):
+    clips = []
+    duration = 0.05
+    for (epoch, fpath) in fpaths:
+        img_clip = mpy.ImageClip(fpath)
+        img_clip = img_clip.set_duration(duration)
+        img_clip = img_clip.resize(width=412, height=412)
+        img_clip = img_clip.margin(100, color=(255, 255, 255))
+
+        txt_clip = mpy.TextClip("Epoch=%03d" % (epoch), fontsize=16, color='black')
+        txt_clip = txt_clip.set_duration(duration)
+        txt_clip = txt_clip.set_position(("center", "bottom"))
+
+        clip = mpy.CompositeVideoClip([img_clip, txt_clip], bg_color=(255, 255, 255))
+        clips.append(clip)
+
+    concat_clip = mpy.concatenate_videoclips(clips,
+                                             bg_color=(255, 255, 255),
+                                             method="compose")
+    concat_clip.write_gif(fout, fps=10)
+
+
+def update(nav, net):
+    num_nodes = len(net.nodes)
+    positions = np.zeros((num_nodes, 2))
+
+    for i, (iden, node) in enumerate(net.nodes.items()):
+        positions[i, :] = (node["POS_X"], node["POS_Y"])
+    # end of for
+
+    # Layout by maximizing mean pairwise distances (MPD) (== minimizing the negative MPD).
+    model = MeanPairwiseDistances(positions)
+    optimizer = optim.SGD(model.parameters(), lr=2e-1, momentum=0.5)
+
+    dpath = osp.join(osp.dirname(__file__), "temp-images")
+    os.makedirs(dpath, exist_ok=True)
+
+    fpaths_img = []
+    n_epoch = 1000
+    for epoch in range(n_epoch):
+        optimizer.zero_grad()
+
+        loss = -1 * model()
+        print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 5 == 0:
+            positions = model.pos.cpu().detach().numpy()
+
+            net = net.copy()
+            for i, (iden, node) in enumerate(net.nodes.items()):
+                node["POS_X"] = positions[i, 0]
+                node["POS_Y"] = positions[i, 1]
+
+            fpath = osp.join(dpath, "%s-layout-%03d.jpg" % (net.name, epoch))
+            fpaths_img.append((epoch, fpath))
+            write_image(net,
+                        fpath,
+                        scale_width=200,
+                        scale_height=200)
+        # end of if
+    # end of for
+
+    create_movie(fpaths_img, osp.join(dpath, "%s-layout-dynamics.gif") % (net.name))
+
+    time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    net.name = "%s (%s)" % (net.name, time_stamp)
+    nav.append_item(net)
 
   ```
 
@@ -1829,189 +1826,188 @@
 
   ```python
   import os
-  import os.path as osp
-  from datetime import datetime
-  
-  import numpy as np
-  import pandas as pd
-  import torch
-  import torch.nn as nn
-  import torch.optim as optim
-  import torch.nn.functional as F
-  from sklearn.datasets import load_iris
-  from sklearn.preprocessing import StandardScaler
-  from sklearn.decomposition import PCA
-  import moviepy.editor as mpy
-  
-  from qtpy.QtCore import Qt
-  from qtpy.QtCore import QPointF
-  from nezzle.graphics import EllipseNode
-  from nezzle.graphics import TextLabel
-  from nezzle.graphics import Network
-  from nezzle.fileio import write_image
-  
-  
-  class MeanPairwiseDistances(nn.Module):
-  
-      def __init__(self, pos, device="cpu"):
-          super().__init__()
-  
-          self.pos = nn.Parameter(torch.tensor(pos),
-                                  requires_grad=True)
-  
-          self.pos = self.pos.to(device)
-  
-      def forward(self):
-          return F.pdist(self.pos).mean()
-  
-  
-  def create_network(name, df):
-      net = Network(name)
-  
-      for i, (pc1, pc2, target) in df.iterrows():
-          x = 500 * pc1
-          y = 500 * pc2
-  
-          node = EllipseNode(i, 40, 40, pos=QPointF(x, y))
-          fill_color = Qt.white
-          if target == "setosa":
-              fill_color = Qt.red
-          elif target == "versicolor":
-              fill_color = Qt.green
-          elif target == "virginica":
-              fill_color = Qt.blue
-  
-          node["FILL_COLOR"] = fill_color
-          node["BORDER_COLOR"] = Qt.black
-          node["BORDER_WIDTH"] = 2
-  
-          label = TextLabel(node, str(node.iden))
-          label["FONT_SIZE"] = 12
-          label["TEXT_COLOR"] = Qt.black
-          label.align()
-  
-          net.add_node(node)
-  
-      return net
-  
-  
-  def create_movie(fpaths, fout):
-      clips = []
-      duration = 0.05
-      for (epoch, fpath) in fpaths:
-          img_clip = mpy.ImageClip(fpath)
-          img_clip = img_clip.set_duration(duration)
-          img_clip = img_clip.resize(width=412, height=412)
-          img_clip = img_clip.margin(100, color=(255, 255, 255))
-  
-          txt_clip = mpy.TextClip("Epoch=%03d"%(epoch), fontsize=16, color='black')
-          txt_clip = txt_clip.set_duration(duration)
-          txt_clip = txt_clip.set_position(("center", "bottom"))
-  
-          clip = mpy.CompositeVideoClip([img_clip, txt_clip], bg_color=(255, 255, 255))
-          clips.append(clip)
-  
-      concat_clip = mpy.concatenate_videoclips(clips,
-                                               bg_color=(255, 255, 255),
-                                               method="compose")
-      concat_clip.write_gif(fout, fps=10)
-  
-  
-  def update(nav, net):
-  
-      iris = load_iris()
-      print(iris.data.shape)
-  
-      df_data = pd.DataFrame(iris.data, columns=iris.feature_names)
-      scaler = StandardScaler()
-      result = scaler.fit_transform(df_data)
-      df_scaled = pd.DataFrame(result, columns=iris.feature_names)
-  
-      pca = PCA(n_components=2)
-      result = pca.fit_transform(df_scaled)
-      df_pc = pd.DataFrame(result, columns=["pc1", "pc2"])
-  
-      target = pd.DataFrame(iris.target, columns=['type'])
-      target['type'] = target['type'].apply(lambda x: iris.target_names[x])
-      df = pd.concat([df_pc, target], axis=1)
-  
-      net = create_network("Iris dataset (PCA)", df)
-      nav.append_item(net)
-  
-      num_nodes = len(net.nodes)
-      positions = np.zeros((num_nodes, 2))
-  
-      for i, (iden, node) in enumerate(net.nodes.items()):
-          positions[i, :] = (node["POS_X"], node["POS_Y"])
-      # end of for
-  
-      # Layout by maximizing mean pairwise distances (MPD) (== minimizing the negative MPD).
-      model = MeanPairwiseDistances(positions)
-      optimizer = optim.SGD(model.parameters(), lr=1e2, momentum=0.25)
-  
-      dpath = osp.join(osp.dirname(__file__), "iris-layout-dynamics-results")
-      os.makedirs(dpath, exist_ok=True)
-  
-      fpaths_img = []
-      n_epoch = 1200
-      for epoch in range(n_epoch):
-          optimizer.zero_grad()
-  
-          loss = model()
-          print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
-  
-          loss.backward()
-          optimizer.step()
-  
-          if epoch % 5 == 0:
-              positions = model.pos.cpu().detach().numpy()
-  
-              net = net.copy()
-              for i, (iden, node) in enumerate(net.nodes.items()):
-                  node["POS_X"] = positions[i, 0]
-                  node["POS_Y"] = positions[i, 1]
-  
-              fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
-              fpaths_img.append((epoch, fpath))
-              write_image(net,
-                          fpath,
-                          scale_width=200,
-                          scale_height=200)
-          # end of if
-      # end of for
-  
-      for epoch in range(n_epoch, 2*n_epoch):
-          optimizer.zero_grad()
-  
-          loss = -1 * model()
-          print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
-  
-          loss.backward()
-          optimizer.step()
-  
-          if epoch % 5 == 0:
-              positions = model.pos.cpu().detach().numpy()
-  
-              net = net.copy()
-              for i, (iden, node) in enumerate(net.nodes.items()):
-                  node["POS_X"] = positions[i, 0]
-                  node["POS_Y"] = positions[i, 1]
-  
-              fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
-              fpaths_img.append((epoch, fpath))
-              write_image(net,
-                          fpath,
-                          scale_width=200,
-                          scale_height=200)
-          # end of if
-      # end of for
-  
-      create_movie(fpaths_img, osp.join(dpath, "iris-layout-dynamics.gif"))
-      time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-      net.name = "%s (%s)"%(net.name, time_stamp)
-      nav.append_item(net)
-  
-  ```
+import os.path as osp
+from datetime import datetime
+
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import moviepy.editor as mpy
+
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
+from nezzle.graphics import EllipseNode
+from nezzle.graphics import TextLabel
+from nezzle.graphics import Network
+from nezzle.io.io import write_image
+
+
+class MeanPairwiseDistances(nn.Module):
+
+    def __init__(self, pos, device="cpu"):
+        super().__init__()
+
+        self.pos = nn.Parameter(torch.tensor(pos),
+                                requires_grad=True)
+
+        self.pos = self.pos.to(device)
+
+    def forward(self):
+        return F.pdist(self.pos).mean()
+
+
+def create_network(name, df):
+    net = Network(name)
+
+    for i, (pc1, pc2, target) in df.iterrows():
+        x = 500 * pc1
+        y = 500 * pc2
+
+        node = EllipseNode(i, 40, 40, pos=QPointF(x, y))
+        fill_color = Qt.white
+        if target == "setosa":
+            fill_color = Qt.red
+        elif target == "versicolor":
+            fill_color = Qt.green
+        elif target == "virginica":
+            fill_color = Qt.blue
+
+        node["FILL_COLOR"] = fill_color
+        node["BORDER_COLOR"] = Qt.black
+        node["BORDER_WIDTH"] = 2
+
+        label = TextLabel(node, str(node.iden))
+        label["FONT_SIZE"] = 12
+        label["TEXT_COLOR"] = Qt.black
+        label.align()
+
+        net.add_node(node)
+
+    return net
+
+
+def create_movie(fpaths, fout):
+    clips = []
+    duration = 0.05
+    for (epoch, fpath) in fpaths:
+        img_clip = mpy.ImageClip(fpath)
+        img_clip = img_clip.set_duration(duration)
+        img_clip = img_clip.resize(width=412, height=412)
+        img_clip = img_clip.margin(100, color=(255, 255, 255))
+
+        txt_clip = mpy.TextClip("Epoch=%03d" % (epoch), fontsize=16, color='black')
+        txt_clip = txt_clip.set_duration(duration)
+        txt_clip = txt_clip.set_position(("center", "bottom"))
+
+        clip = mpy.CompositeVideoClip([img_clip, txt_clip], bg_color=(255, 255, 255))
+        clips.append(clip)
+
+    concat_clip = mpy.concatenate_videoclips(clips,
+                                             bg_color=(255, 255, 255),
+                                             method="compose")
+    concat_clip.write_gif(fout, fps=10)
+
+
+def update(nav, net):
+    iris = load_iris()
+    print(iris.data.shape)
+
+    df_data = pd.DataFrame(iris.data, columns=iris.feature_names)
+    scaler = StandardScaler()
+    result = scaler.fit_transform(df_data)
+    df_scaled = pd.DataFrame(result, columns=iris.feature_names)
+
+    pca = PCA(n_components=2)
+    result = pca.fit_transform(df_scaled)
+    df_pc = pd.DataFrame(result, columns=["pc1", "pc2"])
+
+    target = pd.DataFrame(iris.target, columns=['type'])
+    target['type'] = target['type'].apply(lambda x: iris.target_names[x])
+    df = pd.concat([df_pc, target], axis=1)
+
+    net = create_network("Iris dataset (PCA)", df)
+    nav.append_item(net)
+
+    num_nodes = len(net.nodes)
+    positions = np.zeros((num_nodes, 2))
+
+    for i, (iden, node) in enumerate(net.nodes.items()):
+        positions[i, :] = (node["POS_X"], node["POS_Y"])
+    # end of for
+
+    # Layout by maximizing mean pairwise distances (MPD) (== minimizing the negative MPD).
+    model = MeanPairwiseDistances(positions)
+    optimizer = optim.SGD(model.parameters(), lr=1e2, momentum=0.25)
+
+    dpath = osp.join(osp.dirname(__file__), "iris-layout-dynamics-results")
+    os.makedirs(dpath, exist_ok=True)
+
+    fpaths_img = []
+    n_epoch = 1200
+    for epoch in range(n_epoch):
+        optimizer.zero_grad()
+
+        loss = model()
+        print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 5 == 0:
+            positions = model.pos.cpu().detach().numpy()
+
+            net = net.copy()
+            for i, (iden, node) in enumerate(net.nodes.items()):
+                node["POS_X"] = positions[i, 0]
+                node["POS_Y"] = positions[i, 1]
+
+            fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
+            fpaths_img.append((epoch, fpath))
+            write_image(net,
+                        fpath,
+                        scale_width=200,
+                        scale_height=200)
+        # end of if
+    # end of for
+
+    for epoch in range(n_epoch, 2 * n_epoch):
+        optimizer.zero_grad()
+
+        loss = -1 * model()
+        print("[Epoch #%d] Loss: %.3f" % (epoch + 1, loss.item()))
+
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 5 == 0:
+            positions = model.pos.cpu().detach().numpy()
+
+            net = net.copy()
+            for i, (iden, node) in enumerate(net.nodes.items()):
+                node["POS_X"] = positions[i, 0]
+                node["POS_Y"] = positions[i, 1]
+
+            fpath = osp.join(dpath, "iris-layout-%03d.jpg" % (epoch))
+            fpaths_img.append((epoch, fpath))
+            write_image(net,
+                        fpath,
+                        scale_width=200,
+                        scale_height=200)
+        # end of if
+    # end of for
+
+    create_movie(fpaths_img, osp.join(dpath, "iris-layout-dynamics.gif"))
+    time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    net.name = "%s (%s)" % (net.name, time_stamp)
+    nav.append_item(net)
+
+```
 
   </td>
   </tr>

@@ -14,7 +14,7 @@ from nezzle.graphics import TextLabel
 from nezzle.graphics import CurvedLink
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
-from nezzle.fileio import write_image
+from nezzle.io.io import write_image
 
 
 def create_network(pos_x, pos_y, state, norm_abs_state):

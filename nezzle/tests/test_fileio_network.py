@@ -1,10 +1,5 @@
 # [DEPRECATED TESTS]
 
-import os
-import sys
-import json
-import pytest
-
 from qtpy import QtWidgets
 from qtpy.QtGui import QColor
 from qtpy.QtCore import Qt
@@ -15,8 +10,7 @@ from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import Network
 
-
-from nezzle import fileio
+from nezzle.io import io
 
 app = QtWidgets.QApplication([])
 
@@ -165,9 +159,9 @@ def test_create_network():
     assert len(dict_net["LABELS"]) == len(dict_net2["LABELS"])
 
 def test_json_jkwon():
-    net1 = fileio.read_network("jkwon_egfr_pathway.sif")
-    fileio.write_network(net1, "jkwon_egfr_pathway.json")
-    net2 = fileio.read_network("jkwon_egfr_pathway.json")
+    net1 = io.read_network("jkwon_egfr_pathway.sif")
+    io.write_network(net1, "jkwon_egfr_pathway.json")
+    net2 = io.read_network("jkwon_egfr_pathway.json")
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
     assert set(net1.links.keys()) == set(net2.links.keys())
@@ -175,9 +169,9 @@ def test_json_jkwon():
 
 
 def test_json_korkut_2015():
-    net1 = fileio.read_network("korkut_2015.json")
-    fileio.write_network(net1, "korkut_2015_02.json")
-    net2 = fileio.read_network("korkut_2015_02.json")
+    net1 = io.read_network("korkut_2015.json")
+    io.write_network(net1, "korkut_2015_02.json")
+    net2 = io.read_network("korkut_2015_02.json")
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
     assert set(net1.links.keys()) == set(net2.links.keys())

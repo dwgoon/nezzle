@@ -7,7 +7,7 @@ from qtpy.QtWidgets import QTableWidgetItem
 from qtpy.QtWidgets import QComboBox
 
 from nezzle.ui.ui_opennetworkdialog import Ui_OpenNetworkDialog
-from nezzle.fileio import read_metadata
+from nezzle.io.io import read_metadata
 from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
 
 

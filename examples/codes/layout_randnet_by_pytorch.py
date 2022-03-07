@@ -10,7 +10,7 @@ import moviepy.editor as mpy
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 
-from nezzle.fileio import write_image
+from nezzle.io.io import write_image
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
 from nezzle.graphics import CurvedLink
