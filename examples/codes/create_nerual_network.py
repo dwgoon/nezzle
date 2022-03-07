@@ -9,7 +9,7 @@ from nezzle.graphics import EllipseNode
 from nezzle.graphics import StraightLink
 from nezzle.graphics import Triangle
 from nezzle.graphics import Network
-from nezzle.fileio import write_image
+from nezzle.io.io import write_image
 
 
 def add_node(net, iden, x, y):

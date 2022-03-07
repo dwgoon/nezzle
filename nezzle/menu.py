@@ -22,7 +22,7 @@ from qtpy.QtGui import QClipboard
 from nezzle.dialogs.opennetworkdialog import OpenNetworkDialog
 from nezzle.dialogs.exportimagedialog import ExportImageDialog
 
-from nezzle import fileio
+from nezzle.io import io
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
 
@@ -33,7 +33,6 @@ from nezzle.graphics.nodes.rectanglenode import RectangleNode
 
 from nezzle.graphics.links.linkconverter import LinkConverter
 from nezzle.graphics.links.baselink import BaseLink
-from nezzle.graphics.links.selflooplink import SelfloopLink
 from nezzle.graphics.links.straightlink import StraightLink
 from nezzle.graphics.links.curvedlink import CurvedLink
 from nezzle.graphics.links.elbowlink import VerticalElbowLink, HorizontalElbowLink
@@ -258,7 +257,7 @@ class MenuActionHandler(QWidget):
             elif choice == QDialog.Accepted:
                 fpath = fpath.strip()
                 try:
-                    net = fileio.read_network(fpath, self.openNetworkDialog.link_map)
+                    net = io.read_network(fpath, self.openNetworkDialog.link_map)
                 except Exception as err:
                     err_msg = "An error has occurred during opening the file.\n%s"
                     self.show_error("Open a network file", err_msg % format_exc())
@@ -290,7 +289,7 @@ class MenuActionHandler(QWidget):
             if fpath:
                 net = self.mw.nt_manager.current_item.data()
                 if net:
-                    fileio.write_network(net, fpath)
+                    io.write_network(net, fpath)
                 else:
                     err_msg = "There is no selected network."
                     self.show_error("Save a network", err_msg)
@@ -320,7 +319,7 @@ class MenuActionHandler(QWidget):
                     err_msg = "File name is not designated."
                     self.show_error("Export a network image", err_msg)
 
-                fileio.write_image(net,
+                io.write_image(net,
                                    fpath,
                                    is_transparent,
                                    quality,
