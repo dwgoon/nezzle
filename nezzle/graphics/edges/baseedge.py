@@ -282,11 +282,12 @@ class TwoNodeEdge(BaseEdge):
     def from_dict(cls, attr, source, target):
         iden = attr.pop('ID')
         width = attr.pop('WIDTH')
-        zvalue = attr.pop('ZVALUE')
 
         obj = cls(iden, source, target, width=width)
         obj.head = cls.head_from_dict(attr)
-        obj.setZValue(zvalue)
+
+        if 'ZVALUE' in attr:
+            obj.setZValue(attr["ZVALUE"])
 
         attr['ID_SOURCE'] = source.iden
         attr['ID_TARGET'] = target.iden

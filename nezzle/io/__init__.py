@@ -9,9 +9,9 @@ from nezzle.io.nzj import read_metadata_from_nzj
 from nezzle.io.nzj import read_nzj
 from nezzle.io.nzj import write_nzj
 
-from nezzle.io.cytoscape import read_metadata_from_cx
-from nezzle.io.cytoscape import read_cx
-from nezzle.io.cytoscape import write_cx
+# from nezzle.io.cytoscape import read_metadata_from_cx
+# from nezzle.io.cytoscape import read_cx
+# from nezzle.io.cytoscape import write_cx
 
 
 from nezzle.io.image import write_image
