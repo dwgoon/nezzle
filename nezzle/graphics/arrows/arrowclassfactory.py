@@ -5,6 +5,9 @@ from nezzle.graphics.arrows.basearrow import Hammer
 class ArrowClassFactory(object):
     @staticmethod
     def create(arrow_type):
+        if arrow_type.upper() == "NONE":
+            return None
+
         if arrow_type.upper() == "TRIANGLE":
             return Triangle
         elif arrow_type.upper() == "HAMMER":
@@ -14,4 +17,4 @@ class ArrowClassFactory(object):
 
     @staticmethod
     def get_available_heads():
-        return ["Triangle", "Hammer"]
+        return ["None", "Triangle", "Hammer"]

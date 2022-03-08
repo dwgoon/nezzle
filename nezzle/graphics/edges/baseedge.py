@@ -161,7 +161,7 @@ class BaseEdge(PainterOptionItem):
             attr_head = attr.pop('HEAD')
             if attr_head:
                 ArrowClass = ArrowClassFactory.create(attr_head['ITEM_TYPE'])
-                head = ArrowClass.from_dict(attr_head)
+                head = ArrowClass.from_dict(attr_head) if ArrowClass else None
                 return head
         return None
 
