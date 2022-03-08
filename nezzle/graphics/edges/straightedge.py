@@ -9,15 +9,15 @@ from nezzle.utils import length
 from nezzle.utils import internal_division
 from nezzle.utils import rotate
 from nezzle.graphics.mixins import Lockable
-from nezzle.graphics.links.baselink import TwoNodeLink
+from nezzle.graphics.edges.baseedge import TwoNodeEdge
 from nezzle.graphics.arrows.transform import Rotate
 
 
 @Lockable
-class StraightLink(TwoNodeLink):
-    """Straight link class.
+class StraightEdge(TwoNodeEdge):
+    """Straight edge class.
     """
-    ITEM_TYPE = 'STRAIGHT_LINK'
+    ITEM_TYPE = 'STRAIGHT_EDGE'
 
     def __init__(self, *args, **kwargs):
         self._angle_head = None
@@ -30,8 +30,8 @@ class StraightLink(TwoNodeLink):
         self._update_bounding_rect()
 
     def _identify_head(self):
-        StraightLink._identify_head_pos(self)
-        StraightLink._calculate_head_angle(self)
+        StraightEdge._identify_head_pos(self)
+        StraightEdge._calculate_head_angle(self)
         super()._create_head_path()
 
     def _identify_head_pos(self):
@@ -84,7 +84,7 @@ class StraightLink(TwoNodeLink):
         self._path_paint.lineTo(butt1_rotated)
 
         if self.head and not self.are_nodes_close():
-            StraightLink._identify_head(self)
+            StraightEdge._identify_head(self)
             self._path_paint.connectPath(self._path_head)
             self._path_paint.lineTo(butt2_rotated)
         else:

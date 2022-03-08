@@ -53,7 +53,7 @@ setup (
     ],
     packages=find_packages(),
     package_data={
-        "": ["VERSION", "*.ui", "*.sif", "*.json"],
+        "": ["VERSION", "*.ui", "*.sif", "*.nzj", "*.json"],
         "nezzle.resources": ["icon.png", "logo.png"],
     },
     entry_points={

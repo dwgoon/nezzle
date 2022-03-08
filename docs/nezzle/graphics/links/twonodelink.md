@@ -1,2 +1,2 @@
 
-::: nezzle.graphics.links.baselink.TwoNodeLink
+::: nezzle.graphics.edges.baseedge.TwoNodeEdge

@@ -105,7 +105,7 @@
       <string>Lock</string>
      </property>
      <addaction name="ui_actionLockNodes"/>
-     <addaction name="ui_actionLockLinks"/>
+     <addaction name="ui_actionLockEdges"/>
      <addaction name="ui_actionLockLabels"/>
     </widget>
     <widget class="QMenu" name="ui_menuConvert">
@@ -115,10 +115,10 @@
      <addaction name="ui_actionToEllipseNode"/>
      <addaction name="ui_actionToRectangleNode"/>
      <addaction name="separator"/>
-     <addaction name="ui_actionToStraightLink"/>
-     <addaction name="ui_actionToCurvedLink"/>
-     <addaction name="ui_actionToVerticalElbowLink"/>
-     <addaction name="ui_actionToHorizontalElbowLink"/>
+     <addaction name="ui_actionToStraightEdge"/>
+     <addaction name="ui_actionToCurvedEdge"/>
+     <addaction name="ui_actionToVerticalElbowEdge"/>
+     <addaction name="ui_actionToHorizontalElbowEdge"/>
     </widget>
     <addaction name="ui_menuLock"/>
     <addaction name="ui_menuConvert"/>
@@ -381,13 +381,13 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="ui_linkTabLayout">
+       <widget class="QWidget" name="ui_edgeTabLayout">
         <attribute name="title">
-         <string>Link</string>
+         <string>Edge</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
-          <widget class="QTableView" name="ui_linkStyleTable"/>
+          <widget class="QTableView" name="ui_edgeStyleTable"/>
          </item>
         </layout>
        </widget>
@@ -507,9 +507,9 @@
     <string>Lock Nodes</string>
    </property>
   </action>
-  <action name="actionLock_Links">
+  <action name="actionLock_Edges">
    <property name="text">
-    <string>Lock Links</string>
+    <string>Lock Edges</string>
    </property>
   </action>
   <action name="ui_actionLockNodes">
@@ -520,12 +520,12 @@
     <string>Lock Nodes</string>
    </property>
   </action>
-  <action name="ui_actionLockLinks">
+  <action name="ui_actionLockEdges">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Lock Links</string>
+    <string>Lock Edges</string>
    </property>
   </action>
   <action name="ui_actionLockLabels">
@@ -581,24 +581,24 @@
     <string>Select All</string>
    </property>
   </action>
-  <action name="ui_actionToCurvedLink">
+  <action name="ui_actionToCurvedEdge">
    <property name="text">
-    <string>To Curved Link</string>
+    <string>To Curved Edge</string>
    </property>
   </action>
-  <action name="ui_actionToStraightLink">
+  <action name="ui_actionToStraightEdge">
    <property name="text">
-    <string>To Straight Link</string>
+    <string>To Straight Edge</string>
    </property>
   </action>
-  <action name="ui_actionToVerticalElbowLink">
+  <action name="ui_actionToVerticalElbowEdge">
    <property name="text">
-    <string>To Vertical Elbow Link</string>
+    <string>To Vertical Elbow Edge</string>
    </property>
   </action>
-  <action name="ui_actionToHorizontalElbowLink">
+  <action name="ui_actionToHorizontalElbowEdge">
    <property name="text">
-    <string>To Horizontal Elbow Link</string>
+    <string>To Horizontal Elbow Edge</string>
    </property>
   </action>
   <action name="ui_actionToEllipseNode">

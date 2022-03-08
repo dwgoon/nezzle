@@ -2,11 +2,11 @@ import numpy as np
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QLineF
 from qtpy.QtCore import QRectF
-from qtpy.QtGui import QBrush, QColor, QPainterPath
+from qtpy.QtGui import QColor, QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
-from nezzle.graphics.links.straightlink import StraightLink
-from nezzle.graphics.links.controlpoint import ControlPoint
+from nezzle.graphics.edges.straightedge import StraightEdge
+from nezzle.graphics.edges.controlpoint import ControlPoint
 
 from nezzle.utils import dot
 from nezzle.utils import internal_division
@@ -16,9 +16,9 @@ from nezzle.graphics.mixins import Lockable
 
 
 @Lockable
-class CurvedLink(StraightLink):
+class CurvedEdge(StraightEdge):
 
-    ITEM_TYPE = 'CURVED_LINK'
+    ITEM_TYPE = 'CURVED_EDGE'
 
     def __init__(self, *args, **kwargs):
         self._t_head = 0
@@ -135,8 +135,8 @@ class CurvedLink(StraightLink):
         self._dps_bottom = []
 
     def _identify_head(self):
-        CurvedLink._identify_head_pos(self)
-        CurvedLink._calculate_head_angle(self)
+        CurvedEdge._identify_head_pos(self)
+        CurvedEdge._calculate_head_angle(self)
         super()._create_head_path()
 
     def _identify_head_pos(self):
@@ -182,10 +182,10 @@ class CurvedLink(StraightLink):
 
         if self.head:
             if self.is_straight():
-                StraightLink._identify_head(self)
+                StraightEdge._identify_head(self)
                 return
             else:
-                CurvedLink._identify_head(self)
+                CurvedEdge._identify_head(self)
                 cps[2] = self.pos_head
 
         sps = quadbezier.identify_sps(cps)
@@ -222,9 +222,9 @@ class CurvedLink(StraightLink):
     def _create_path(self):
         self._identify_pos()
         if self.is_straight():
-            return StraightLink._create_path(self)
+            return StraightEdge._create_path(self)
 
         try:
             self._create_curve_path()
         except FloatingPointError:
-            super(StraightLink, self)._create_path()
+            super(StraightEdge, self)._create_path()

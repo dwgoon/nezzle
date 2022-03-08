@@ -22,7 +22,8 @@ from qtpy.QtGui import QClipboard
 from nezzle.dialogs.opennetworkdialog import OpenNetworkDialog
 from nezzle.dialogs.exportimagedialog import ExportImageDialog
 
-from nezzle.io import io
+from nezzle.io import read_network
+from nezzle.io import write_network
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
 
@@ -31,11 +32,12 @@ from nezzle.graphics.nodes.basenode import BaseNode
 from nezzle.graphics.nodes.ellipsenode import EllipseNode
 from nezzle.graphics.nodes.rectanglenode import RectangleNode
 
-from nezzle.graphics.links.linkconverter import LinkConverter
-from nezzle.graphics.links.baselink import BaseLink
-from nezzle.graphics.links.straightlink import StraightLink
-from nezzle.graphics.links.curvedlink import CurvedLink
-from nezzle.graphics.links.elbowlink import VerticalElbowLink, HorizontalElbowLink
+from nezzle.graphics.edges.edgeconverter import EdgeConverter
+from nezzle.graphics.edges.baseedge import BaseEdge
+from nezzle.graphics.edges.selfloopedge import SelfloopEdge
+from nezzle.graphics.edges.straightedge import StraightEdge
+from nezzle.graphics.edges.curvededge import CurvedEdge
+from nezzle.graphics.edges.elbowedge import VerticalElbowEdge, HorizontalElbowEdge
 
 
 class MenuActionHandler(QWidget):
@@ -98,12 +100,12 @@ class MenuActionHandler(QWidget):
              self.process_view_history_dock
         )
 
-        # Select -> Lock -> Lock Nodes, Lock Links, Lock Labels
+        # Select -> Lock -> Lock Nodes, Lock Edges, Lock Labels
         self.mw.ui_actionLockNodes.triggered.connect(
             self.process_lock_nodes
         )
-        self.mw.ui_actionLockLinks.triggered.connect(
-            self.process_lock_links
+        self.mw.ui_actionLockEdges.triggered.connect(
+            self.process_lock_edges
         )
         self.mw.ui_actionLockLabels.triggered.connect(
             self.process_lock_labels
@@ -116,17 +118,17 @@ class MenuActionHandler(QWidget):
         self.mw.ui_actionToRectangleNode.triggered.connect(
             self.process_convert_to_rectangle_node
         )
-        self.mw.ui_actionToStraightLink.triggered.connect(
-            self.process_convert_to_straight_link
+        self.mw.ui_actionToStraightEdge.triggered.connect(
+            self.process_convert_to_straight_edge
         )
-        self.mw.ui_actionToCurvedLink.triggered.connect(
-            self.process_convert_to_curved_link
+        self.mw.ui_actionToCurvedEdge.triggered.connect(
+            self.process_convert_to_curved_edge
         )
-        self.mw.ui_actionToVerticalElbowLink.triggered.connect(
-            self.process_convert_to_vertical_elbow_link
+        self.mw.ui_actionToVerticalElbowEdge.triggered.connect(
+            self.process_convert_to_vertical_elbow_edge
         )
-        self.mw.ui_actionToHorizontalElbowLink.triggered.connect(
-            self.process_convert_to_horizontal_elbow_link
+        self.mw.ui_actionToHorizontalElbowEdge.triggered.connect(
+            self.process_convert_to_horizontal_elbow_edge
         )
 
 
@@ -138,8 +140,8 @@ class MenuActionHandler(QWidget):
 
 
         # The following objects are locked at first.
-        self.mw.ui_actionLockLinks.setChecked(True)
-        self.process_lock_links(True)
+        self.mw.ui_actionLockEdges.setChecked(True)
+        self.process_lock_edges(True)
 
         self.mw.ui_actionLockLabels.setChecked(True)
         self.process_lock_labels(True)
@@ -257,7 +259,7 @@ class MenuActionHandler(QWidget):
             elif choice == QDialog.Accepted:
                 fpath = fpath.strip()
                 try:
-                    net = io.read_network(fpath, self.openNetworkDialog.link_map)
+                    net = read_network(fpath, self.openNetworkDialog.edge_map)
                 except Exception as err:
                     err_msg = "An error has occurred during opening the file.\n%s"
                     self.show_error("Open a network file", err_msg % format_exc())
@@ -284,12 +286,12 @@ class MenuActionHandler(QWidget):
             fpath = QFileDialog.getSaveFileName(self.mw,
                                                 self.tr("Save a network file"),
                                                 "",
-                                                self.tr("Network files (*.sif *.json)"))
+                                                self.tr("Network files (*.sif *.nzj *.json)"))
             fpath = fpath[0]
             if fpath:
                 net = self.mw.nt_manager.current_item.data()
                 if net:
-                    io.write_network(net, fpath)
+                    write_network(net, fpath)
                 else:
                     err_msg = "There is no selected network."
                     self.show_error("Save a network", err_msg)
@@ -319,12 +321,12 @@ class MenuActionHandler(QWidget):
                     err_msg = "File name is not designated."
                     self.show_error("Export a network image", err_msg)
 
-                io.write_image(net,
-                                   fpath,
-                                   is_transparent,
-                                   quality,
-                                   scale_width, scale_height,
-                                   dpi_width, dpi_height)
+                write_image(net,
+                            fpath,
+                            is_transparent,
+                            quality,
+                            scale_width, scale_height,
+                            dpi_width, dpi_height)
         except Exception as err:
             err_msg = "An error has occurred during saving the file:\n%s"
             self.show_error("Export a network image", err_msg % format_exc())
@@ -374,9 +376,9 @@ class MenuActionHandler(QWidget):
         ss.set_locked(Lock.LABELS, checked)
 
     @Slot(bool)
-    def process_lock_links(self, checked):
+    def process_lock_edges(self, checked):
         ss = get_system_state()
-        ss.set_locked(Lock.LINKS, checked)
+        ss.set_locked(Lock.EDGES, checked)
 
     def _process_convert_to_node(self, nodeclass):
         net = self.mw.nt_manager.current_net
@@ -420,7 +422,7 @@ class MenuActionHandler(QWidget):
     def process_convert_to_rectangle_node(self):
         self._process_convert_to_node(RectangleNode)
 
-    def _process_convert_to_link(self, linkclass):
+    def _process_convert_to_edge(self, edgeclass):
         net = self.mw.nt_manager.current_net
         if not net:
             return
@@ -430,38 +432,38 @@ class MenuActionHandler(QWidget):
         old_items = []
         new_items = []
         for old_item in scene.selectedItems():
-            if not isinstance(old_item, BaseLink):
+            if not isinstance(old_item, BaseEdge):
                 continue
 
-            if type(old_item) == linkclass:
+            if type(old_item) == edgeclass:
                 continue
 
-            # Currently, SelfloopLink CANNOT be converted to any other type of link.
-            if type(old_item) == SelfloopLink:
+            # Currently, SelfloopEdge CANNOT be converted to any other type of edge.
+            if type(old_item) == SelfloopEdge:
                 continue
 
-            new_item = LinkConverter.convert(old_item, linkclass)
+            new_item = EdgeConverter.convert(old_item, edgeclass)
             old_items.append(old_item)
             new_items.append(new_item)
         # end of for
         if len(old_items) > 0:
-            self.mw.hv_manager.history.on_convert_links(net, old_items, new_items)
+            self.mw.hv_manager.history.on_convert_edges(net, old_items, new_items)
 
     @Slot()
-    def process_convert_to_straight_link(self):
-        self._process_convert_to_link(StraightLink)
+    def process_convert_to_straight_edge(self):
+        self._process_convert_to_edge(StraightEdge)
 
     @Slot()
-    def process_convert_to_curved_link(self):
-        self._process_convert_to_link(CurvedLink)
+    def process_convert_to_curved_edge(self):
+        self._process_convert_to_edge(CurvedEdge)
 
     @Slot()
-    def process_convert_to_vertical_elbow_link(self):
-        self._process_convert_to_link(VerticalElbowLink)
+    def process_convert_to_vertical_elbow_edge(self):
+        self._process_convert_to_edge(VerticalElbowEdge)
 
     @Slot()
-    def process_convert_to_horizontal_elbow_link(self):
-        self._process_convert_to_link(HorizontalElbowLink)
+    def process_convert_to_horizontal_elbow_edge(self):
+        self._process_convert_to_edge(HorizontalElbowEdge)
 
     @Slot(bool)
     def process_select_all(self):

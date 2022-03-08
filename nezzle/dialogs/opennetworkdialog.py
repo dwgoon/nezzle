@@ -7,7 +7,7 @@ from qtpy.QtWidgets import QTableWidgetItem
 from qtpy.QtWidgets import QComboBox
 
 from nezzle.ui.ui_opennetworkdialog import Ui_OpenNetworkDialog
-from nezzle.io.io import read_metadata
+from nezzle.io import read_metadata
 from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
 
 
@@ -23,27 +23,26 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         validator_double = QDoubleValidator()
         validator_double.setBottom(0.0)
 
-        # Set TableWidget for link haader mapping
-        self.ui_linkHeadMappingTable.setColumnCount(3)
-        self.ui_linkHeadMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Head"])
+        # Set TableWidget for edge haader mapping
+        self.ui_edgeHeadMappingTable.setColumnCount(3)
+        self.ui_edgeHeadMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Head"])
 
         # Set head selection QComboBox
         self._available_heads = ArrowClassFactory.get_available_heads()
         self._head_selections = {}
 
-        # Link signal and slot
+        # Edge signal and slot
         self.ui_openButton.released.connect(self.on_open_button_released)
         self.ui_reloadButton.released.connect(self.on_reload_button_released)
         self.ui_buttonBox.accepted.connect(self.on_accepted)
         self.ui_buttonBox.rejected.connect(self.on_rejected)
 
         # TODO: Implement tail mapping
-        self.ui_linkTailMappingTable.setColumnCount(3)
-        self.ui_linkTailMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Tail"])
-        self.ui_linkTailMappingTable.setItem(0, 0, QTableWidgetItem("Currently Not Supported"))
+        self.ui_edgeTailMappingTable.setColumnCount(3)
+        self.ui_edgeTailMappingTable.setHorizontalHeaderLabels(["Count", "Interaction", "Tail"])
+        self.ui_edgeTailMappingTable.setItem(0, 0, QTableWidgetItem("Currently Not Supported"))
 
-        self.ui_linkTailMappingTable.setDisabled(True)
-
+        self.ui_edgeTailMappingTable.setDisabled(True)
 
     @Slot()
     def on_open_button_released(self):
@@ -51,7 +50,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
             dialog = QFileDialog(self)
             dialog.setWindowTitle("Open a network file")
             dialog.setAcceptMode(QFileDialog.AcceptOpen)
-            dialog.setNameFilters([self.tr("Text files (*.sif *.json)")])
+            dialog.setNameFilters([self.tr("Text files (*.sif *.nzj *.json)")])
             dialog.setFileMode(QFileDialog.ExistingFile)
             if dialog.exec() == QDialog.Accepted:
                 fpath = dialog.selectedFiles()[0]
@@ -63,7 +62,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setWindowTitle("Open a network file")
-            msg.setText("An invalid file type for network data.")
+            msg.setText("Invalid file type or file contents!")
             msg.exec()
         # end of except
 
@@ -79,19 +78,19 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         metadata = read_metadata(fpath)
         interactions = metadata["INTERACTIONS"]
         num_rows = len(interactions)
-        self.ui_linkHeadMappingTable.setRowCount(num_rows)
+        self.ui_edgeHeadMappingTable.setRowCount(num_rows)
         for i, (interaction_name, count) in enumerate(interactions.items()):
             # Column (0): Count of each interaction
             count_item = QTableWidgetItem(str(count))
             count_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
-            self.ui_linkHeadMappingTable.setItem(i, 0, count_item)
+            self.ui_edgeHeadMappingTable.setItem(i, 0, count_item)
 
             # Column (1): Interaction name
             interaction_item = QTableWidgetItem(interaction_name)
             interaction_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
-            self.ui_linkHeadMappingTable.setItem(i, 1, interaction_item)
+            self.ui_edgeHeadMappingTable.setItem(i, 1, interaction_item)
 
             # Column (2): QComboBox for selecting heads
             cb = QComboBox()
@@ -100,7 +99,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
                 index = self._available_heads.index(interaction_name)
                 cb.setCurrentIndex(index)
 
-            self.ui_linkHeadMappingTable.setCellWidget(i, 2, cb)
+            self.ui_edgeHeadMappingTable.setCellWidget(i, 2, cb)
             self._head_selections[interaction_name] = cb
         # end of for
 
@@ -119,11 +118,11 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
 
     # Read-only properties
     @property
-    def link_map(self):
-        _link_map = {}
+    def edge_map(self):
+        _edge_map = {}
         for interaction_name, cb in self._head_selections.items():
-            _link_map[interaction_name] = cb.currentText()
-        return _link_map
+            _edge_map[interaction_name] = cb.currentText()
+        return _edge_map
 
     @property
     def fpath(self):
@@ -150,6 +149,6 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
     #     return self._scene_height
 
     @property
-    def no_link_type(self):
-        return self.ui_noLinkTypeCheck.isChecked()
+    def no_edge_type(self):
+        return self.ui_noEdgeTypeCheck.isChecked()
 # end of class

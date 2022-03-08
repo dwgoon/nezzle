@@ -10,10 +10,10 @@ import moviepy.editor as mpy
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import CurvedLink
+from nezzle.graphics import CurvedEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
 
@@ -59,7 +59,7 @@ def update(nav, net):
     net = Network("10-node network (before layout)")
 
     num_nodes = 10
-    num_links = 20
+    num_edges = 20
     positions = np.random.uniform(-10, 10, size=(num_nodes, 2))
 
     for i, pos in enumerate(positions):
@@ -76,29 +76,29 @@ def update(nav, net):
         net.add_label(label)
         # end of for
 
-    connections = np.random.randint(0, num_nodes, size=(num_links, 2))
-    set_links = set()
+    connections = np.random.randint(0, num_nodes, size=(num_edges, 2))
+    set_edges = set()
     for i, conn in enumerate(connections):
         src = net.nodes[str(conn[0])]
         tgt = net.nodes[str(conn[1])]
 
-        if (src.iden, tgt.iden) in set_links:
+        if (src.iden, tgt.iden) in set_edges:
             continue
 
         if np.random.randn() < 0.5:
             head = Triangle(width=10, height=10, offset=4)
-            link = CurvedLink("LINK%d(%s+%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
+            edge = CurvedEdge("EDGE%d(%s+%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
 
         else:
             head = Hammer(width=16, height=3, offset=4)
-            link = CurvedLink("LINK%d(%s-%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
+            edge = CurvedEdge("EDGE%d(%s-%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
 
-        link["FILL_COLOR"] = Qt.black
-        link["CP_POS_X"] = -10
-        link["CP_POS_Y"] = -70
+        edge["FILL_COLOR"] = Qt.black
+        edge["CP_POS_X"] = -10
+        edge["CP_POS_Y"] = -70
 
-        net.add_link(link)
-        set_links.add((src.iden, tgt.iden))
+        net.add_edge(edge)
+        set_edges.add((src.iden, tgt.iden))
     # end of for
 
     nav.append_item(net)

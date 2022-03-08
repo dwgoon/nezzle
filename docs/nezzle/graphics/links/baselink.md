@@ -1,2 +1,2 @@
 
-::: nezzle.graphics.links.baselink.BaseLink
+::: nezzle.graphics.edges.baseedge.BaseEdge

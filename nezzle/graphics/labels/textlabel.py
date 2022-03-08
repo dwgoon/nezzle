@@ -7,7 +7,7 @@ from qtpy.QtWidgets import QGraphicsTextItem
 
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.baseitem import PainterOptionItem
-from nezzle.graphics import BaseLink
+from nezzle.graphics import BaseEdge
 
 
 @Lockable
@@ -175,7 +175,7 @@ class TextLabel(PainterOptionItem):
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionChange:
             parent = self.parentItem()
-            if isinstance(parent, BaseLink):
+            if isinstance(parent, BaseEdge):
                 if parent.is_node_selected():
                     self._text_item.itemChange(change, self.pos())
                     return super().itemChange(change, self.pos())

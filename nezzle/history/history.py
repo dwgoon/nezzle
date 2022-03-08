@@ -7,7 +7,7 @@ from qtpy.QtGui import QKeySequence
 from nezzle.history.commands import MoveByMouseCommand
 from nezzle.history.commands import MoveByKeyCommand
 from nezzle.history.commands import ConvertNodeCommand
-from nezzle.history.commands import ConvertLinkCommand
+from nezzle.history.commands import ConvertEdgeCommand
 
 
 class History(QObject):
@@ -22,8 +22,8 @@ class History(QObject):
     def on_move_items_by_key(self, items):
         self._undo_stack.push(MoveByKeyCommand(items))
 
-    def on_convert_links(self, net, old_items, new_items):
-        self._undo_stack.push(ConvertLinkCommand(net, old_items, new_items))
+    def on_convert_edges(self, net, old_items, new_items):
+        self._undo_stack.push(ConvertEdgeCommand(net, old_items, new_items))
 
     def on_convert_nodes(self, net, old_items, new_items):
         self._undo_stack.push(ConvertNodeCommand(net, old_items, new_items))

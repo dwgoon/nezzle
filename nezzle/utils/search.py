@@ -1,41 +1,41 @@
 import nezzle
 
 
-def search_links(net, substr):
-    """Find links whose identity string contain the given substring.
+def search_edges(net, substr):
+    """Find edges whose identity string contain the given substring.
 
     Args:
         net: nezzle.graphics.Network
-            Network object whose links are searched.
+            Network object whose edges are searched.
         substr: str
-            Substring to search in the identity string of a link (link.iden).
+            Substring to search in the identity string of a edge (edge.iden).
 
     Returns:
-        links: list
-            List of links whose identity strings contain the substring.
+        edges: list
+            List of edges whose identity strings contain the substring.
 
     """
-    links_found = []
-    for iden, link in net.links.items():
-        if isinstance(link, nezzle.graphics.SelfloopLink):
-            if substr in link.node.iden:
-                links_found.append(link)
+    edges_found = []
+    for iden, edge in net.edges.items():
+        if isinstance(edge, nezzle.graphics.SelfloopEdge):
+            if substr in edge.node.iden:
+                edges_found.append(edge)
             else:
                 continue
-        elif substr in link.target.iden or substr in link.source.iden:
-            links_found.append(link)
+        elif substr in edge.target.iden or substr in edge.source.iden:
+            edges_found.append(edge)
 
-    return links_found
+    return edges_found
 
 
-def search_links_target(net, substr):
-    links_found = []
-    for src, tgt, data in net.nxdg.edges(data=True):
-        link = data['GRAPHICS']
-        if isinstance(link, nezzle.graphics.SelfloopLink):
-            if substr in link.node:
-                links_found.append(link)
-        elif substr in link.target.iden:
-            links_found.append(link)
+def search_edges_target(net, substr):
+    edges_found = []
+    for src, tgt, data in net.nxgraph.edges(data=True):
+        edge = data['GRAPHICS']
+        if isinstance(edge, nezzle.graphics.SelfloopEdge):
+            if substr in edge.node:
+                edges_found.append(edge)
+        elif substr in edge.target.iden:
+            edges_found.append(edge)
     # end of for
-    return links_found
+    return edges_found

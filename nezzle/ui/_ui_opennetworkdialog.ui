@@ -266,7 +266,7 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Link Symbol</string>
+         <string>Edge Symbol</string>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -279,7 +279,7 @@
           <enum>QLayout::SetMinimumSize</enum>
          </property>
          <item>
-          <widget class="QCheckBox" name="ui_noLinkTypeCheck">
+          <widget class="QCheckBox" name="ui_noEdgeTypeCheck">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -287,7 +287,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>No link type</string>
+            <string>No edge type</string>
            </property>
           </widget>
          </item>

@@ -6,7 +6,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 
 from nezzle.graphics import ArrowClassFactory
-from nezzle.graphics import LinkClassFactory
+from nezzle.graphics import EdgeClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import Network
@@ -25,7 +25,7 @@ def update(nav, net):
     y2 = 41.24
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
-    LinkClass = LinkClassFactory.create("VERTICAL_ELBOW_LINK")
+    EdgeClass = EdgeClassFactory.create("VERTICAL_ELBOW_EDGE")
     ArrowClass = ArrowClassFactory.create("TRIANGLE")
     HammerClass = ArrowClassFactory.create("HAMMER")
 
@@ -49,28 +49,28 @@ def update(nav, net):
     new_net.add_node(node2)
     new_net.add_node(node3)
 
-    # Create two links
+    # Create two edges
     head = ArrowClass(width=10, height=10, offset=4)
-    link1 = LinkClass("LINK1", node1, node2, width=4, head=head)
-    link1["FILL_COLOR"] = Qt.black
-    link1["CP_POS_X"] = -10
-    link1["CP_POS_Y"] = -50
+    edge1 = EdgeClass("EDGE1", node1, node2, width=4, head=head)
+    edge1["FILL_COLOR"] = Qt.black
+    edge1["CP_POS_X"] = -10
+    edge1["CP_POS_Y"] = -50
 
     head = ArrowClass(width=10, height=10, offset=4)
-    link2 = LinkClass("LINK2", node2, node3, width=4, head=head)
-    link2["FILL_COLOR"] = Qt.black
-    link2["CP_POS_X"] = -10
-    link2["CP_POS_Y"] = -50
+    edge2 = EdgeClass("EDGE2", node2, node3, width=4, head=head)
+    edge2["FILL_COLOR"] = Qt.black
+    edge2["CP_POS_X"] = -10
+    edge2["CP_POS_Y"] = -50
 
     head = HammerClass(width=16, height=3, offset=4)
-    link3 = LinkClass("LINK3", node3, node1, width=4, head=head)
-    link3["FILL_COLOR"] = Qt.black
-    link3["CP_POS_X"] = 10
-    link3["CP_POS_Y"] = 50
+    edge3 = EdgeClass("EDGE3", node3, node1, width=4, head=head)
+    edge3["FILL_COLOR"] = Qt.black
+    edge3["CP_POS_X"] = 10
+    edge3["CP_POS_Y"] = 50
 
-    new_net.add_link(link1)
-    new_net.add_link(link2)
-    new_net.add_link(link3)
+    new_net.add_edge(edge1)
+    new_net.add_edge(edge2)
+    new_net.add_edge(edge3)
 
     # Create labels
     LabelClass = LabelClassFactory.create("TEXT_LABEL")

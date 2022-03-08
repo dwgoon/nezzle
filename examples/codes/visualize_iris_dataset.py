@@ -18,7 +18,7 @@ from qtpy.QtCore import QPointF
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 class MeanPairwiseDistances(nn.Module):

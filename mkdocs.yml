@@ -75,10 +75,10 @@ nav:
   - API:
     - graphics:      
       - nodes: nezzle/grpahics/nodes/nodes.md
-      - links:
-        - BaseLink: nezzle/graphics/links/baselink.md
-        - TwoNodeLink: nezzle/graphics/links/twonodelink.md
-        - StraightLink: nezzle/graphics/links/straightlink.md
+      - edges:
+        - BaseEdge: nezzle/graphics/edges/baseedge.md
+        - TwoNodeEdge: nezzle/graphics/edges/twonodeedge.md
+        - StraightEdge: nezzle/graphics/edges/straightedge.md
       
       
     # - CLI: nezzle/main.md

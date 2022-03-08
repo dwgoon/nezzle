@@ -3,7 +3,7 @@ from qtpy.QtCore import QPointF
 from qtpy.QtGui import QColor
 
 from nezzle.graphics import ArrowClassFactory
-from nezzle.graphics import LinkClassFactory
+from nezzle.graphics import EdgeClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import Network
@@ -19,10 +19,10 @@ def update(nav, net):
     """
 
 
-    new_net = Network('Two links')
+    new_net = Network('Two edges')
 
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
-    LinkClass = LinkClassFactory.create("STRAIGHT_LINK")
+    EdgeClass = EdgeClassFactory.create("STRAIGHT_EDGE")
     TriangleClass = ArrowClassFactory.create("TRIANGLE")
     HammerClass = ArrowClassFactory.create("HAMMER")
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
@@ -57,9 +57,9 @@ def update(nav, net):
     new_net.add_label(label)
 
     head = TriangleClass(width=10, height=10, offset=4)
-    link = LinkClass("LINK1", src, tgt, width=4, head=head)
-    link["FILL_COLOR"] = Qt.black
-    new_net.add_link(link)
+    edge = EdgeClass("EDGE1", src, tgt, width=4, head=head)
+    edge["FILL_COLOR"] = Qt.black
+    new_net.add_edge(edge)
 
 
     x0 = -70.0
@@ -92,8 +92,8 @@ def update(nav, net):
     new_net.add_label(label)
 
     head = HammerClass(width=14, height=4, offset=4)
-    link = LinkClass("LINK2", src, tgt, width=4, head=head)
-    link["FILL_COLOR"] = Qt.black
-    new_net.add_link(link)
+    edge = EdgeClass("EDGE2", src, tgt, width=4, head=head)
+    edge["FILL_COLOR"] = Qt.black
+    new_net.add_edge(edge)
 
     nav.append_item(new_net)

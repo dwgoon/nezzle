@@ -10,16 +10,16 @@ from qtpy.QtGui import QFont
 
 import nezzle
 from nezzle.graphics import NodeClassFactory
-from nezzle.graphics import LinkClassFactory
+from nezzle.graphics import EdgeClassFactory
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import Network
-from nezzle.graphics import SelfloopLink
+from nezzle.graphics import SelfloopEdge
 from nezzle.constants import DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
 from nezzle.utils.math import rotate, dist, internal_division
 
 
-def to_graphics(dg, iden, no_link_type=False):
+def to_graphics(dg, iden, no_edge_type=False):
     if not isinstance(dg, nx.DiGraph):
         raise TypeError("NetworkX.DiGraph should be given, not %s"%(type(dg)))
 
@@ -30,7 +30,7 @@ def to_graphics(dg, iden, no_link_type=False):
     NodeClass = NodeClassFactory.create("ELLIPSE_NODE")
     nodes = {}
     counter_node = 0
-    counter_link = 0
+    counter_edge = 0
 
     # Set constants with default values
     scene_width = DEFAULT_SCENE_WIDTH
@@ -48,38 +48,38 @@ def to_graphics(dg, iden, no_link_type=False):
     width = 50
     height = 35
 
-    # Link types
+    # Edge types
     str_act = '+'
     str_inh = '-'
 
-    for str_src, str_tgt, link_data in dg.edges(data=True):
-        str_link_type = None
+    for str_src, str_tgt, edge_data in dg.edges(data=True):
+        str_edge_type = None
         head = None
 
-        if not no_link_type:
-            if 'HEAD' in link_data:
-                if isinstance(link_data['HEAD'], dict):
-                    attr_head = link_data.pop('HEAD')
-                    ArrowClass = ArrowClassFactory.create(attr_head['TYPE'])
+        if not no_edge_type:
+            if 'HEAD' in edge_data:
+                if isinstance(edge_data['HEAD'], dict):
+                    attr_head = edge_data.pop('HEAD')
+                    ArrowClass = ArrowClassFactory.create(attr_head['ITEM_TYPE'])
                     head = ArrowClass.from_dict(attr_head)
-                    # if dict_head['TYPE'] == "TRIANGLE":
-                    #     str_link_type = '+'
-                    # elif dict_head['TYPE'] == "HAMMER":
-                    #     str_link_type = '-'
+                    # if dict_head['ITEM_TYPE'] == "TRIANGLE":
+                    #     str_edge_type = '+'
+                    # elif dict_head['ITEM_TYPE'] == "HAMMER":
+                    #     str_edge_type = '-'
                 else:
-                    str_link_type = link_data.pop('HEAD')
-            elif 'SIGN' in link_data:
-                sign_link = link_data['SIGN']
-                if sign_link > 0:
-                    str_link_type = str_act
-                elif sign_link < 0:
-                    str_link_type = str_inh
+                    str_edge_type = edge_data.pop('HEAD')
+            elif 'SIGN' in edge_data:
+                sign_edge = edge_data['SIGN']
+                if sign_edge > 0:
+                    str_edge_type = str_act
+                elif sign_edge < 0:
+                    str_edge_type = str_inh
                 else:
-                    raise ValueError("Undefined link sign: %s"%(sign_link))
+                    raise ValueError("Undefined edge sign: %s"%(sign_edge))
 
-        if not head and not no_link_type \
-           and (str_link_type not in (str_act, str_inh)):
-            raise ValueError("Undefined link type: %s"%(str_link_type))
+        if not head and not no_edge_type \
+           and (str_edge_type not in (str_act, str_inh)):
+            raise ValueError("Undefined edge type: %s"%(str_edge_type))
 
         if 'POS_X' in dg.nodes[str_src]:
             sx = dg.nodes[str_src]['POS_X']
@@ -135,16 +135,16 @@ def to_graphics(dg, iden, no_link_type=False):
             nodes[str_tgt] = tgt
         # end of else
 
-        counter_link += 1
+        counter_edge += 1
 
         # Add head
         if not head:  # Head can created according to head information.
-            if no_link_type:
+            if no_edge_type:
                 ArrowClass = None
-            elif str_link_type == '+':
+            elif str_edge_type == '+':
                 head_type = "TRIANGLE"
                 ArrowClass = ArrowClassFactory.create(head_type)
-            elif str_link_type == '-':
+            elif str_edge_type == '-':
                 head_type = "HAMMER"
                 ArrowClass = ArrowClassFactory.create(head_type)
             else:
@@ -153,38 +153,38 @@ def to_graphics(dg, iden, no_link_type=False):
             if ArrowClass:
                 head = ArrowClass()
 
-        # Add link with head
-        if str_src == str_tgt:  # Self-loop link
-            LinkClass = LinkClassFactory.create('SELFLOOP_LINK')
-            iden = "%s%s%s" % (str_src, str_link_type, str_src)
-            link = LinkClass(iden=iden,
-                             name=str_link_type,
+        # Add edge with head
+        if str_src == str_tgt:  # Self-loop edge
+            EdgeClass = EdgeClassFactory.create('SELFLOOP_EDGE')
+            iden = "%s%s%s" % (str_src, str_edge_type, str_src)
+            edge = EdgeClass(iden=iden,
+                             name=str_edge_type,
                              node=src,
                              head=head)
 
-            if "FILL_COLOR" not in link_data:
-                link["FILL_COLOR"] = QColor(100, 100, 100, 100)
+            if "FILL_COLOR" not in edge_data:
+                edge["FILL_COLOR"] = QColor(100, 100, 100, 100)
 
-            # Update extra data in nezzle.graphics.Link object.
-            link.update(link_data)
+            # Update extra data in nezzle.graphics.Edge object.
+            edge.update(edge_data)
         else:
-            LinkClass = LinkClassFactory.create('CURVED_LINK')
-            iden = "%s%s%s" % (str_src, str_link_type, str_tgt)
-            link = LinkClass(iden=iden,
-                             name= str_link_type,
+            EdgeClass = EdgeClassFactory.create('CURVED_EDGE')
+            iden = "%s%s%s" % (str_src, str_edge_type, str_tgt)
+            edge = EdgeClass(iden=iden,
+                             name= str_edge_type,
                              source=src, target=tgt,
                              head=head)
 
-            if "FILL_COLOR" not in link_data:
-                link["FILL_COLOR"] = Qt.black
+            if "FILL_COLOR" not in edge_data:
+                edge["FILL_COLOR"] = Qt.black
 
-            # Update extra data in nezzle.graphics.Link object.
-            link.update(link_data)
+            # Update extra data in nezzle.graphics.Edge object.
+            edge.update(edge_data)
         # end of else
 
-        src.add_link(link)
-        tgt.add_link(link)
-        net.add_link(link)
+        src.add_edge(edge)
+        tgt.add_edge(edge)
+        net.add_edge(edge)
     # end of for : reading each line of SIF file
 
     # Add nodes and labels in network
@@ -201,17 +201,17 @@ def to_graphics(dg, iden, no_link_type=False):
         net.add_label(label)
         nodes[str_name] = node
 
-    # Make the two links of interconnected nodes curved.
-    for src, tgt, attr in net.nxdg.edges(data=True):
-        if net.nxdg.has_edge(tgt, src):
+    # Make the two edges of interconnected nodes curved.
+    for src, tgt, attr in net.nxgraph.edges(data=True):
+        if net.nxgraph.has_edge(tgt, src):
             if src == tgt:  # Skip selfloops
                 continue
 
-            link = attr['GRAPHICS']
-            mid = internal_division(link.pos_src, link.pos_tgt, 0.5, 0.5)
-            d = dist(link.pos_src, mid)/math.cos(math.pi/4)
-            cp = rotate(link.pos_src, mid, -30, d)
-            link.ctrl_point.setPos(cp)
+            edge = attr['GRAPHICS']
+            mid = internal_division(edge.pos_src, edge.pos_tgt, 0.5, 0.5)
+            d = dist(edge.pos_src, mid)/math.cos(math.pi/4)
+            cp = rotate(edge.pos_src, mid, -30, d)
+            edge.ctrl_point.setPos(cp)
 
     return net
 
@@ -223,13 +223,13 @@ def to_networkx(net):
     dg = nx.DiGraph()
     dg.name = net.iden
 
-    for iden, link in net.links.items():
+    for iden, edge in net.edges.items():
 
-        if isinstance(link, SelfloopLink):
-            src = tgt = link.node
+        if isinstance(edge, SelfloopEdge):
+            src = tgt = edge.node
         else:
-            src = link.source
-            tgt = link.target
+            src = edge.source
+            tgt = edge.target
 
         if src.iden not in dg.nodes:
             dg.add_node(src.iden)
@@ -241,17 +241,17 @@ def to_networkx(net):
 
 
         dg.add_edge(src.iden, tgt.iden)
-        link_data = dg.edges[src.iden, tgt.iden]
-        link_data.update(link.to_dict())
+        edge_data = dg.edges[src.iden, tgt.iden]
+        edge_data.update(edge.to_dict())
 
         # Set sign information if head exists.
-        if link.head:
-            sign_link = 0
-            if link.head.ITEM_TYPE == "TRIANGLE":
-                sign_link = +1
-            elif link.head.ITEM_TYPE == "HAMMER":
-                sign_link = -1
+        if edge.head:
+            sign_edge = 0
+            if edge.head.ITEM_TYPE == "TRIANGLE":
+                sign_edge = +1
+            elif edge.head.ITEM_TYPE == "HAMMER":
+                sign_edge = -1
 
-            link_data['SIGN'] = sign_link
+            edge_data['SIGN'] = sign_edge
 
     return dg

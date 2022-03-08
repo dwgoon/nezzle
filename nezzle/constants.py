@@ -13,7 +13,7 @@ class Lock(object):
     For bitwise operations, do not use Enum class
     """
     NODES = 1
-    LINKS = 2
+    EDGES = 2
     LABELS = 4
 
 

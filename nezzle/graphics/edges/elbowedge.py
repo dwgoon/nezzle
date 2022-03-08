@@ -11,9 +11,9 @@ from qtpy.QtGui import QPen, QBrush, QColor
 from qtpy.QtGui import QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
-from nezzle.graphics.links.straightlink import StraightLink
-from nezzle.graphics.links.controlpoint import HorizontalConnectorControlPoint
-from nezzle.graphics.links.controlpoint import VerticalConnectorControlPoint
+from nezzle.graphics.edges.straightedge import StraightEdge
+from nezzle.graphics.edges.controlpoint import HorizontalConnectorControlPoint
+from nezzle.graphics.edges.controlpoint import VerticalConnectorControlPoint
 
 from nezzle.utils import angle
 from nezzle.utils import dist
@@ -28,8 +28,8 @@ from nezzle.graphics.mixins import Lockable
 np.seterr('raise')
 
 
-class ElbowLink(StraightLink):
-    ITEM_TYPE = 'ELBOW_LINK'
+class ElbowEdge(StraightEdge):
+    ITEM_TYPE = 'ELBOW_EDGE'
 
     def __init__(self, *args, **kwargs):
         self._ctrl_points = []
@@ -284,7 +284,7 @@ class ElbowLink(StraightLink):
         # end of for
 
     def _create_path(self):
-        self._identify_pos()  # Identify the position of this link
+        self._identify_pos()  # Identify the position of this edge
         self._identify_connectors_pos()  # Identify the positions of connectors
         try:
             # if self.is_straight():
@@ -299,9 +299,9 @@ class ElbowLink(StraightLink):
 
 
 @Lockable
-class VerticalElbowLink(ElbowLink):
+class VerticalElbowEdge(ElbowEdge):
 
-    ITEM_TYPE = 'VERTICAL_ELBOW_LINK'
+    ITEM_TYPE = 'VERTICAL_ELBOW_EDGE'
 
     def _create_control_items(self):
         m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
@@ -347,9 +347,9 @@ class VerticalElbowLink(ElbowLink):
 
 
 @Lockable
-class HorizontalElbowLink(ElbowLink):
+class HorizontalElbowEdge(ElbowEdge):
 
-    ITEM_TYPE = 'HORIZONTAL_ELBOW_LINK'
+    ITEM_TYPE = 'HORIZONTAL_ELBOW_EDGE'
 
     def _create_control_items(self):
         m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)

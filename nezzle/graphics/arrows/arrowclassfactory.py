@@ -10,7 +10,7 @@ class ArrowClassFactory(object):
         elif arrow_type.upper() == "HAMMER":
             return Hammer
         else:
-            raise TypeError("Undefined link type: %s" % (arrow_type))
+            raise TypeError("Undefined edge type: %s" % (arrow_type))
 
     @staticmethod
     def get_available_heads():

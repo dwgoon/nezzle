@@ -5,9 +5,9 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 from qtpy.QtGui import QColor
 
-from nezzle.io import io
+from nezzle.io import read_network
 from nezzle.graphics import LabelClassFactory
-from nezzle.graphics import LinkClassFactory
+from nezzle.graphics import EdgeClassFactory
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import Network
@@ -37,7 +37,7 @@ def test_copy_node():
     assert n1.to_dict() == n2.to_dict()
 
 
-def test_copy_link():
+def test_copy_edge():
 
     net = Network("ID_NETWORK")
 
@@ -50,22 +50,22 @@ def test_copy_link():
     ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass()
 
-    LinkClass = LinkClassFactory.create('CURVED_LINK')
-    link1 = LinkClass(iden="ID3", source=n1, target=n2, width=3, head=head)
-    link1["FILL_COLOR"] = QColor(10, 100, 10)
-    link1['WIDTH'] = 5
+    EdgeClass = EdgeClassFactory.create('CURVED_EDGE')
+    edge1 = EdgeClass(iden="ID3", source=n1, target=n2, width=3, head=head)
+    edge1["FILL_COLOR"] = QColor(10, 100, 10)
+    edge1['WIDTH'] = 5
 
-    link2 = link1.copy()
+    edge2 = edge1.copy()
 
-    net.add_link(link1)
-    net.add_link(link2)
+    net.add_edge(edge1)
+    net.add_edge(edge2)
 
-    assert link1.iden == link2.iden
-    assert link1.source == link2.source
-    assert link1.target == link2.target
-    assert link1["FILL_COLOR"] == link2["FILL_COLOR"]
-    assert link1['WIDTH'] == link2['WIDTH']
-    assert link1.to_dict() == link2.to_dict()
+    assert edge1.iden == edge2.iden
+    assert edge1.source == edge2.source
+    assert edge1.target == edge2.target
+    assert edge1["FILL_COLOR"] == edge2["FILL_COLOR"]
+    assert edge1['WIDTH'] == edge2['WIDTH']
+    assert edge1.to_dict() == edge2.to_dict()
 
 
 def test_copy_label():
@@ -83,9 +83,9 @@ def test_copy_label():
 
 
 def test_copy_network():
-    net1 = io.read_network("jkwon_egfr_pathway.sif")
+    net1 = read_network("jkwon_egfr_pathway.sif")
     net2 = net1.copy()
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
-    assert set(net1.links.keys()) == set(net2.links.keys())
+    assert set(net1.edges.keys()) == set(net2.edges.keys())
     assert net1.to_dict() == net2.to_dict()

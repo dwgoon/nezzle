@@ -2,7 +2,7 @@
 # Contents
 1. [GUI Examples](#GUI-Examples)
     - [Convert node types](#Convert-node-types)
-    - [Convert link types](#Convert-link-types)
+    - [Convert edge types](#Convert-edge-types)
     - [Undo & redo in history](#Undo-&-redo-in-history)
     - [Save & load networks](#Save-&-load-networks)    
     - [Export images](#Export-images)
@@ -10,7 +10,7 @@
 
 2. [Code Examples](#Code-Examples)
     - [Nodes](#Nodes)
-    - [Links](#Links)
+    - [Edges](#Edges)
     - [Arrows](#Arrows)
     - [Labels](#Labels)
     - [Files](#Files)
@@ -28,10 +28,10 @@
 </td></tr>
 </table>
 
-### Convert link types
+### Convert edge types
 <table>
 <tr><td>
-<img src="images/convert_link_types.gif" alt="Drawing" width="600px"/>
+<img src="images/convert_edge_types.gif" alt="Drawing" width="600px"/>
 </td></tr>
 </table>
 
@@ -326,7 +326,7 @@
   </tr>
 </table>
 
-## Links
+## Edges
 <table>
   <tr>
     <th> Visualization </th>
@@ -334,7 +334,7 @@
   </tr>
   <tr>
   <td>
-  <img src="images/link01.png" alt="Drawing" width="300px"/>
+  <img src="images/edge01.png" alt="Drawing" width="300px"/>
   </td>
   <td>
 
@@ -344,7 +344,7 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import StraightLink
+  from nezzle.graphics import StraightEdge
   from nezzle.graphics import Network
   
   
@@ -361,7 +361,7 @@
       tgt["BORDER_COLOR"] = Qt.black
       tgt["BORDER_WIDTH"] = 2
   
-      link = StraightLink("LINK", src, tgt, width=4)
+      edge = StraightEdge("EDGE", src, tgt, width=4)
   
       label_src = TextLabel(src, "A")
       label_src["FONT_SIZE"] = 20
@@ -375,7 +375,7 @@
   
       net.add_node(src)
       net.add_node(tgt)
-      net.add_link(link)
+      net.add_edge(edge)
       net.add_label(label_src)
       net.add_label(label_tgt)
   
@@ -387,7 +387,7 @@
 
   <tr>
   <td>
-  <img src="images/link02.png" alt="Drawing" width="300px"/>
+  <img src="images/edge02.png" alt="Drawing" width="300px"/>
   </td>
   <td>
 
@@ -397,7 +397,7 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
+  from nezzle.graphics import CurvedEdge
   from nezzle.graphics import Network
   
   
@@ -414,9 +414,9 @@
       tgt["BORDER_COLOR"] = Qt.black
       tgt["BORDER_WIDTH"] = 2
   
-      link = CurvedLink("LINK", src, tgt, width=4)
-      link["CP_POS_X"] = 0
-      link["CP_POS_Y"] = -80
+      edge = CurvedEdge("EDGE", src, tgt, width=4)
+      edge["CP_POS_X"] = 0
+      edge["CP_POS_Y"] = -80
   
       label_src = TextLabel(src, "A")
       label_src["FONT_SIZE"] = 20
@@ -430,7 +430,7 @@
   
       net.add_node(src)
       net.add_node(tgt)
-      net.add_link(link)
+      net.add_edge(edge)
       net.add_label(label_src)
       net.add_label(label_tgt)
   
@@ -443,7 +443,7 @@
 
   <tr>
   <td>
-  <img src="images/link03.png" alt="Drawing" width="300px"/>
+  <img src="images/edge03.png" alt="Drawing" width="300px"/>
   </td>
   <td>
 
@@ -453,7 +453,7 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
+  from nezzle.graphics import CurvedEdge
   from nezzle.graphics import Network
   
   
@@ -470,9 +470,9 @@
       tgt["BORDER_COLOR"] = Qt.black
       tgt["BORDER_WIDTH"] = 2
   
-      link = CurvedLink("LINK", src, tgt, width=4)
-      link["CP_POS_X"] = 0
-      link["CP_POS_Y"] = -80
+      edge = CurvedEdge("EDGE", src, tgt, width=4)
+      edge["CP_POS_X"] = 0
+      edge["CP_POS_Y"] = -80
   
       label_src = TextLabel(src, "A")
       label_src["FONT_SIZE"] = 20
@@ -486,7 +486,7 @@
   
       net.add_node(src)
       net.add_node(tgt)
-      net.add_link(link)
+      net.add_edge(edge)
       net.add_label(label_src)
       net.add_label(label_tgt)
   
@@ -498,7 +498,7 @@
 
   <tr>
   <td>
-  <img src="images/link04.png" alt="Drawing" width="300px"/>
+  <img src="images/edge04.png" alt="Drawing" width="300px"/>
   </td>
   <td>
 
@@ -508,7 +508,7 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import HorizontalElbowLink
+  from nezzle.graphics import HorizontalElbowEdge
   from nezzle.graphics import Network
   
   
@@ -525,11 +525,11 @@
       tgt["BORDER_COLOR"] = Qt.black
       tgt["BORDER_WIDTH"] = 2
   
-      link = HorizontalElbowLink("LINK", src, tgt, width=4)
-      link["CP0_POS_X"] = -40
-      link["CP0_POS_Y"] = 0
-      link["CP2_POS_X"] = 40
-      link["CP2_POS_Y"] = 0
+      edge = HorizontalElbowEdge("EDGE", src, tgt, width=4)
+      edge["CP0_POS_X"] = -40
+      edge["CP0_POS_Y"] = 0
+      edge["CP2_POS_X"] = 40
+      edge["CP2_POS_Y"] = 0
   
       label_src = TextLabel(src, "A")
       label_src["FONT_SIZE"] = 20
@@ -543,7 +543,7 @@
   
       net.add_node(src)
       net.add_node(tgt)
-      net.add_link(link)
+      net.add_edge(edge)
       net.add_label(label_src)
       net.add_label(label_tgt)
   
@@ -555,7 +555,7 @@
 
   <tr>
   <td>
-  <img src="images/link05.png" alt="Drawing" width="300px"/>
+  <img src="images/edge05.png" alt="Drawing" width="300px"/>
   </td>
   <td>
 
@@ -566,17 +566,17 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import StraightLink
+  from nezzle.graphics import StraightEdge
   from nezzle.graphics import Triangle
   from nezzle.graphics import Hammer
   from nezzle.graphics import Network
   
   
   def update(nav, net):
-      net = Network("Straight links with different alpha values")
+      net = Network("Straight edges with different alpha values")
       arrows = [Triangle(20, 20), Hammer(24, 8)]
   
-      link_colors = [QColor(255, 0, 0, 100), QColor(0, 0, 255, 100)]
+      edge_colors = [QColor(255, 0, 0, 100), QColor(0, 0, 255, 100)]
   
       for i in range(2):
           pos_src = QPointF(-80, 100 * i)
@@ -592,8 +592,8 @@
           tgt["BORDER_WIDTH"] = 2
   
           arrow = arrows[i]
-          link = StraightLink("LINK%d"%(i + 1), src, tgt, width=8, head=arrow)
-          link["FILL_COLOR"] = link_colors[i]
+          edge = StraightEdge("EDGE%d"%(i + 1), src, tgt, width=8, head=arrow)
+          edge["FILL_COLOR"] = edge_colors[i]
   
           label_src = TextLabel(src, "S%d"%(i + 1))
           label_src["FONT_SIZE"] = 20
@@ -607,7 +607,7 @@
   
           net.add_node(src)
           net.add_node(tgt)
-          net.add_link(link)
+          net.add_edge(edge)
           net.add_label(label_src)
           net.add_label(label_tgt)
       # end of for
@@ -640,14 +640,14 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
+  from nezzle.graphics import CurvedEdge
   from nezzle.graphics import Triangle
   from nezzle.graphics import Hammer
   from nezzle.graphics import Network
   
   
   def update(nav, net):
-      net = Network("Curved links with triangle and hammer arrows")
+      net = Network("Curved edges with triangle and hammer arrows")
       arrows = [
           Triangle(10, 10),
           Hammer(18, 4)
@@ -665,9 +665,9 @@
           tgt["BORDER_WIDTH"] = 2
   
           arrow = arrows[i]
-          link = CurvedLink("LINK%d"%(i + 1), src, tgt, width=4, head=arrow)
-          link["CP_POS_X"] = -20
-          link["CP_POS_Y"] = -80
+          edge = CurvedEdge("EDGE%d"%(i + 1), src, tgt, width=4, head=arrow)
+          edge["CP_POS_X"] = -20
+          edge["CP_POS_Y"] = -80
   
           label_src = TextLabel(src, "S%d"%(i + 1))
           label_src["FONT_SIZE"] = 20
@@ -681,7 +681,7 @@
   
           net.add_node(src)
           net.add_node(tgt)
-          net.add_link(link)
+          net.add_edge(edge)
           net.add_label(label_src)
           net.add_label(label_tgt)
       # end of for  
@@ -703,13 +703,13 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
+  from nezzle.graphics import CurvedEdge
   from nezzle.graphics import Triangle
   from nezzle.graphics import Network
   
   
   def update(nav, net):
-      net = Network("Curved links with triangle arrows of different sizes")
+      net = Network("Curved edges with triangle arrows of different sizes")
   
       for i in range(5):
           src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=QPointF(-80, 80*i))
@@ -723,9 +723,9 @@
           tgt["BORDER_WIDTH"] = 2
   
           arrow = Triangle(10 + 4*i, 10 + 4*i)
-          link = CurvedLink("LINK%d"%(i + 1), src, tgt, width=4, head=arrow)
-          link["CP_POS_X"] = -20
-          link["CP_POS_Y"] = -80
+          edge = CurvedEdge("EDGE%d"%(i + 1), src, tgt, width=4, head=arrow)
+          edge["CP_POS_X"] = -20
+          edge["CP_POS_Y"] = -80
   
           label_src = TextLabel(src, "S%d"%(i + 1))
           label_src["FONT_SIZE"] = 20
@@ -739,7 +739,7 @@
   
           net.add_node(src)
           net.add_node(tgt)
-          net.add_link(link)
+          net.add_edge(edge)
           net.add_label(label_src)
           net.add_label(label_tgt)
       # end of for
@@ -763,13 +763,13 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import CurvedLink
+  from nezzle.graphics import CurvedEdge
   from nezzle.graphics import Hammer
   from nezzle.graphics import Network
   
   
   def update(nav, net):
-      net = Network("Curved links with hammer arrows of different sizes")
+      net = Network("Curved edges with hammer arrows of different sizes")
   
       for i in range(5):
           src = EllipseNode("SRC%d"%(i + 1), 40, 40, pos=QPointF(-80, 80*i))
@@ -783,9 +783,9 @@
           tgt["BORDER_WIDTH"] = 2
   
           arrow = Hammer(14 + 6*i, 2 + 2*i)
-          link = CurvedLink("LINK%d"%(i + 1), src, tgt, width=4, head=arrow)
-          link["CP_POS_X"] = -20
-          link["CP_POS_Y"] = -80
+          edge = CurvedEdge("EDGE%d"%(i + 1), src, tgt, width=4, head=arrow)
+          edge["CP_POS_X"] = -20
+          edge["CP_POS_Y"] = -80
   
           label_src = TextLabel(src, "S%d"%(i + 1))
           label_src["FONT_SIZE"] = 20
@@ -799,7 +799,7 @@
   
           net.add_node(src)
           net.add_node(tgt)
-          net.add_link(link)
+          net.add_edge(edge)
           net.add_label(label_src)
           net.add_label(label_tgt)
       # end of for
@@ -822,14 +822,14 @@
   
   from nezzle.graphics import EllipseNode
   from nezzle.graphics import TextLabel
-  from nezzle.graphics import StraightLink
+  from nezzle.graphics import StraightEdge
   from nezzle.graphics import Triangle
   from nezzle.graphics import Hammer
   from nezzle.graphics import Network
   
   
   def update(nav, net):
-      net = Network("Curved links with arrows of different offsets")
+      net = Network("Curved edges with arrows of different offsets")
   
       arrows = [
           Triangle(10, 10),
@@ -853,7 +853,7 @@
               tgt["BORDER_WIDTH"] = 2
   
               arrow = arrows[j]
-              link = StraightLink("LINK%d"%(idx + 1), src, tgt, width=4, head=arrow)
+              edge = StraightEdge("EDGE%d"%(idx + 1), src, tgt, width=4, head=arrow)
               arrow.offset = 8 * i
   
               label_src = TextLabel(src, "S%d"%(idx + 1))
@@ -868,7 +868,7 @@
   
               net.add_node(src)
               net.add_node(tgt)
-              net.add_link(link)
+              net.add_edge(edge)
               net.add_label(label_src)
               net.add_label(label_tgt)
       # end of for
@@ -1141,10 +1141,10 @@ from qtpy.QtCore import QPointF
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import CurvedLink
+from nezzle.graphics import CurvedEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
-from nezzle.io.io import write_network
+from nezzle.io import write_network
 
 
 def update(nav, net):
@@ -1165,19 +1165,19 @@ def update(nav, net):
     net.add_node(tgt)
 
     head = Triangle(width=10, height=10, offset=4)
-    link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
-    link1["FILL_COLOR"] = Qt.black
-    link1["CP_POS_X"] = -10
-    link1["CP_POS_Y"] = -50
+    edge1 = CurvedEdge("EDGE1", src, tgt, width=4, head=head)
+    edge1["FILL_COLOR"] = Qt.black
+    edge1["CP_POS_X"] = -10
+    edge1["CP_POS_Y"] = -50
 
     head = Hammer(width=16, height=3, offset=4)
-    link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
-    link2["FILL_COLOR"] = Qt.black
-    link2["CP_POS_X"] = 10
-    link2["CP_POS_Y"] = 50
+    edge2 = CurvedEdge("EDGE2", tgt, src, width=4, head=head)
+    edge2["FILL_COLOR"] = Qt.black
+    edge2["CP_POS_X"] = 10
+    edge2["CP_POS_Y"] = 50
 
-    net.add_link(link1)
-    net.add_link(link2)
+    net.add_edge(edge1)
+    net.add_edge(edge2)
 
     for node in [src, tgt]:
         label = TextLabel(node, node.iden)
@@ -1187,7 +1187,7 @@ def update(nav, net):
     # end of for
 
     # Not appending the new network to the navigation.
-    # You should use *.json to save the graphics information.
+    # You should use *.nzj to save the graphics information.
     write_network(net, "2nnfl.json")
 
   ```
@@ -1207,10 +1207,10 @@ from qtpy.QtCore import QPointF
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import CurvedLink
+from nezzle.graphics import CurvedEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def update(nav, net):
@@ -1231,19 +1231,19 @@ def update(nav, net):
     net.add_node(tgt)
 
     head = Triangle(width=10, height=10, offset=4)
-    link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
-    link1["FILL_COLOR"] = Qt.black
-    link1["CP_POS_X"] = -10
-    link1["CP_POS_Y"] = -50
+    edge1 = CurvedEdge("EDGE1", src, tgt, width=4, head=head)
+    edge1["FILL_COLOR"] = Qt.black
+    edge1["CP_POS_X"] = -10
+    edge1["CP_POS_Y"] = -50
 
     head = Hammer(width=16, height=3, offset=4)
-    link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
-    link2["FILL_COLOR"] = Qt.black
-    link2["CP_POS_X"] = 10
-    link2["CP_POS_Y"] = 50
+    edge2 = CurvedEdge("EDGE2", tgt, src, width=4, head=head)
+    edge2["FILL_COLOR"] = Qt.black
+    edge2["CP_POS_X"] = 10
+    edge2["CP_POS_Y"] = 50
 
-    net.add_link(link1)
-    net.add_link(link2)
+    net.add_edge(edge1)
+    net.add_edge(edge2)
 
     for node in [src, tgt]:
         label = TextLabel(node, node.iden)
@@ -1292,10 +1292,10 @@ from qtpy.QtCore import QPointF
 from qtpy.QtGui import QColor
 
 from nezzle.graphics import EllipseNode
-from nezzle.graphics import StraightLink
+from nezzle.graphics import StraightEdge
 from nezzle.graphics import Triangle
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def add_node(net, iden, x, y):
@@ -1309,7 +1309,7 @@ def add_node(net, iden, x, y):
     return node
 
 
-def add_links(net, neurons, l):
+def add_edges(net, neurons, l):
     """Connect (l-1)-th layer to l-th layer.
 
     Args:
@@ -1323,9 +1323,9 @@ def add_links(net, neurons, l):
         for tgt in neurons[l]:
             head = Triangle(width=12, height=12, offset=8)
             iden = "%s-%s" % (src.iden, tgt.iden)
-            link = StraightLink(iden, src, tgt, width=4, head=head)
-            link["FILL_COLOR"] = QColor(0, 0, 0, 50)
-            net.add_link(link)
+            edge = StraightEdge(iden, src, tgt, width=4, head=head)
+            edge["FILL_COLOR"] = QColor(0, 0, 0, 50)
+            net.add_edge(edge)
 
 
 def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
@@ -1358,7 +1358,7 @@ def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
             node = add_node(net, "%s%s" % (l, k), x, y)
             neurons[l].append(node)
 
-        add_links(net, neurons, l)
+        add_edges(net, neurons, l)
 
     return net
 
@@ -1414,10 +1414,10 @@ from qtpy.QtGui import QColor
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import CurvedLink
+from nezzle.graphics import CurvedEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def create_network(pos_x, pos_y, s):
@@ -1433,19 +1433,19 @@ def create_network(pos_x, pos_y, s):
     net.add_node(tgt)
 
     head = Triangle(width=10, height=10, offset=4)
-    link1 = CurvedLink("LINK1", src, tgt, width=4, head=head)
-    link1["FILL_COLOR"] = Qt.black
-    link1["CP_POS_X"] = -10
-    link1["CP_POS_Y"] = -50
+    edge1 = CurvedEdge("EDGE1", src, tgt, width=4, head=head)
+    edge1["FILL_COLOR"] = Qt.black
+    edge1["CP_POS_X"] = -10
+    edge1["CP_POS_Y"] = -50
 
     head = Hammer(width=16, height=3, offset=4)
-    link2 = CurvedLink("LINK2", tgt, src, width=4, head=head)
-    link2["FILL_COLOR"] = Qt.black
-    link2["CP_POS_X"] = 10
-    link2["CP_POS_Y"] = 50
+    edge2 = CurvedEdge("EDGE2", tgt, src, width=4, head=head)
+    edge2["FILL_COLOR"] = Qt.black
+    edge2["CP_POS_X"] = 10
+    edge2["CP_POS_Y"] = 50
 
-    net.add_link(link1)
-    net.add_link(link2)
+    net.add_edge(edge1)
+    net.add_edge(edge2)
 
     for i, node in enumerate([src, tgt]):
 
@@ -1552,10 +1552,10 @@ from qtpy.QtGui import QColor
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import CurvedLink
+from nezzle.graphics import CurvedEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def create_network(pos_x, pos_y, state, norm_abs_state):
@@ -1573,40 +1573,40 @@ def create_network(pos_x, pos_y, state, norm_abs_state):
     net.add_node(z)
 
     head = Triangle(width=10, height=10, offset=4)
-    link1 = CurvedLink("LINK1", x, y, width=4, head=head)
-    link1["FILL_COLOR"] = Qt.black
-    link1["CP_POS_X"] = -10
-    link1["CP_POS_Y"] = -50
+    edge1 = CurvedEdge("EDGE1", x, y, width=4, head=head)
+    edge1["FILL_COLOR"] = Qt.black
+    edge1["CP_POS_X"] = -10
+    edge1["CP_POS_Y"] = -50
 
     head = Triangle(width=10, height=10, offset=4)
-    link2 = CurvedLink("LINK2", y, x, width=4, head=head)
-    link2["FILL_COLOR"] = Qt.black
-    link2["CP_POS_X"] = 10
-    link2["CP_POS_Y"] = 40
+    edge2 = CurvedEdge("EDGE2", y, x, width=4, head=head)
+    edge2["FILL_COLOR"] = Qt.black
+    edge2["CP_POS_X"] = 10
+    edge2["CP_POS_Y"] = 40
 
     head = Triangle(width=10, height=10, offset=4)
-    link3 = CurvedLink("LINK3", y, z, width=4, head=head)
-    link3["FILL_COLOR"] = Qt.black
-    link3["CP_POS_X"] = -28
-    link3["CP_POS_Y"] = -28
+    edge3 = CurvedEdge("EDGE3", y, z, width=4, head=head)
+    edge3["FILL_COLOR"] = Qt.black
+    edge3["CP_POS_X"] = -28
+    edge3["CP_POS_Y"] = -28
 
     head = Hammer(width=14, height=4, offset=4)
-    link4 = CurvedLink("LINK3", z, y, width=4, head=head)
-    link4["FILL_COLOR"] = Qt.black
-    link4["CP_POS_X"] = 45
-    link4["CP_POS_Y"] = 40
+    edge4 = CurvedEdge("EDGE3", z, y, width=4, head=head)
+    edge4["FILL_COLOR"] = Qt.black
+    edge4["CP_POS_X"] = 45
+    edge4["CP_POS_Y"] = 40
 
     head = Triangle(width=10, height=10, offset=4)
-    link5 = CurvedLink("LINK3", z, x, width=4, head=head)
-    link5["FILL_COLOR"] = Qt.black
-    link5["CP_POS_X"] = -45
-    link5["CP_POS_Y"] = 40
+    edge5 = CurvedEdge("EDGE3", z, x, width=4, head=head)
+    edge5["FILL_COLOR"] = Qt.black
+    edge5["CP_POS_X"] = -45
+    edge5["CP_POS_Y"] = 40
 
-    net.add_link(link1)
-    net.add_link(link2)
-    net.add_link(link3)
-    net.add_link(link4)
-    net.add_link(link5)
+    net.add_edge(edge1)
+    net.add_edge(edge2)
+    net.add_edge(edge3)
+    net.add_edge(edge4)
+    net.add_edge(edge5)
 
     for i, node in enumerate([x, y, z]):
         if state[i] > 0.0:
@@ -1714,7 +1714,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import moviepy.editor as mpy
 
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 class MeanPairwiseDistances(nn.Module):
@@ -1845,7 +1845,7 @@ from qtpy.QtCore import QPointF
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 class MeanPairwiseDistances(nn.Module):

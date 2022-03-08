@@ -6,10 +6,10 @@ from qtpy.QtCore import QPointF
 from qtpy.QtGui import QColor
 
 from nezzle.graphics import EllipseNode
-from nezzle.graphics import StraightLink
+from nezzle.graphics import StraightEdge
 from nezzle.graphics import Triangle
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def add_node(net, iden, x, y):
@@ -23,7 +23,7 @@ def add_node(net, iden, x, y):
     return node
 
 
-def add_links(net, neurons, l):
+def add_edges(net, neurons, l):
     """Connect (l-1)-th layer to l-th layer.
 
     Args:
@@ -37,9 +37,9 @@ def add_links(net, neurons, l):
         for tgt in neurons[l]:
             head = Triangle(width=12, height=12, offset=8)
             iden = "%s-%s"%(src.iden, tgt.iden)
-            link = StraightLink(iden, src, tgt, width=4, head=head)
-            link["FILL_COLOR"] = QColor(0, 0, 0, 50)
-            net.add_link(link)
+            edge = StraightEdge(iden, src, tgt, width=4, head=head)
+            edge["FILL_COLOR"] = QColor(0, 0, 0, 50)
+            net.add_edge(edge)
 
 
 def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
@@ -72,7 +72,7 @@ def create_network(layers, r=40, vs=40, hs=200, op=(0, 0)):
             node = add_node(net, "%s%s"%(l, k), x, y)
             neurons[l].append(node)
 
-        add_links(net, neurons, l)
+        add_edges(net, neurons, l)
 
     return net
 

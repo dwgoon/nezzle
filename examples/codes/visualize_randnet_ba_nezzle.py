@@ -12,9 +12,9 @@ from qtpy.QtGui import QColor
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import StraightLink
+from nezzle.graphics import StraightEdge
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def create_network(G):
@@ -46,9 +46,9 @@ def create_network(G):
         id_tgt = edge[1]
         src = net.nodes[id_src]
         tgt = net.nodes[id_tgt]
-        link = StraightLink("%s-%s"%(id_src, id_tgt), src, tgt, width=4)        
-        link["FILL_COLOR"] = QColor(255, 0, 0, 20)   
-        net.add_link(link)
+        edge = StraightEdge("%s-%s"%(id_src, id_tgt), src, tgt, width=4)        
+        edge["FILL_COLOR"] = QColor(255, 0, 0, 20)   
+        net.add_edge(edge)
 
     return net
 

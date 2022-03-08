@@ -5,12 +5,12 @@ from qtpy.QtGui import QColor
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 from nezzle.graphics import NodeClassFactory
-from nezzle.graphics import LinkClassFactory
+from nezzle.graphics import EdgeClassFactory
 from nezzle.graphics import ArrowClassFactory
 from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import Network
 
-from nezzle.io import io
+from nezzle.io import read_network
 
 app = QtWidgets.QApplication([])
 
@@ -26,16 +26,16 @@ app = QtWidgets.QApplication([])
 #                   radius=7,
 #                   pos=QPointF(200, 200))
 #
-#     link_ab = ArrowLink("LINK_AB", a, b, 2, QColor(0, 0, 0, 0), '+')
-#     link_ba = HammerLink("LINK_BA", b, a, 3, QColor(Qt.red), '-')
+#     edge_ab = ArrowEdge("EDGE_AB", a, b, 2, QColor(0, 0, 0, 0), '+')
+#     edge_ba = HammerEdge("EDGE_BA", b, a, 3, QColor(Qt.red), '-')
 #
 #     net = Network()
 #
 #     net.add_node(a)
 #     net.add_node(b)
 #
-#     net.add_link(link_ab)
-#     net.add_link(link_ba)
+#     net.add_edge(edge_ab)
+#     net.add_edge(edge_ba)
 #
 #     with open("_test_json_network.json", "wt") as fout:
 #         fout.write(json.dumps(net.toDict()))
@@ -98,31 +98,31 @@ def test_create_network():
 
     assert node3.to_dict() != node4.to_dict()
 
-    # Create CurvedLink
+    # Create CurvedEdge
     ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass()
-    LinkClass = LinkClassFactory.create('CURVED_LINK')
-    link = LinkClass('ID_LINK_1', node, node2, head=head)
-    net.add_link(link)
-    attr = link.to_dict()
+    EdgeClass = EdgeClassFactory.create('CURVED_EDGE')
+    edge = EdgeClass('ID_EDGE_1', node, node2, head=head)
+    net.add_edge(edge)
+    attr = edge.to_dict()
 
-    link2 = LinkClass.from_dict(attr, node, node2)
-    link2.iden = 'ID_LINK_2'
-    net.add_link(link2)
+    edge2 = EdgeClass.from_dict(attr, node, node2)
+    edge2.iden = 'ID_EDGE_2'
+    net.add_edge(edge2)
 
-    # Create StraightLink
+    # Create StraightEdge
     ArrowClass = ArrowClassFactory.create("HAMMER")
     head = ArrowClass()
-    LinkClass = LinkClassFactory.create('STRAIGHT_LINK')
-    link3 = LinkClass('ID_LINK_3', node, node2, head=head)
-    net.add_link(link3)
+    EdgeClass = EdgeClassFactory.create('STRAIGHT_EDGE')
+    edge3 = EdgeClass('ID_EDGE_3', node, node2, head=head)
+    net.add_edge(edge3)
 
     ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass()
-    link4 = LinkClass.from_dict(link3.to_dict(), node, node2)
-    link4.iden = 'ID_LINK_4'
-    link4.head = head
-    net.add_link(link4)
+    edge4 = EdgeClass.from_dict(edge3.to_dict(), node, node2)
+    edge4.iden = 'ID_EDGE_4'
+    edge4.head = head
+    net.add_edge(edge4)
 
     # Setting the size of CircleNode
     node2.width = 100
@@ -155,26 +155,26 @@ def test_create_network():
     assert dict_net['NEZZLE_VERSION'] == dict_net2['NEZZLE_VERSION']
     assert dict_net['BACKGROUND_COLOR'] == dict_net2['BACKGROUND_COLOR']
     assert len(dict_net["NODES"]) == len(dict_net2["NODES"])
-    assert len(dict_net["LINKS"]) == len(dict_net2["LINKS"])
+    assert len(dict_net["EDGES"]) == len(dict_net2["EDGES"])
     assert len(dict_net["LABELS"]) == len(dict_net2["LABELS"])
 
 def test_json_jkwon():
-    net1 = io.read_network("jkwon_egfr_pathway.sif")
+    net1 = read_network("jkwon_egfr_pathway.sif")
     io.write_network(net1, "jkwon_egfr_pathway.json")
-    net2 = io.read_network("jkwon_egfr_pathway.json")
+    net2 = read_network("jkwon_egfr_pathway.json")
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
-    assert set(net1.links.keys()) == set(net2.links.keys())
+    assert set(net1.edges.keys()) == set(net2.edges.keys())
     assert net1.to_dict() == net2.to_dict()
 
 
 def test_json_korkut_2015():
-    net1 = io.read_network("korkut_2015.json")
+    net1 = read_network("korkut_2015.json")
     io.write_network(net1, "korkut_2015_02.json")
-    net2 = io.read_network("korkut_2015_02.json")
+    net2 = read_network("korkut_2015_02.json")
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
-    assert set(net1.links.keys()) == set(net2.links.keys())
+    assert set(net1.edges.keys()) == set(net2.edges.keys())
     assert net1.to_dict() == net2.to_dict()
 
 if __name__ == '__main__':

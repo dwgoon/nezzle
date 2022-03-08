@@ -76,7 +76,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="ui_labelLinkHeadMapping">
+    <widget class="QLabel" name="ui_labelEdgeHeadMapping">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -84,12 +84,12 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Link Head Mapping</string>
+      <string>Edge Head Mapping</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTableWidget" name="ui_linkHeadMappingTable">
+    <widget class="QTableWidget" name="ui_edgeHeadMappingTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -111,7 +111,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="ui_labelLinkTailMapping">
+    <widget class="QLabel" name="ui_labelEdgeTailMapping">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -119,12 +119,12 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Link Tail Mapping</string>
+      <string>Edge Tail Mapping</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTableWidget" name="ui_linkTailMappingTable">
+    <widget class="QTableWidget" name="ui_edgeTailMappingTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>

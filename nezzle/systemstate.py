@@ -18,8 +18,8 @@ class SystemState(QObject):
             item_type = item_type.casefold()
             if item_type.endswith('_node'):
                 lock = Lock.NODES
-            elif item_type.endswith('_link'):
-                lock = Lock.LINKS
+            elif item_type.endswith('_edge'):
+                lock = Lock.EDGES
             elif item_type.endswith('_label'):
                 lock = Lock.LABELS
         elif isinstance(item_type, int):

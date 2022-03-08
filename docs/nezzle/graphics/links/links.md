@@ -1,2 +1,2 @@
 
-::: nezzle.graphics.links.straightlink
+::: nezzle.graphics.edges.straightedge

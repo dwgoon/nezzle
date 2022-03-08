@@ -111,6 +111,11 @@ class MappableGraphicsItem(MappableItem,
         super().__init__(*args, **kwargs)
         self._attr['ITEM_TYPE'] = self.ITEM_TYPE
 
+    def to_dict(self):
+        attr = super().to_dict()
+        attr["ZVALUE"] = self.zValue()
+        return attr
+
 
 class Movable(object):
     def is_movable(self):

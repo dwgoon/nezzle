@@ -13,14 +13,8 @@ with open(pjoin(dirname(__file__), "VERSION"), "rt") as fin:
     __version__ = fin.read().strip()
 
 
-from nezzle.io.io import read_sif
-from nezzle.io.io import write_sif
-
-from nezzle.io.io import read_nzjs
-from nezzle.io.io import write_nzjs
-
-from nezzle.io.io import read_network
-from nezzle.io.io import write_network
+from nezzle.io.sif import read_sif
+from nezzle.io.sif import write_sif
 
 from nezzle.convert import to_graphics
 from nezzle.convert import to_networkx

@@ -4,7 +4,7 @@ from qtpy.QtCore import QPointF
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import StraightLink
+from nezzle.graphics import StraightEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
 
@@ -21,7 +21,7 @@ def update(nav, net):
         {"ID": "F", "POS_X": 598.0, "POS_Y": 601.2}
     ]
 
-    link_types = [
+    edge_types = [
         {"SOURCE": "A", "TARGET": "C", "INTERACTION": "INHIBITS"},
         {"SOURCE": "A", "TARGET": "D", "INTERACTION": "ACTIVATES"},
         {"SOURCE": "A", "TARGET": "G", "INTERACTION": "ACTIVATES"},
@@ -33,7 +33,7 @@ def update(nav, net):
     ]
 
     df_node_pos = pd.DataFrame(node_positions)
-    df_link_types = pd.DataFrame(link_types)
+    df_edge_types = pd.DataFrame(edge_types)
 
     net = Network('A simple 8-node network')
 
@@ -53,21 +53,21 @@ def update(nav, net):
         net.add_label(label)
     # end of for
 
-    for i, row in df_link_types.iterrows():
+    for i, row in df_edge_types.iterrows():
         src = net.nodes[row["SOURCE"]]
         tgt = net.nodes[row["TARGET"]]
 
         if row["INTERACTION"] == "ACTIVATES":
             head = Triangle(width=10, height=10, offset=4)
-            link = StraightLink("LINK(%s+%s)", src, tgt, width=4, head=head)
+            edge = StraightEdge("EDGE(%s+%s)", src, tgt, width=4, head=head)
         else:
             head = Hammer(width=16, height=3, offset=4)
-            link = StraightLink("LINK(%s-%s)", src, tgt, width=4, head=head)
+            edge = StraightEdge("EDGE(%s-%s)", src, tgt, width=4, head=head)
 
-        link["WIDTH"] = 2
-        link["FILL_COLOR"] = "black"
+        edge["WIDTH"] = 2
+        edge["FILL_COLOR"] = "black"
 
-        net.add_link(link)
+        net.add_edge(edge)
     # end of for
 
     nav.append_item(net)

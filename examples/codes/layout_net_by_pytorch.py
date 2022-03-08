@@ -9,7 +9,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import moviepy.editor as mpy
 
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 class MeanPairwiseDistances(nn.Module):

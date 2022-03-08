@@ -12,7 +12,7 @@ class BaseNode(PainterOptionItem):
         super().__init__(iden, *args, **kwargs)
         self._iden = iden
         self._brect = QRectF()
-        self._links = []
+        self._edges = []
 
         self._attr.set_trigger('WIDTH', self._trigger_set_width)
         self._attr.set_trigger('HEIGHT', self._trigger_set_height)
@@ -36,8 +36,8 @@ class BaseNode(PainterOptionItem):
         return 'Node(%s)'%(self.name)
 
     @property
-    def links(self):
-        return self._links
+    def edges(self):
+        return self._edges
 
     @property
     def width(self):
@@ -60,8 +60,8 @@ class BaseNode(PainterOptionItem):
 
     def gather_children(self):
         children = super().gather_children()
-        for link in self.links:
-            for child in link.childItems():
+        for edge in self.edges:
+            for child in edge.childItems():
                 if child not in children:
                     children.append(child)
 
@@ -76,8 +76,8 @@ class BaseNode(PainterOptionItem):
         return rect
 
     def update(self, *args, **kwargs):
-        for link in self._links:
-            link.update()
+        for edge in self._edges:
+            edge.update()
         self._invalidate()
         return super().update(*args, **kwargs)
 
@@ -89,17 +89,17 @@ class BaseNode(PainterOptionItem):
 
         return super().itemChange(change, value)
 
-    def has_link(self, link):
-        return link in self._links
+    def has_edge(self, edge):
+        return edge in self._edges
 
-    def add_link(self, link):
-        if self.has_link(link):
+    def add_edge(self, edge):
+        if self.has_edge(edge):
             return
-        self._links.append(link)
+        self._edges.append(edge)
 
-    def remove_link(self, link):
-        if link in self._links:
-            self._links.remove(link)
+    def remove_edge(self, edge):
+        if edge in self._edges:
+            self._edges.remove(edge)
 
     def copy(self):
         return self.from_dict(self.to_dict())
@@ -123,8 +123,10 @@ class BaseNode(PainterOptionItem):
         iden = attr.pop('ID')
         width = attr.pop('WIDTH')
         height = attr.pop('HEIGHT')
+        zvalue = attr.pop('ZVALUE')
 
         obj = cls(iden=iden, width=width, height=height)
+        obj.setZValue(zvalue)
         obj._attr.update(attr)
 
         return obj

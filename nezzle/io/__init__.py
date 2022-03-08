@@ -5,12 +5,9 @@ from nezzle.io.sif import read_metadata_from_sif
 from nezzle.io.sif import read_sif
 from nezzle.io.sif import write_sif
 
-from nezzle.io.nezzle import read_metadata_from_nzjs
-from nezzle.io.nezzle import read_nzjs
-from nezzle.io.nezzle import write_nzjs
-
-
-
+from nezzle.io.nzj import read_metadata_from_nzj
+from nezzle.io.nzj import read_nzj
+from nezzle.io.nzj import write_nzj
 from nezzle.io.image import write_image
 
 
@@ -23,23 +20,23 @@ def read_metadata(fpath):
 
     if file_name_ext.endswith('.sif'):
         return read_metadata_from_sif(fpath)
-    elif file_name_ext.endswith('.json'):
-        return read_metadata_from_nzjs(fpath)
+    elif file_name_ext.endswith('.nzj') or file_name_ext.endswith('.json'):
+        return read_metadata_from_nzj(fpath)
 
     else:
         raise ValueError("Unsupported file type: %s"%(fext))
 
 
-def read_network(fpath, link_map=None):
+def read_network(fpath, edge_map=None):
     if not fpath:
         raise ValueError("Invalid file path: %s"%(fpath))
     file_name_ext = os.path.basename(fpath)
     fname, fext = os.path.splitext(file_name_ext)
 
     if file_name_ext.endswith('.sif'):
-        return read_sif(fpath, link_map)
-    elif file_name_ext.endswith('.json'):
-        return read_nzjs(fpath, link_map)
+        return read_sif(fpath, edge_map)
+    elif file_name_ext.endswith('.nzj') or file_name_ext.endswith('.json'):
+        return read_nzj(fpath, edge_map)
 
     else:
         raise ValueError("Unsupported file type: %s"%(fext))
@@ -52,7 +49,7 @@ def write_network(net, fpath):
 
     if file_name_ext.endswith('.sif'):
         write_sif(net, fpath)
-    elif file_name_ext.endswith('.json'):
-        write_nzjs(net, fpath)
+    elif file_name_ext.endswith('.nzj') or file_name_ext.endswith('.json'):
+        write_nzj(net, fpath)
     else:
         raise ValueError("Unsupported file type: %s" % (file_name_ext))

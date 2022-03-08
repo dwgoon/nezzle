@@ -9,7 +9,7 @@ class BaseArrow(object):
     def __init__(self, width, height, offset=4):
 
         self._attr = TriggerDict()
-        self._attr['TYPE'] = self.ITEM_TYPE
+        self._attr['ITEM_TYPE'] = self.ITEM_TYPE
 
         self._offset = offset
         self._height = height
@@ -65,7 +65,7 @@ class BaseArrow(object):
     @offset.setter
     def offset(self, val):
         if not hasattr(self, "_parent") or not self._parent:
-            raise ValueError("A link should be assigned for this arrow before setting offset.")
+            raise ValueError("A edge should be assigned for this arrow before setting offset.")
 
         self._attr['OFFSET'] = val
         self.update()
@@ -85,12 +85,12 @@ class BaseArrow(object):
     def update(self):
         self.parent.update()
 
-    def identify_points(self, head, link_body_width, angle=None):
+    def identify_points(self, head, edge_body_width, angle=None):
         raise NotImplementedError("identify_pos should be implemented!")
 
     def to_dict(self):
         dict_head = {}
-        dict_head['TYPE'] = self.ITEM_TYPE
+        dict_head['ITEM_TYPE'] = self.ITEM_TYPE
         dict_head['WIDTH'] = self.width
         dict_head['HEIGHT'] = self.height
         dict_head['OFFSET'] = self.offset
@@ -103,7 +103,7 @@ class BaseArrow(object):
         width = dict_head['WIDTH']
         height = dict_head['HEIGHT']
         offset = dict_head['OFFSET']
-        #head_type = dict_head['TYPE']
+        #head_type = dict_head['ITEM_TYPE']
         #ArrowClass = ArrowClassFactory.create(head_type)
         return cls(width, height, offset=offset)
 
@@ -115,10 +115,10 @@ class Triangle(BaseArrow):
     def __init__(self, width=10, height=10, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
 
-    def identify_points(self, head, link_body_width, transform=None):
+    def identify_points(self, head, edge_body_width, transform=None):
 
-        neck1 = head + QPointF(0, -link_body_width/2)
-        neck2 = head + QPointF(0, +link_body_width/2)
+        neck1 = head + QPointF(0, -edge_body_width/2)
+        neck2 = head + QPointF(0, +edge_body_width/2)
 
         face1 = head + QPointF(0.0, -self.width/2)
         face2 = head + QPointF(0.0, +self.width/2)
@@ -134,9 +134,9 @@ class Triangle(BaseArrow):
         return points
     # end of def identify_pos
 
-    def set_size_from_link(self, link_width):
-        self.width = 5*link_width
-        self.height = 5*link_width
+    def set_size_from_edge(self, edge_width):
+        self.width = 5*edge_width
+        self.height = 5*edge_width
         self.parent.update()
 
 
@@ -147,10 +147,10 @@ class Hammer(BaseArrow):
     def __init__(self, width=14, height=2, *args, **kwargs):
         super().__init__(width, height, *args, **kwargs)
 
-    def identify_points(self, head, link_body_width, transform=None):
+    def identify_points(self, head, edge_body_width, transform=None):
 
-        neck1 = head + QPointF(0, -link_body_width/2)
-        neck2 = head + QPointF(0, +link_body_width/2)
+        neck1 = head + QPointF(0, -edge_body_width/2)
+        neck2 = head + QPointF(0, +edge_body_width/2)
 
         face1 = head + QPointF(0, -self.width/2)
         face2 = head + QPointF(self.height, -self.width/2)
@@ -167,7 +167,7 @@ class Hammer(BaseArrow):
         return points
     # end of def identify_pos
 
-    def set_size_from_link(self, link_width):
-        self.width = 7*link_width
-        self.height = link_width
+    def set_size_from_edge(self, edge_width):
+        self.width = 7*edge_width
+        self.height = edge_width
         self.parent.update()

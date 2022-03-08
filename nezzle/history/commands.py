@@ -4,9 +4,9 @@ from qtpy.QtCore import QPointF
 from qtpy.QtWidgets import QUndoCommand
 
 from nezzle.graphics.nodes.basenode import BaseNode
-from nezzle.graphics.links.controlpoint import ControlPoint
-from nezzle.graphics.links.controlpoint import ConnectorControlPoint
-from nezzle.graphics.links.linkfactory import LinkClassFactory
+from nezzle.graphics.edges.controlpoint import ControlPoint
+from nezzle.graphics.edges.controlpoint import ConnectorControlPoint
+from nezzle.graphics.edges.edgefactory import EdgeClassFactory
 from nezzle.graphics.nodes.nodefactory import NodeClassFactory
 
 
@@ -28,8 +28,8 @@ class MoveByMouseCommand(QUndoCommand):
                 children = []
 
             if isinstance(item, BaseNode):
-                for link in item.links:
-                    for child in link.childItems():
+                for edge in item.edges:
+                    for child in edge.childItems():
                         if child not in children:
                             children.append(child)
 
@@ -167,7 +167,7 @@ class ConvertNodeCommand(QUndoCommand):
         self.setText(self._text)
 
 
-class ConvertLinkCommand(QUndoCommand):
+class ConvertEdgeCommand(QUndoCommand):
     ID = 3
 
     def id(self):
@@ -182,7 +182,7 @@ class ConvertLinkCommand(QUndoCommand):
     def undo(self):
         for old_item, new_item in zip(self._old_items, self._new_items):
             old_item.setSelected(new_item.isSelected())
-            self._net.replace_link(new_item, old_item)
+            self._net.replace_edge(new_item, old_item)
             old_item.update_children_old_positions()
             old_item["_OLD_POS"] = new_item.pos()
 
@@ -192,19 +192,19 @@ class ConvertLinkCommand(QUndoCommand):
     def redo(self):
         for old_item, new_item in zip(self._old_items, self._new_items):
             new_item.setSelected(old_item.isSelected())
-            self._net.replace_link(old_item, new_item)
+            self._net.replace_edge(old_item, new_item)
             new_item.update_children_old_positions()
             new_item["_OLD_POS"] = new_item.pos()
 
         new_item.scene().update()
 
-        NewLinkClass = LinkClassFactory.create(new_item.ITEM_TYPE)
+        NewEdgeClass = EdgeClassFactory.create(new_item.ITEM_TYPE)
         num_items = len(self._old_items)
         if num_items == 1:
             old_item = self._old_items[0]
             new_item = self._new_items[0]
-            self._text = f"Convert {str(old_item)} to {NewLinkClass.__name__}"
+            self._text = f"Convert {str(old_item)} to {NewEdgeClass.__name__}"
         else:
-            self._text = f"Convert {num_items} Items to {NewLinkClass.__name__}"
+            self._text = f"Convert {num_items} Items to {NewEdgeClass.__name__}"
 
         self.setText(self._text)

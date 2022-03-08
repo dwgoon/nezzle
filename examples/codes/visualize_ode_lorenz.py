@@ -11,10 +11,10 @@ from qtpy.QtGui import QColor
 
 from nezzle.graphics import EllipseNode
 from nezzle.graphics import TextLabel
-from nezzle.graphics import CurvedLink
+from nezzle.graphics import CurvedEdge
 from nezzle.graphics import Triangle, Hammer
 from nezzle.graphics import Network
-from nezzle.io.io import write_image
+from nezzle.io import write_image
 
 
 def create_network(pos_x, pos_y, state, norm_abs_state):
@@ -32,40 +32,40 @@ def create_network(pos_x, pos_y, state, norm_abs_state):
     net.add_node(z)
 
     head = Triangle(width=10, height=10, offset=4)
-    link1 = CurvedLink("LINK1", x, y, width=4, head=head)
-    link1["FILL_COLOR"] = Qt.black
-    link1["CP_POS_X"] = -10
-    link1["CP_POS_Y"] = -50
+    edge1 = CurvedEdge("EDGE1", x, y, width=4, head=head)
+    edge1["FILL_COLOR"] = Qt.black
+    edge1["CP_POS_X"] = -10
+    edge1["CP_POS_Y"] = -50
 
     head = Triangle(width=10, height=10, offset=4)
-    link2 = CurvedLink("LINK2", y, x, width=4, head=head)
-    link2["FILL_COLOR"] = Qt.black
-    link2["CP_POS_X"] = 10
-    link2["CP_POS_Y"] = 40
+    edge2 = CurvedEdge("EDGE2", y, x, width=4, head=head)
+    edge2["FILL_COLOR"] = Qt.black
+    edge2["CP_POS_X"] = 10
+    edge2["CP_POS_Y"] = 40
     
     head = Triangle(width=10, height=10, offset=4)
-    link3 = CurvedLink("LINK3", y, z, width=4, head=head)
-    link3["FILL_COLOR"] = Qt.black
-    link3["CP_POS_X"] = -28
-    link3["CP_POS_Y"] = -28
+    edge3 = CurvedEdge("EDGE3", y, z, width=4, head=head)
+    edge3["FILL_COLOR"] = Qt.black
+    edge3["CP_POS_X"] = -28
+    edge3["CP_POS_Y"] = -28
     
     head = Hammer(width=14, height=4, offset=4)
-    link4 = CurvedLink("LINK3", z, y, width=4, head=head)
-    link4["FILL_COLOR"] = Qt.black
-    link4["CP_POS_X"] = 45
-    link4["CP_POS_Y"] = 40
+    edge4 = CurvedEdge("EDGE3", z, y, width=4, head=head)
+    edge4["FILL_COLOR"] = Qt.black
+    edge4["CP_POS_X"] = 45
+    edge4["CP_POS_Y"] = 40
     
     head = Triangle(width=10, height=10, offset=4)
-    link5 = CurvedLink("LINK3", z, x, width=4, head=head)
-    link5["FILL_COLOR"] = Qt.black
-    link5["CP_POS_X"] = -45
-    link5["CP_POS_Y"] = 40
+    edge5 = CurvedEdge("EDGE3", z, x, width=4, head=head)
+    edge5["FILL_COLOR"] = Qt.black
+    edge5["CP_POS_X"] = -45
+    edge5["CP_POS_Y"] = 40
     
-    net.add_link(link1)
-    net.add_link(link2)
-    net.add_link(link3)
-    net.add_link(link4)
-    net.add_link(link5)
+    net.add_edge(edge1)
+    net.add_edge(edge2)
+    net.add_edge(edge3)
+    net.add_edge(edge4)
+    net.add_edge(edge5)
 
     for i, node in enumerate([x, y, z]):
         if state[i] > 0.0:

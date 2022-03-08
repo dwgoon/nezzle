@@ -3,15 +3,15 @@ import math
 from qtpy.QtCore import QRectF
 from qtpy.QtGui import QPainterPath
 
-from nezzle.graphics.links.baselink import BaseLink
+from nezzle.graphics.edges.baseedge import BaseEdge
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.arrows.transform import Rotate
 
 
 @Lockable
-class SelfloopLink(BaseLink):
+class SelfloopEdge(BaseEdge):
 
-    ITEM_TYPE = 'SELFLOOP_LINK'
+    ITEM_TYPE = 'SELFLOOP_EDGE'
 
     def __init__(self, iden, node, *args, **kwargs):
         self._node = node
@@ -23,7 +23,7 @@ class SelfloopLink(BaseLink):
 
         super().__init__(iden, *args, **kwargs)
 
-        self.node.add_link(self)
+        self.node.add_edge(self)
 
     @property
     def node(self):
@@ -97,8 +97,8 @@ class SelfloopLink(BaseLink):
         self._angle_begin += math.degrees(math.acos(cosine))
 
     def _identify_head(self):
-        SelfloopLink._identify_head_pos(self)
-        SelfloopLink._calculate_head_angle(self)
+        SelfloopEdge._identify_head_pos(self)
+        SelfloopEdge._calculate_head_angle(self)
         super()._create_head_path()
 
     def _identify_head_pos(self):
@@ -149,7 +149,7 @@ class SelfloopLink(BaseLink):
         path.arcTo(rect_outer, begin_angle, -self._angle_sweep)
 
         if self.head:
-            SelfloopLink._identify_head(self)
+            SelfloopEdge._identify_head(self)
             self._path_paint.connectPath(self._path_head)
         else:
             path.lineTo(self._identify_arc_pos(rect_inner, -self._angle_sweep))
