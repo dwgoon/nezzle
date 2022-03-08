@@ -50,7 +50,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
             dialog = QFileDialog(self)
             dialog.setWindowTitle("Open a network file")
             dialog.setAcceptMode(QFileDialog.AcceptOpen)
-            dialog.setNameFilters([self.tr("Text files (*.sif *.nzj *.json)")])
+            dialog.setNameFilters([self.tr("Text files (*.sif *.cx *.nzj *.json)")])
             dialog.setFileMode(QFileDialog.ExistingFile)
             if dialog.exec() == QDialog.Accepted:
                 fpath = dialog.selectedFiles()[0]

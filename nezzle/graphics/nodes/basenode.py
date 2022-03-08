@@ -123,10 +123,11 @@ class BaseNode(PainterOptionItem):
         iden = attr.pop('ID')
         width = attr.pop('WIDTH')
         height = attr.pop('HEIGHT')
-        zvalue = attr.pop('ZVALUE')
-
-        obj = cls(iden=iden, width=width, height=height)
-        obj.setZValue(zvalue)
+        
+        obj = cls(iden=iden, width=width, height=height)        
         obj._attr.update(attr)
+        
+        if "ZVALUE" in attr:
+            obj.setZValue(attr["ZVALUE"])
 
         return obj
