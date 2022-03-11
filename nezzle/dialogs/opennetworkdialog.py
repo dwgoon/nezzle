@@ -1,3 +1,5 @@
+import traceback
+
 from qtpy.QtCore import Slot
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QDoubleValidator
@@ -62,7 +64,7 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setWindowTitle("Open a network file")
-            msg.setText("Invalid file type or file contents!")
+            msg.setText("Invalid file type or file contents:\n\n%s"%(traceback.format_exc()))
             msg.exec()
         # end of except
 
