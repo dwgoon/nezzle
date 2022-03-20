@@ -63,13 +63,13 @@ def visualize(nav, net, alg, data, mutations, targets):
 
     act = x_pert - x_ctrl
 
-    F = W_pert*x_pert - W_ctrl*x_ctrl
+    dF = W_pert*x_pert - W_ctrl*x_ctrl  # Change in signal flow
 
     
     font = QFont('Arial', 11)
     visualizer = LinearVisualizer()
     visualizer.visualize(net,
-                         F,
+                         dF,
                          act,
                          data.A,
                          data.n2i,
@@ -96,7 +96,7 @@ def visualize(nav, net, alg, data, mutations, targets):
 def update(nav, net):
     ds = sfa.DataSet()
     ds.create("BORISOV_2009")
-    data = ds["BORISOV_2009"]["30m_AUC_EGF=1+I=100"]
+    data = sfa.get_avalue(ds["BORISOV_2009"])
     
     algs = sfa.AlgorithmSet()
     alg = algs.create("SP")
@@ -124,7 +124,7 @@ def update(nav, net):
         str_targets = ''.join(['%s(%d)'%(tgt, val_inh) for tgt in targets])
         fname = "mt_[%s]_pert_[%s].jpg"%(str_mutations, str_targets)
         fpath_img = os.path.join(dpath, fname)
-        print("[Image #%d: %s]"%(i+1, fpath_img))
+        print("[Image #%d] %s"%(i+1, fpath_img))
         write_image(net_for_sfv,
                     fpath_img,
                     scale_width=800, scale_height=800,
