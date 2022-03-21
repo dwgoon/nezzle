@@ -24,6 +24,8 @@ from nezzle.dialogs.exportimagedialog import ExportImageDialog
 
 from nezzle.io import read_network
 from nezzle.io import write_network
+from nezzle.io import write_image
+
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
 
@@ -323,10 +325,12 @@ class MenuActionHandler(QWidget):
 
                 write_image(net,
                             fpath,
-                            is_transparent,
-                            quality,
-                            scale_width, scale_height,
-                            dpi_width, dpi_height)
+                            transparent=is_transparent,
+                            quality=quality,
+                            scale_width=scale_width,
+                            scale_height=scale_height,
+                            dpi_width=dpi_width,
+                            dpi_height=dpi_height)
         except Exception as err:
             err_msg = "An error has occurred during saving the file:\n%s"
             self.show_error("Export a network image", err_msg % format_exc())

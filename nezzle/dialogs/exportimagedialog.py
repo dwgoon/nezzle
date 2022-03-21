@@ -106,12 +106,12 @@ class ExportImageDialog(QDialog, Ui_ExportImageDialog):
         try:
             self._scaleWidth = int(self.ui_scaleWidthEdit.text())
         except ValueError:
-            self._scaleWidth = 100
+            self._scaleWidth = 200
 
         try:
             self._scaleHeight = int(self.ui_scaleWidthEdit.text())
         except ValueError:
-            self._scaleHeight = 100
+            self._scaleHeight = 200
 
 
         try:

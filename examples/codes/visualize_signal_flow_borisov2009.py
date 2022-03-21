@@ -105,10 +105,10 @@ def update(nav, net):
     alg.params.apply_weight_norm = True
     alg.params.use_rel_change = True
     
-    mutations = ['PI3K']
+    mutations = ['RAS', 'PI3K']
 
     # Candidates: [['RAS', 'PIP3'], ['MEK', 'PDK1']]
-    list_targets = [['RAS', 'PIP3']]
+    list_targets = [['MEK', 'PIP3']] #[['RAS', 'PIP3']]
     val_inh = -10
 
     for i, targets in enumerate(list_targets):
@@ -120,12 +120,13 @@ def update(nav, net):
         net_for_sfv = net.copy()
         visualize(nav, net_for_sfv, alg, data, mutations, targets)
         
-        str_mutations = ','.join(mutations)
-        str_targets = ''.join(['%s(%d)'%(tgt, val_inh) for tgt in targets])
-        fname = "mt_[%s]_pert_[%s].jpg"%(str_mutations, str_targets)
-        fpath_img = os.path.join(dpath, fname)
-        print("[Image #%d] %s"%(i+1, fpath_img))
-        write_image(net_for_sfv,
-                    fpath_img,
-                    scale_width=800, scale_height=800,
-                    dpi_width=600, dpi_height=600,)
+        # [Save network image]
+        # str_mutations = ','.join(mutations)
+        # str_targets = ''.join(['%s(%d)'%(tgt, val_inh) for tgt in targets])
+        # fname = "mt_[%s]_pert_[%s].png"%(str_mutations, str_targets)
+        # fpath_img = os.path.join(dpath, fname)
+        # print("[Image #%d] %s"%(i+1, fpath_img))
+        # write_image(net_for_sfv,
+        #             fpath_img,
+        #             scale_width=200, scale_height=200,
+        #             dpi_width=600, dpi_height=600,)

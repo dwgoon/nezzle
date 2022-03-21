@@ -10,7 +10,7 @@ def write_image(net,
                 image_width=None, image_height=None,
                 transparent=True,
                 quality=100,
-                scale_width=100, scale_height=100,
+                scale_width=200, scale_height=200,
                 dpi_width=350, dpi_height=350,
                 pad_width=10, pad_height=10):
 
