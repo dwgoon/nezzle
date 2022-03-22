@@ -35,12 +35,11 @@ def visualize(nav, net, alg, data, mutations, targets):
     b[inds] = vals
 
     W_ctrl = alg.W.copy()
-    x_ctrl, trj_ctrl = alg.propagate_iterative(
-                                W_ctrl,
-                                b,
-                                b,
-                                alg.params.alpha,
-                                get_trj=False)
+    x_ctrl, trj_ctrl = alg.propagate_iterative(W_ctrl,
+                                               b,
+                                               b,
+                                               alg.params.alpha,
+                                               get_trj=False)
 
     # Apply perturbations
     W_pert = W_ctrl.copy()
