@@ -104,9 +104,7 @@ def update(nav, net):
     alg.params.use_rel_change = True
     
     mutations = ['RAS']
-
-    # Candidates: [['RAS', 'PIP3'], ['MEK', 'PDK1']]
-    list_targets = [['MEK', 'PIP3']] #[['RAS', 'PIP3']]
+    list_targets = [['MEK', 'PIP3']]
     val_inh = -10
 
     for i, targets in enumerate(list_targets):
