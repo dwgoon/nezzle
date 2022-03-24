@@ -60,16 +60,15 @@ def visualize(nav, net, alg, data, mutations, targets):
                                                alg.params.alpha,
                                                get_trj=False)
 
-    act = x_pert - x_ctrl
-
-    dF = W_pert*x_pert - W_ctrl*x_ctrl  # Change in signal flow
+    dact = x_pert - x_ctrl  # Change in activity (difference)
+    dF = W_pert*x_pert - W_ctrl*x_ctrl  # Change in signal flow (diffence)
 
     
     font = QFont('Arial', 11)
     visualizer = LinearVisualizer()
     visualizer.visualize(net,
                          dF,
-                         act,
+                         dact,
                          data.A,
                          data.n2i,
                          lw_min=1.5,
@@ -104,7 +103,7 @@ def update(nav, net):
     alg.params.apply_weight_norm = True
     alg.params.use_rel_change = True
     
-    mutations = ['RAS', 'PI3K']
+    mutations = ['RAS']
 
     # Candidates: [['RAS', 'PIP3'], ['MEK', 'PDK1']]
     list_targets = [['MEK', 'PIP3']] #[['RAS', 'PIP3']]
