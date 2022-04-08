@@ -36,6 +36,9 @@ class Network(MappableItem):
         self._nxgraph = nx.DiGraph(name=name)
         self.nxgraph.labels = {}
 
+        self._attr.set_trigger('BACKGROUND_COLOR', self._trigger_set_background_color)
+
+
     def __str__(self):
         return self.name
 
@@ -76,6 +79,11 @@ class Network(MappableItem):
             self._item.setText(self._name)
 
         return value
+
+    def _trigger_set_background_color(self, key, value):
+        self._background_color = QColor(value)
+        self.scene.setBackgroundBrush(self._background_color)
+        return self._background_color.name(QColor.HexArgb)
 
     def add_node(self, node):
         node.setZValue(0)
