@@ -19,7 +19,8 @@ class TextLabel(PainterOptionItem):
         self._text_item = QGraphicsTextItem()
         self._font = None
 
-        super().__init__(parent=parent, iden=text)
+        iden = "[%s-%s]%s-%s"%(parent.__class__.__name__, str(parent.iden), id(self), text)
+        super().__init__(parent=parent, iden=iden)
 
         self._attr.set_trigger('TEXT',
                                self._trigger_set_text_str, when='set')
