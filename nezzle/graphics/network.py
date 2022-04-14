@@ -292,9 +292,9 @@ class Network(MappableItem):
                 iden_src = dict_edge.pop("ID_SOURCE")
                 iden_tgt = dict_edge.pop("ID_TARGET")
                 src = dict_graphics[iden_src]
-                tgt = dict_graphics[iden_tgt]
+                trg = dict_graphics[iden_tgt]
                 EdgeClass = EdgeClassFactory.create(item_type)
-                edge = EdgeClass.from_dict(dict_edge, src, tgt)
+                edge = EdgeClass.from_dict(dict_edge, src, trg)
 
             dict_graphics[edge.iden] = edge
             net.add_edge(edge)
@@ -377,15 +377,15 @@ class Network(MappableItem):
 #     net_new.scene.setBackgroundBrush(Qt.white) #transparent)
 #     for i in range(ir.size):
 #         itgt, isrc = ir[i], ic[i]
-#         tgt, src = i2n[itgt], i2n[isrc]
+#         trg, src = i2n[itgt], i2n[isrc]
 #
 #         sign = '+' if A[itgt, isrc] > 0 else '-'
 #         ArrowClass = msc[sign]
 #         head = ArrowClass()
 #
-#         iden = "%s%s%s" % (src, sign, tgt)
+#         iden = "%s%s%s" % (src, sign, trg)
 #
-#         if src == tgt:
+#         if src == trg:
 #             if src not in nodes_cache:
 #                 node = nodes[src].copy()
 #                 nodes_cache[src] = node
@@ -405,11 +405,11 @@ class Network(MappableItem):
 #             else:
 #                 node_src = nodes_cache[src]
 #
-#             if tgt not in nodes_cache:
-#                 node_tgt = nodes[tgt].copy()
-#                 nodes_cache[tgt] = node_tgt
+#             if trg not in nodes_cache:
+#                 node_tgt = nodes[trg].copy()
+#                 nodes_cache[trg] = node_tgt
 #             else:
-#                 node_tgt = nodes_cache[tgt]
+#                 node_tgt = nodes_cache[trg]
 #
 #             edge = EdgeClass(iden=iden,
 #                              source=node_src,
@@ -435,9 +435,9 @@ class Network(MappableItem):
 #         label.setPos(-rect.width() / 2, -rect.height() / 2)
 #         net_new.add_label(label)
 #
-#     for src, tgt, attr in net_new.nxgraph.edges(data=True):
-#         if net_new.nxgraph.has_edge(tgt, src):
-#             if src == tgt:  # Skip selfloops
+#     for src, trg, attr in net_new.nxgraph.edges(data=True):
+#         if net_new.nxgraph.has_edge(trg, src):
+#             if src == trg:  # Skip selfloops
 #                 continue
 #
 #             edge = attr['GRAPHICS']

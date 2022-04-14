@@ -119,20 +119,20 @@ def to_graphics(dg, iden, no_edge_type=False):
         # end of else
 
         if str_tgt in nodes:
-            tgt = nodes[str_tgt]
+            trg = nodes[str_tgt]
         else:
             counter_node += 1
-            tgt = NodeClass(str_tgt, width=width, height=height,
+            trg = NodeClass(str_tgt, width=width, height=height,
                             pos=QPointF(tx, ty))
 
             if "FILL_COLOR" not in dg.nodes[str_tgt]:
-                tgt["FILL_COLOR"] = color_node
+                trg["FILL_COLOR"] = color_node
 
             if 'BORDER_COLOR' not in dg.nodes[str_tgt]:
-                tgt['BORDER_COLOR'] = Qt.darkGray
+                trg['BORDER_COLOR'] = Qt.darkGray
 
-            tgt.update(dg.nodes[str_tgt])
-            nodes[str_tgt] = tgt
+            trg.update(dg.nodes[str_tgt])
+            nodes[str_tgt] = trg
         # end of else
 
         counter_edge += 1
@@ -172,7 +172,7 @@ def to_graphics(dg, iden, no_edge_type=False):
             iden = "%s%s%s" % (str_src, str_edge_type, str_tgt)
             edge = EdgeClass(iden=iden,
                              name= str_edge_type,
-                             source=src, target=tgt,
+                             source=src, target=trg,
                              head=head)
 
             if "FILL_COLOR" not in edge_data:
@@ -183,7 +183,7 @@ def to_graphics(dg, iden, no_edge_type=False):
         # end of else
 
         src.add_edge(edge)
-        tgt.add_edge(edge)
+        trg.add_edge(edge)
         net.add_edge(edge)
     # end of for : reading each line of SIF file
 
@@ -202,9 +202,9 @@ def to_graphics(dg, iden, no_edge_type=False):
         nodes[str_name] = node
 
     # Make the two edges of interconnected nodes curved.
-    for src, tgt, attr in net.nxgraph.edges(data=True):
-        if net.nxgraph.has_edge(tgt, src):
-            if src == tgt:  # Skip selfloops
+    for src, trg, attr in net.nxgraph.edges(data=True):
+        if net.nxgraph.has_edge(trg, src):
+            if src == trg:  # Skip selfloops
                 continue
 
             edge = attr['GRAPHICS']
@@ -226,22 +226,22 @@ def to_networkx(net):
     for iden, edge in net.edges.items():
 
         if isinstance(edge, SelfloopEdge):
-            src = tgt = edge.node
+            src = trg = edge.node
         else:
             src = edge.source
-            tgt = edge.target
+            trg = edge.target
 
         if src.iden not in dg.nodes:
             dg.add_node(src.iden)
             dg.nodes[src.iden].update(src.to_dict())
 
-        if tgt.iden not in dg.nodes:
-            dg.add_node(tgt.iden)
-            dg.nodes[tgt.iden].update(tgt.to_dict())
+        if trg.iden not in dg.nodes:
+            dg.add_node(trg.iden)
+            dg.nodes[trg.iden].update(trg.to_dict())
 
 
-        dg.add_edge(src.iden, tgt.iden)
-        edge_data = dg.edges[src.iden, tgt.iden]
+        dg.add_edge(src.iden, trg.iden)
+        edge_data = dg.edges[src.iden, trg.iden]
         edge_data.update(edge.to_dict())
 
         # Set sign information if head exists.

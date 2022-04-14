@@ -45,19 +45,19 @@ def update(nav, net):
     label.align()
     new_net.add_label(label)
 
-    tgt = NodeClass('TGT1', 40, 40, pos=QPointF(x1, y1))
-    tgt["FILL_COLOR"] = QColor(255, 153, 51)
-    tgt["BORDER_COLOR"] = Qt.black
-    tgt["BORDER_WIDTH"] = 2
-    new_net.add_node(tgt)
+    trg = NodeClass('TGT1', 40, 40, pos=QPointF(x1, y1))
+    trg["FILL_COLOR"] = QColor(255, 153, 51)
+    trg["BORDER_COLOR"] = Qt.black
+    trg["BORDER_WIDTH"] = 2
+    new_net.add_node(trg)
 
-    label = LabelClass(tgt, "B")
+    label = LabelClass(trg, "B")
     label["FONT_SIZE"] = 20
     label.align()
     new_net.add_label(label)
 
     head = TriangleClass(width=10, height=10, offset=4)
-    edge = EdgeClass("EDGE1", src, tgt, width=4, head=head)
+    edge = EdgeClass("EDGE1", src, trg, width=4, head=head)
     edge["FILL_COLOR"] = Qt.black
     new_net.add_edge(edge)
 
@@ -80,19 +80,19 @@ def update(nav, net):
     label.align()
     new_net.add_label(label)
 
-    tgt = NodeClass('TGT2', 40, 40, pos=QPointF(x1, y1))
-    tgt["FILL_COLOR"] = QColor(255, 153, 51)
-    tgt["BORDER_COLOR"] = Qt.black
-    tgt["BORDER_WIDTH"] = 2
-    new_net.add_node(tgt)
+    trg = NodeClass('TGT2', 40, 40, pos=QPointF(x1, y1))
+    trg["FILL_COLOR"] = QColor(255, 153, 51)
+    trg["BORDER_COLOR"] = Qt.black
+    trg["BORDER_WIDTH"] = 2
+    new_net.add_node(trg)
 
-    label = LabelClass(tgt, "D")
+    label = LabelClass(trg, "D")
     label["FONT_SIZE"] = 20
     label.align()
     new_net.add_label(label)
 
     head = HammerClass(width=14, height=4, offset=4)
-    edge = EdgeClass("EDGE2", src, tgt, width=4, head=head)
+    edge = EdgeClass("EDGE2", src, trg, width=4, head=head)
     edge["FILL_COLOR"] = Qt.black
     new_net.add_edge(edge)
 

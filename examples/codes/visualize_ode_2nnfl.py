@@ -24,19 +24,19 @@ def create_network(pos_x, pos_y, s):
 
     net = Network('2NNFL')
     src = EllipseNode('A', 40, 40, pos=QPointF(pos_x[0], pos_y[0]))
-    tgt = EllipseNode('B', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
+    trg = EllipseNode('B', 40, 40, pos=QPointF(pos_x[1], pos_y[1]))
 
     net.add_node(src)
-    net.add_node(tgt)
+    net.add_node(trg)
 
     head = Triangle(width=10, height=10, offset=4)
-    edge1 = CurvedEdge("EDGE1", src, tgt, width=4, head=head)
+    edge1 = CurvedEdge("EDGE1", src, trg, width=4, head=head)
     edge1["FILL_COLOR"] = Qt.black
     edge1["CP_POS_X"] = -10
     edge1["CP_POS_Y"] = -50
 
     head = Hammer(width=16, height=3, offset=4)
-    edge2 = CurvedEdge("EDGE2", tgt, src, width=4, head=head)
+    edge2 = CurvedEdge("EDGE2", trg, src, width=4, head=head)
     edge2["FILL_COLOR"] = Qt.black
     edge2["CP_POS_X"] = 10
     edge2["CP_POS_Y"] = 50
@@ -44,7 +44,7 @@ def create_network(pos_x, pos_y, s):
     net.add_edge(edge1)
     net.add_edge(edge2)
 
-    for i, node in enumerate([src, tgt]):
+    for i, node in enumerate([src, trg]):
 
         if s[i] > 0.5:
             color = color_white + s[i] * (color_up - color_white)

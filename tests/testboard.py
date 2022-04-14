@@ -38,23 +38,23 @@ def add_curve(view):
     NodeClass = NodeClassFactory.create("RECTANGLE_NODE")
 
     src = NodeClass('ID_NODE_1', 50, 20, pos=QPoint(x1, y1))
-    tgt = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))
+    trg = NodeClass('ID_NODE_2', 50, 20, pos=QPoint(x0, y0))
 
     src["FILL_COLOR"] = Qt.darkCyan
-    tgt["FILL_COLOR"] = Qt.cyan
+    trg["FILL_COLOR"] = Qt.cyan
 
     EdgeClass = EdgeClassFactory.create("CURVED_EDGE")
 
     ArrowClass = ArrowClassFactory.create("TRIANGLE")
     head = ArrowClass(width=10, height=10, offset=4)
-    curve = EdgeClass("ID_EDGE_1", src, tgt, width=4, head=head)
+    curve = EdgeClass("ID_EDGE_1", src, trg, width=4, head=head)
     curve["FILL_COLOR"] = QColor(255, 0, 0)
     curve['BORDER_COLOR'] = QColor(25, 50, 100)
     curve["BORDER_WIDTH"] = 2
 
     net.add_edge(curve)
     net.add_node(src)
-    net.add_node(tgt)
+    net.add_node(trg)
 
     #
     #
@@ -63,18 +63,18 @@ def add_curve(view):
     # ArrowClass = ArrowClassFactory.create("HAMMER")
     # head = ArrowClass(width=16, height=4, offset=4)
     # src = NodeClass('ID_NODE_3', 30, 20, pos=QPoint(x0, y0 + 20))
-    # tgt = NodeClass('ID_NODE_4', 20, 30, pos=QPoint(x1, y1 + 20))
+    # trg = NodeClass('ID_NODE_4', 20, 30, pos=QPoint(x1, y1 + 20))
     #
     # src["FILL_COLOR"] = QColor(100, 50, 150, 50)
     # src['BORDER_COLOR'] = Qt.red
     # src["BORDER_WIDTH"] = 2
     # src['BORDER_LINE_TYPE'] = Qt.DotLine
-    # tgt["FILL_COLOR"] = QColor(100, 50, 150, 50)
-    # tgt['BORDER_COLOR'] = Qt.yellow
-    # tgt["BORDER_WIDTH"] = 2
-    # tgt['BORDER_LINE_TYPE'] = 'DASH'
+    # trg["FILL_COLOR"] = QColor(100, 50, 150, 50)
+    # trg['BORDER_COLOR'] = Qt.yellow
+    # trg["BORDER_WIDTH"] = 2
+    # trg['BORDER_LINE_TYPE'] = 'DASH'
     #
-    # curve = EdgeClass("ID_EDGE_2", src, tgt, width=4, head=head)
+    # curve = EdgeClass("ID_EDGE_2", src, trg, width=4, head=head)
     # curve["FILL_COLOR"] = QColor(0, 0, 255)
     # curve['BORDER_COLOR'] = '#ffa500'
     #
@@ -82,7 +82,7 @@ def add_curve(view):
     #
     # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=10, height=10, offset=4)
-    # curve = EdgeClass("ID_EDGE_3", tgt, src, width=2, head=head)
+    # curve = EdgeClass("ID_EDGE_3", trg, src, width=2, head=head)
     # curve["FILL_COLOR"] = QColor(0, 0, 255)
     # curve["BORDER_WIDTH"] = 1
     # curve['BORDER_COLOR'] = QColor(255, 0, 0)
@@ -90,31 +90,31 @@ def add_curve(view):
     #
     # net.add_edge(curve)
     # net.add_node(src)
-    # net.add_node(tgt)
+    # net.add_node(trg)
     #
     # src = NodeClass('ID_NODE_5', 20, 40, pos=QPoint(x0, y0 - 50))
-    # tgt = NodeClass('ID_NODE_6', 20, 40, pos=QPoint(x1, y1 - 50))
+    # trg = NodeClass('ID_NODE_6', 20, 40, pos=QPoint(x1, y1 - 50))
     #
     # src["FILL_COLOR"] = Qt.green
     # src['BORDER_COLOR'] = Qt.magenta
     # src["BORDER_WIDTH"] = 3
-    # tgt["FILL_COLOR"] = Qt.blue
-    # tgt['BORDER_COLOR'] = Qt.magenta
-    # tgt.pen = QPen()  # Previously defined border options are ignored
+    # trg["FILL_COLOR"] = Qt.blue
+    # trg['BORDER_COLOR'] = Qt.magenta
+    # trg.pen = QPen()  # Previously defined border options are ignored
     #
-    # curve = EdgeClass("ID_EDGE_4", tgt, src, width=4, head=None)
+    # curve = EdgeClass("ID_EDGE_4", trg, src, width=4, head=None)
     # curve["FILL_COLOR"] = QColor(25, 150, 155)
     #
     # EdgeClass = EdgeClassFactory.create("STRAIGHT_EDGE")
     # ArrowClass = ArrowClassFactory.create("TRIANGLE")
     # head = ArrowClass(width=10, height=10, offset=4)
-    # straight = EdgeClass("ID_EDGE_5", src, tgt, width=4, head=head)
+    # straight = EdgeClass("ID_EDGE_5", src, trg, width=4, head=head)
     # straight["FILL_COLOR"] = Qt.magenta
     # net.add_edge(straight)
     #
     # net.add_edge(curve)
     # net.add_node(src)
-    # net.add_node(tgt)
+    # net.add_node(trg)
     #
     # LabelClass = LabelClassFactory.create("TEXT_LABEL")
     # labels = LabelClass(src, "NODE_5")

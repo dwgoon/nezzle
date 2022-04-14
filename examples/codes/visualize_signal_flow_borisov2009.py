@@ -118,7 +118,7 @@ def update(nav, net):
         
         # [Save network image]
         # str_mutations = ','.join(mutations)
-        # str_targets = ''.join(['%s(%d)'%(tgt, val_inh) for tgt in targets])
+        # str_targets = ''.join(['%s(%d)'%(trg, val_inh) for trg in targets])
         # fname = "mt_[%s]_pert_[%s].png"%(str_mutations, str_targets)
         # fpath_img = os.path.join(dpath, fname)
         # print("[Image #%d] %s"%(i+1, fpath_img))

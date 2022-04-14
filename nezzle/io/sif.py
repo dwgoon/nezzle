@@ -88,15 +88,15 @@ def read_sif(fpath, edge_map=None):
             # end of else
 
             if str_tgt in nodes:
-                tgt = nodes[str_tgt]
+                trg = nodes[str_tgt]
             else:
                 counter_node += 1
-                tgt = NodeClass(str_tgt, width=width, height=height,
+                trg = NodeClass(str_tgt, width=width, height=height,
                                 pos=QPointF(tx, ty))
 
-                tgt["FILL_COLOR"] = color
-                tgt['BORDER_COLOR'] = Qt.darkGray
-                nodes[str_tgt] = tgt
+                trg["FILL_COLOR"] = color
+                trg['BORDER_COLOR'] = Qt.darkGray
+                nodes[str_tgt] = trg
             # end of else
 
             counter_edge += 1
@@ -126,13 +126,13 @@ def read_sif(fpath, edge_map=None):
                 iden = "%s%s%s" % (str_src, str_edge_type, str_tgt)
                 edge = EdgeClass(iden=iden,
                                  name= str_edge_type,
-                                 source=src, target=tgt,
+                                 source=src, target=trg,
                                  head=head)
 
                 edge["FILL_COLOR"] = Qt.black
 
             src.add_edge(edge)
-            tgt.add_edge(edge)
+            trg.add_edge(edge)
             net.add_edge(edge)
         # end of for: reading each line of SIF file
 
@@ -149,9 +149,9 @@ def read_sif(fpath, edge_map=None):
             nodes[str_name] = node
     # end of with
 
-    for src, tgt, attr in net.nxgraph.edges(data=True):
-        if net.nxgraph.has_edge(tgt, src):
-            if src == tgt:  # Skip selfloops
+    for src, trg, attr in net.nxgraph.edges(data=True):
+        if net.nxgraph.has_edge(trg, src):
+            if src == trg:  # Skip selfloops
                 continue
 
             edge = attr['GRAPHICS']

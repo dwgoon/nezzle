@@ -34,15 +34,15 @@ def update(nav, net):
     connections = np.random.randint(0, num_nodes, size=(num_edges, 2))
     for i, conn in enumerate(connections):
         src = net.nodes[str(conn[0])]
-        tgt = net.nodes[str(conn[1])]
+        trg = net.nodes[str(conn[1])]
 
         if np.random.randn() < 0.5:
             head = Triangle(width=10, height=10, offset=4)
-            edge = CurvedEdge("EDGE%d(%s+%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
+            edge = CurvedEdge("EDGE%d(%s+%s)"%(i, src.iden, trg.iden), src, trg, width=4, head=head)
 
         else:
             head = Hammer(width=16, height=3, offset=4)
-            edge = CurvedEdge("EDGE%d(%s-%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
+            edge = CurvedEdge("EDGE%d(%s-%s)"%(i, src.iden, trg.iden), src, trg, width=4, head=head)
 
         edge["FILL_COLOR"] = Qt.black
         edge["CP_POS_X"] = -10

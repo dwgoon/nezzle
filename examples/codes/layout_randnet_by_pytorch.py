@@ -80,25 +80,25 @@ def update(nav, net):
     set_edges = set()
     for i, conn in enumerate(connections):
         src = net.nodes[str(conn[0])]
-        tgt = net.nodes[str(conn[1])]
+        trg = net.nodes[str(conn[1])]
 
-        if (src.iden, tgt.iden) in set_edges:
+        if (src.iden, trg.iden) in set_edges:
             continue
 
         if np.random.randn() < 0.5:
             head = Triangle(width=10, height=10, offset=4)
-            edge = CurvedEdge("EDGE%d(%s+%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
+            edge = CurvedEdge("EDGE%d(%s+%s)"%(i, src.iden, trg.iden), src, trg, width=4, head=head)
 
         else:
             head = Hammer(width=16, height=3, offset=4)
-            edge = CurvedEdge("EDGE%d(%s-%s)"%(i, src.iden, tgt.iden), src, tgt, width=4, head=head)
+            edge = CurvedEdge("EDGE%d(%s-%s)"%(i, src.iden, trg.iden), src, trg, width=4, head=head)
 
         edge["FILL_COLOR"] = Qt.black
         edge["CP_POS_X"] = -10
         edge["CP_POS_Y"] = -70
 
         net.add_edge(edge)
-        set_edges.add((src.iden, tgt.iden))
+        set_edges.add((src.iden, trg.iden))
     # end of for
 
     nav.append_item(net)

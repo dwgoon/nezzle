@@ -34,10 +34,10 @@ def add_edges(net, neurons, l):
         return
 
     for src in neurons[l - 1]:
-        for tgt in neurons[l]:
+        for trg in neurons[l]:
             head = Triangle(width=12, height=12, offset=8)
-            iden = "%s-%s"%(src.iden, tgt.iden)
-            edge = StraightEdge(iden, src, tgt, width=4, head=head)
+            iden = "%s-%s"%(src.iden, trg.iden)
+            edge = StraightEdge(iden, src, trg, width=4, head=head)
             edge["FILL_COLOR"] = QColor(0, 0, 0, 50)
             net.add_edge(edge)
 

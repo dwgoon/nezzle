@@ -30,7 +30,7 @@ def search_edges(net, substr):
 
 def search_edges_target(net, substr):
     edges_found = []
-    for src, tgt, data in net.nxgraph.edges(data=True):
+    for src, trg, data in net.nxgraph.edges(data=True):
         edge = data['GRAPHICS']
         if isinstance(edge, nezzle.graphics.SelfloopEdge):
             if substr in edge.node:

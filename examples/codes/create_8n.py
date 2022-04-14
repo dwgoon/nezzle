@@ -55,14 +55,14 @@ def update(nav, net):
 
     for i, row in df_edge_types.iterrows():
         src = net.nodes[row["SOURCE"]]
-        tgt = net.nodes[row["TARGET"]]
+        trg = net.nodes[row["TARGET"]]
 
         if row["INTERACTION"] == "ACTIVATES":
             head = Triangle(width=10, height=10, offset=4)
-            edge = StraightEdge("EDGE(%s+%s)", src, tgt, width=4, head=head)
+            edge = StraightEdge("EDGE(%s+%s)", src, trg, width=4, head=head)
         else:
             head = Hammer(width=16, height=3, offset=4)
-            edge = StraightEdge("EDGE(%s-%s)", src, tgt, width=4, head=head)
+            edge = StraightEdge("EDGE(%s-%s)", src, trg, width=4, head=head)
 
         edge["WIDTH"] = 2
         edge["FILL_COLOR"] = "black"
