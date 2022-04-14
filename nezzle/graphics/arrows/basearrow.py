@@ -6,7 +6,9 @@ class BaseArrow(object):
 
     ITEM_TYPE = 'BASE_HEAD'
 
-    def __init__(self, width, height, offset=4):
+    DEFAULT_OFFSET = 4
+
+    def __init__(self, width, height, offset):
 
         self._attr = TriggerDict()
         self._attr['ITEM_TYPE'] = self.ITEM_TYPE
@@ -74,14 +76,6 @@ class BaseArrow(object):
         self._offset = value
         return value
 
-    # @property
-    # def symbol(self):
-    #     return self._symbol
-    #
-    # @symbol.setter
-    # def symbol(self, val):
-    #     self._symbol = val
-
     def update(self):
         self.parent.update()
 
@@ -103,8 +97,6 @@ class BaseArrow(object):
         width = dict_head['WIDTH']
         height = dict_head['HEIGHT']
         offset = dict_head['OFFSET']
-        #head_type = dict_head['ITEM_TYPE']
-        #ArrowClass = ArrowClassFactory.create(head_type)
         return cls(width, height, offset=offset)
 
 
@@ -112,8 +104,21 @@ class Triangle(BaseArrow):
 
     ITEM_TYPE = "TRIANGLE"
 
-    def __init__(self, width=10, height=10, *args, **kwargs):
-        super().__init__(width, height, *args, **kwargs)
+    DEFAULT_WIDTH = 10
+    DEFAULT_HEIGHT = 10
+    DEFAULT_OFFSET = 4
+
+    def __init__(self, width=None, height=None, offset=None, *args, **kwargs):
+        if not width:
+            width = Triangle.DEFAULT_WIDTH
+
+        if not height:
+            height = Triangle.DEFAULT_HEIGHT
+
+        if not offset:
+            offset = Triangle.DEFAULT_OFFSET
+
+        super().__init__(width, height, offset, *args, **kwargs)
 
     def identify_points(self, head, edge_body_width, transform=None):
 
@@ -144,8 +149,21 @@ class Hammer(BaseArrow):
 
     ITEM_TYPE = "HAMMER"
 
-    def __init__(self, width=14, height=2, *args, **kwargs):
-        super().__init__(width, height, *args, **kwargs)
+    DEFAULT_WIDTH = 14
+    DEFAULT_HEIGHT = 2
+    DEFAULT_OFFSET = 4
+
+    def __init__(self, width=None, height=None, offset=None, *args, **kwargs):
+        if not width:
+            width = Hammer.DEFAULT_WIDTH
+
+        if not height:
+            height = Hammer.DEFAULT_HEIGHT
+
+        if not offset:
+            offset = Hammer.DEFAULT_OFFSET
+
+        super().__init__(width, height, offset, *args, **kwargs)
 
     def identify_points(self, head, edge_body_width, transform=None):
 

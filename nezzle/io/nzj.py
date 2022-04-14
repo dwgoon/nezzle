@@ -5,6 +5,7 @@ from collections import defaultdict
 import numpy as np
 
 from nezzle.graphics import Network
+from nezzle.graphics import ArrowClassFactory
 
 
 class NpEncoder(json.JSONEncoder):
@@ -28,8 +29,11 @@ def read_metadata_from_nzj(fpath):
         dict_net = json.loads(fin.read())
 
     for edge in dict_net["EDGES"]:
-        str_head_type = edge["HEAD"]["ITEM_TYPE"].title()
-        interactions[str_head_type] += 1
+        if edge["HEAD"]:
+            str_head_type = edge["HEAD"]["ITEM_TYPE"].title()
+            interactions[str_head_type] += 1
+        else:
+            interactions["None"] += 1
 
     metadata["NETWORK_NAME"] = dict_net["NAME"]
     metadata["INTERACTIONS"] = interactions
@@ -42,9 +46,22 @@ def read_nzj(fpath, edge_map):
         dict_net = json.loads(fin.read())
 
         for edge in dict_net["EDGES"]:
-            head_type_ori = edge["HEAD"]["ITEM_TYPE"].title()
-            head_type_new = edge_map[head_type_ori]
-            edge["HEAD"]["ITEM_TYPE"] = head_type_new.upper()
+            if not edge["HEAD"]:
+                edge["HEAD"] = {}
+                head_type_new = edge_map["None"]
+                ArrowClass = ArrowClassFactory.create(head_type_new)
+                if ArrowClass:
+                    edge["HEAD"]["ITEM_TYPE"] = edge_map["None"].upper()
+                    edge["HEAD"]["WIDTH"] = ArrowClass.DEFAULT_WIDTH
+                    edge["HEAD"]["HEIGHT"] = ArrowClass.DEFAULT_HEIGHT
+                    edge["HEAD"]["OFFSET"] = ArrowClass.DEFAULT_OFFSET
+
+            else:
+                head_type_ori = edge["HEAD"]["ITEM_TYPE"].title()
+                head_type_new = edge_map[head_type_ori]
+                edge["HEAD"]["ITEM_TYPE"] = head_type_new.upper()
+
+
 
     return Network.from_dict(dict_net)
 # end of def
