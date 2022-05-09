@@ -22,8 +22,9 @@
 
 ## Installation
 
-[Anaconda](https://www.anaconda.com) is recommended to use and develop Nezzle.
+:snake: [Anaconda](https://www.anaconda.com) is recommended to use and develop Nezzle.
 
+:warning:	Apple M1 users are encouraged to use [Rosetta Terminal](https://dev.to/courier/tips-and-tricks-to-setup-your-apple-m1-for-development-547g).
 
 ### Anaconda virtual environment
 
