@@ -80,11 +80,11 @@ class CurvedEdge(StraightEdge):
             if not self.is_node_selected():
                 # Draw control lines
                 painter.drawLine(self.pos_ctrl, self.pos_src)
-                painter.drawLine(self.pos_ctrl, self.pos_tgt)
+                painter.drawLine(self.pos_ctrl, self.pos_trg)
 
     def is_straight(self):
         v1 = self.pos_src - self.ctrl_point.pos()
-        v2 = self.pos_tgt - self.ctrl_point.pos()
+        v2 = self.pos_trg - self.ctrl_point.pos()
         len_v1 = length(v1)
         len_v2 = length(v2)
         dot_v1v2 = dot(v1, v2)
@@ -112,7 +112,7 @@ class CurvedEdge(StraightEdge):
         super()._update_bounding_rect()
 
         rect_ctrl_src = QRectF(self.pos_ctrl, self.pos_src)
-        rect_ctrl_tgt = QRectF(self.pos_ctrl, self.pos_tgt)
+        rect_ctrl_trg = QRectF(self.pos_ctrl, self.pos_tgt)
 
         rect = self._bounding_rect
         rect = rect.united(rect_ctrl_src)

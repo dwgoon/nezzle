@@ -38,14 +38,14 @@ class StraightEdge(TwoNodeEdge):
         offset = self._calculate_head_offset()
 
         p1 = self.pos_src
-        p2 = self.pos_tgt
+        p2 = self.pos_trg
 
         ph = internal_division(p1, p2, dist(p1, p2) - offset, offset)
         self.pos_head.setX(ph.x())
         self.pos_head.setY(ph.y())
 
     def _calculate_head_offset(self):
-        v = self.pos_tgt - self.pos_src
+        v = self.pos_trg - self.pos_src
         try:
             angle_rad = np.arccos(v.x()/length(v))
         except ZeroDivisionError:
@@ -55,7 +55,7 @@ class StraightEdge(TwoNodeEdge):
         return radius + self.head.offset + self.head.height
 
     def _calculate_head_angle(self):
-        self._angle_head = -QLineF(self.pos_src, self.pos_tgt).angle()
+        self._angle_head = -QLineF(self.pos_src, self.pos_trg).angle()
         self._head_transform.angle = self._angle_head
 
     def _identify_pos(self):
@@ -71,7 +71,7 @@ class StraightEdge(TwoNodeEdge):
         self._identify_pos()
         self._path_paint = QPainterPath()
 
-        line = QLineF(self.pos_src, self.pos_tgt)
+        line = QLineF(self.pos_src, self.pos_trg)
 
         butt1 = self.pos_src + QPointF(0, -self.width / 2)
         butt2 = self.pos_src + QPointF(0, +self.width / 2)

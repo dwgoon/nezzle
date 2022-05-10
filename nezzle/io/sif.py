@@ -26,7 +26,7 @@ def read_metadata_from_sif(fpath):
                 continue
 
             items = line.split()
-            str_src, str_edge_type, str_tgt = items[:3]
+            str_src, str_edge_type, str_trg = items[:3]
             interactions[str_edge_type.strip()] += 1
 
     metadata["NETWORK_NAME"] = os.path.basename(fpath)
@@ -54,7 +54,7 @@ def read_sif(fpath, edge_map=None):
                 continue
 
             items = line.split()
-            str_src, str_edge_type, str_tgt = items[:3]
+            str_src, str_edge_type, str_trg = items[:3]
 
             if edge_map and (str_edge_type not in edge_map):
                 raise ValueError("Undefined edge type: %s"%(str_edge_type))
@@ -87,16 +87,16 @@ def read_sif(fpath, edge_map=None):
                 nodes[str_src] = src
             # end of else
 
-            if str_tgt in nodes:
-                trg = nodes[str_tgt]
+            if str_trg in nodes:
+                trg = nodes[str_trg]
             else:
                 counter_node += 1
-                trg = NodeClass(str_tgt, width=width, height=height,
+                trg = NodeClass(str_trg, width=width, height=height,
                                 pos=QPointF(tx, ty))
 
                 trg["FILL_COLOR"] = color
                 trg['BORDER_COLOR'] = Qt.darkGray
-                nodes[str_tgt] = trg
+                nodes[str_trg] = trg
             # end of else
 
             counter_edge += 1
@@ -111,7 +111,7 @@ def read_sif(fpath, edge_map=None):
             if ArrowClass:
                 head = ArrowClass()
 
-            if str_src == str_tgt: # Self-loop edge
+            if str_src == str_trg: # Self-loop edge
                 EdgeClass = EdgeClassFactory.create('SELFLOOP_EDGE')
                 iden = "%s%s%s" % (str_src, str_edge_type, str_src)
                 edge = EdgeClass(iden=iden,
@@ -123,7 +123,7 @@ def read_sif(fpath, edge_map=None):
 
             else:
                 EdgeClass = EdgeClassFactory.create('CURVED_EDGE')
-                iden = "%s%s%s" % (str_src, str_edge_type, str_tgt)
+                iden = "%s%s%s" % (str_src, str_edge_type, str_trg)
                 edge = EdgeClass(iden=iden,
                                  name= str_edge_type,
                                  source=src, target=trg,

@@ -33,10 +33,10 @@ def update(nav, net):
     src1["BORDER_COLOR"] = Qt.black
     src1["BORDER_WIDTH"] = 2
 
-    tgt1 = NodeClass('TGT1', 40, 40, pos=QPoint(x1, y1))
-    tgt1["FILL_COLOR"] = Qt.yellow
-    tgt1["BORDER_COLOR"] = Qt.black
-    tgt1["BORDER_WIDTH"] = 2
+    trg1 = NodeClass('TGT1', 40, 40, pos=QPoint(x1, y1))
+    trg1["FILL_COLOR"] = Qt.yellow
+    trg1["BORDER_COLOR"] = Qt.black
+    trg1["BORDER_WIDTH"] = 2
 
 
     x0 = -70.0
@@ -50,23 +50,23 @@ def update(nav, net):
     src2["BORDER_COLOR"] = Qt.black
     src2["BORDER_WIDTH"] = 2
 
-    tgt2 = NodeClass('TGT2', 40, 40, pos=QPoint(x1, y1))
-    tgt2["FILL_COLOR"] = QColor(255, 165, 0)
-    tgt2["BORDER_COLOR"] = Qt.black
-    tgt2["BORDER_WIDTH"] = 2
+    trg2 = NodeClass('TGT2', 40, 40, pos=QPoint(x1, y1))
+    trg2["FILL_COLOR"] = QColor(255, 165, 0)
+    trg2["BORDER_COLOR"] = Qt.black
+    trg2["BORDER_WIDTH"] = 2
 
     new_net.add_node(src1)
-    new_net.add_node(tgt1)
+    new_net.add_node(trg1)
     new_net.add_node(src2)
-    new_net.add_node(tgt2)
+    new_net.add_node(trg2)
 
     # Create two edges
     head = ArrowClass(width=10, height=10, offset=4)
-    edge1 = EdgeClass("EDGE1", src1, tgt1, width=4, head=head)
+    edge1 = EdgeClass("EDGE1", src1, trg1, width=4, head=head)
     edge1["FILL_COLOR"] = Qt.black
 
     head = HammerClass(width=16, height=3, offset=4)
-    edge2 = EdgeClass("EDGE2", src2, tgt2, width=4, head=head)
+    edge2 = EdgeClass("EDGE2", src2, trg2, width=4, head=head)
     edge2["FILL_COLOR"] = Qt.black
 
     new_net.add_edge(edge1)
@@ -74,7 +74,7 @@ def update(nav, net):
 
     # Create labels
     LabelClass = LabelClassFactory.create("TEXT_LABEL")
-    for (node, name) in [(src1, "A"), (tgt1, "B"), (src2, "C"), (tgt2, "D")]:
+    for (node, name) in [(src1, "A"), (trg1, "B"), (src2, "C"), (trg2, "D")]:
         label = LabelClass(node, name)
         label["FONT_SIZE"] = 20
         label.align()

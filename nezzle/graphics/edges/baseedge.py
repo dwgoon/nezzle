@@ -243,7 +243,7 @@ class TwoNodeEdge(BaseEdge):
         return self._source.pos() - self.pos()
 
     @property
-    def pos_tgt(self):
+    def pos_trg(self):
         """The position of target relative to its parent edge
         """
         return self._target.pos() - self.pos()

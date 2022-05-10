@@ -52,7 +52,7 @@ def to_graphics(dg, iden, no_edge_type=False):
     str_act = '+'
     str_inh = '-'
 
-    for str_src, str_tgt, edge_data in dg.edges(data=True):
+    for str_src, str_trg, edge_data in dg.edges(data=True):
         str_edge_type = None
         head = None
 
@@ -91,13 +91,13 @@ def to_graphics(dg, iden, no_edge_type=False):
         else:
             sy = half_height + random.uniform(*range_y)
 
-        if 'POS_X' in dg.nodes[str_tgt]:
-            tx = dg.nodes[str_tgt]['POS_X']
+        if 'POS_X' in dg.nodes[str_trg]:
+            tx = dg.nodes[str_trg]['POS_X']
         else:
             tx = half_width + random.uniform(*range_x)
 
-        if 'POS_Y' in dg.nodes[str_tgt]:
-            ty = dg.nodes[str_tgt]['POS_Y']
+        if 'POS_Y' in dg.nodes[str_trg]:
+            ty = dg.nodes[str_trg]['POS_Y']
         else:
             ty = half_height + random.uniform(*range_y)
 
@@ -118,21 +118,21 @@ def to_graphics(dg, iden, no_edge_type=False):
             nodes[str_src] = src
         # end of else
 
-        if str_tgt in nodes:
-            trg = nodes[str_tgt]
+        if str_trg in nodes:
+            trg = nodes[str_trg]
         else:
             counter_node += 1
-            trg = NodeClass(str_tgt, width=width, height=height,
+            trg = NodeClass(str_trg, width=width, height=height,
                             pos=QPointF(tx, ty))
 
-            if "FILL_COLOR" not in dg.nodes[str_tgt]:
+            if "FILL_COLOR" not in dg.nodes[str_trg]:
                 trg["FILL_COLOR"] = color_node
 
-            if 'BORDER_COLOR' not in dg.nodes[str_tgt]:
+            if 'BORDER_COLOR' not in dg.nodes[str_trg]:
                 trg['BORDER_COLOR'] = Qt.darkGray
 
-            trg.update(dg.nodes[str_tgt])
-            nodes[str_tgt] = trg
+            trg.update(dg.nodes[str_trg])
+            nodes[str_trg] = trg
         # end of else
 
         counter_edge += 1

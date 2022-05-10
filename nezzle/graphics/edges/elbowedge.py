@@ -195,7 +195,7 @@ class ElbowEdge(StraightEdge):
         for i, pos in enumerate(self._pos_connectors):
             self._cps.append(pos)
 
-        self._cps.append(self.pos_tgt)
+        self._cps.append(self.pos_trg)
 
         ix_begin = 0
         ix_end = len(self._cps) - 1
@@ -212,7 +212,7 @@ class ElbowEdge(StraightEdge):
 
         for i in range(len_cps-2, 1, -1):
             pos_conn = self._cps[i]
-            pos_conn_on_tgt = pos_conn - self.pos_tgt
+            pos_conn_on_trg = pos_conn - self.pos_tgt
             if self.target.contains(pos_conn_on_tgt):
                 ix_end = i
 

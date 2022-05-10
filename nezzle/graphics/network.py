@@ -178,13 +178,13 @@ class Network(MappableItem):
         self.scene.addItem(edge)
 
         if isinstance(edge, SelfloopEdge):
-            iden_src = iden_tgt = edge.node.iden
+            iden_src = iden_trg = edge.node.iden
         else:
             iden_src = edge.source.iden
-            iden_tgt = edge.target.iden
+            iden_trg = edge.target.iden
 
-        self.nxgraph.add_edge(iden_src, iden_tgt)
-        self.nxgraph[iden_src][iden_tgt]['GRAPHICS'] = edge
+        self.nxgraph.add_edge(iden_src, iden_trg)
+        self.nxgraph[iden_src][iden_trg]['GRAPHICS'] = edge
 
     def remove_edge(self, obj):
         if isinstance(obj, BaseEdge):

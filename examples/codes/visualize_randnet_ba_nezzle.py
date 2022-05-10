@@ -43,10 +43,10 @@ def create_network(G):
 
     for edge in G.edges:
         id_src = edge[0]
-        id_tgt = edge[1]
+        id_trg = edge[1]
         src = net.nodes[id_src]
-        trg = net.nodes[id_tgt]
-        edge = StraightEdge("%s-%s"%(id_src, id_tgt), src, trg, width=4)        
+        trg = net.nodes[id_trg]
+        edge = StraightEdge("%s-%s"%(id_src, id_trg), src, trg, width=4)
         edge["FILL_COLOR"] = QColor(255, 0, 0, 20)   
         net.add_edge(edge)
 
