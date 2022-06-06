@@ -254,7 +254,7 @@ class TwoNodeEdge(BaseEdge):
     def are_nodes_close(self):
         """Decide whether the two nodes are overlapped to show the graphics of edge appropriately.
         """
-        v = self.pos_tgt - self.pos_src
+        v = self.pos_trg - self.pos_src
         len_v = length(v)
         if len_v <= 1e-6:
             return True
@@ -264,9 +264,9 @@ class TwoNodeEdge(BaseEdge):
 
         v *= -1
         angle_rad = np.arccos(v.x() / len_v)
-        radius_tgt = self.target.calculate_radius(angle_rad)
+        radius_trg = self.target.calculate_radius(angle_rad)
 
-        return dist(self.pos_src, self.pos_tgt) < radius_src + radius_tgt
+        return dist(self.pos_src, self.pos_trg) < radius_src + radius_trg
 
     def _identify_pos(self):
         m = internal_division(self.source.pos(), self.target.pos(), 0.5, 0.5)

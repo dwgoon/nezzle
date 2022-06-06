@@ -10,8 +10,7 @@ def reload_modules(dirs=None, modules=None):
     """Reload modules in a directory
 
     Args:
-        dpath:
-
+        dirs:
         modules:
 
     """
@@ -25,7 +24,9 @@ def reload_modules(dirs=None, modules=None):
         if os.path.isfile(dpath):
             dpath = dirname(dpath)
 
-        sys.path.append(dpath)
+        if dpath not in sys.path:
+            sys.path.append(dpath)
+            
         if not modules:
             modules = []
             for fname in os.listdir(dpath):
