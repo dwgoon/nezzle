@@ -180,4 +180,6 @@ python nezzle.py
 
 
 ## Citation
-To be updated...
+D. Lee </br>
+[Nezzle: an interactive and programmable visualization of biological networks in Python](https://academic.oup.com/bioinformatics/article/38/12/3310/6585333?login=true) </br>
+*Bioinformatics* 38(12) 3310–3311 (2022). </br>
