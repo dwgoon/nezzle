@@ -212,8 +212,8 @@ class ElbowEdge(StraightEdge):
 
         for i in range(len_cps-2, 1, -1):
             pos_conn = self._cps[i]
-            pos_conn_on_trg = pos_conn - self.pos_tgt
-            if self.target.contains(pos_conn_on_tgt):
+            pos_conn_on_trg = pos_conn - self.pos_trg
+            if self.target.contains(pos_conn_on_trg):
                 ix_end = i
 
             break
@@ -304,9 +304,9 @@ class VerticalElbowEdge(ElbowEdge):
     ITEM_TYPE = 'VERTICAL_ELBOW_EDGE'
 
     def _create_control_items(self):
-        m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        m_st = internal_division(self.pos_src, self.pos_trg, 0.5, 0.5)
         m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
-        m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
+        m_mt = internal_division(m_st, self.pos_trg, 0.5, 0.5)
 
         cp0 = VerticalConnectorControlPoint(iden="CP0", parent=self, pos=m_sm)
         cp0.append_connector(self._pos_connectors[0])
@@ -342,7 +342,7 @@ class VerticalElbowEdge(ElbowEdge):
         con2.setX(pos_cp1.x())
         con2.setY(pos_cp2.y())
 
-        con3.setX(self.pos_tgt.x())
+        con3.setX(self.pos_trg.x())
         con3.setY(pos_cp2.y())
 
 
@@ -352,9 +352,9 @@ class HorizontalElbowEdge(ElbowEdge):
     ITEM_TYPE = 'HORIZONTAL_ELBOW_EDGE'
 
     def _create_control_items(self):
-        m_st = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        m_st = internal_division(self.pos_src, self.pos_trg, 0.5, 0.5)
         m_sm = internal_division(self.pos_src, m_st, 0.5, 0.5)
-        m_mt = internal_division(m_st, self.pos_tgt, 0.5, 0.5)
+        m_mt = internal_division(m_st, self.pos_trg, 0.5, 0.5)
 
         cp0 = HorizontalConnectorControlPoint(iden="CP0", parent=self, pos=m_sm)
         cp0.append_connector(self._pos_connectors[0])
@@ -391,4 +391,4 @@ class HorizontalElbowEdge(ElbowEdge):
         con2.setY(pos_cp1.y())
 
         con3.setX(pos_cp2.x())
-        con3.setY(self.pos_tgt.y())
+        con3.setY(self.pos_trg.y())

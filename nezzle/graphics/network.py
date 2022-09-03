@@ -290,9 +290,9 @@ class Network(MappableItem):
                 edge = EdgeClass.from_dict(dict_edge, node)
             else:
                 iden_src = dict_edge.pop("ID_SOURCE")
-                iden_tgt = dict_edge.pop("ID_TARGET")
+                iden_trg = dict_edge.pop("ID_TARGET")
                 src = dict_graphics[iden_src]
-                trg = dict_graphics[iden_tgt]
+                trg = dict_graphics[iden_trg]
                 EdgeClass = EdgeClassFactory.create(item_type)
                 edge = EdgeClass.from_dict(dict_edge, src, trg)
 
@@ -376,10 +376,10 @@ class Network(MappableItem):
 #     # net_new.scene.setBackgroundBrush(QColor(0, 0, 0, 0))
 #     net_new.scene.setBackgroundBrush(Qt.white) #transparent)
 #     for i in range(ir.size):
-#         itgt, isrc = ir[i], ic[i]
-#         trg, src = i2n[itgt], i2n[isrc]
+#         itrg, isrc = ir[i], ic[i]
+#         trg, src = i2n[itrg], i2n[isrc]
 #
-#         sign = '+' if A[itgt, isrc] > 0 else '-'
+#         sign = '+' if A[itrg, isrc] > 0 else '-'
 #         ArrowClass = msc[sign]
 #         head = ArrowClass()
 #
@@ -406,18 +406,18 @@ class Network(MappableItem):
 #                 node_src = nodes_cache[src]
 #
 #             if trg not in nodes_cache:
-#                 node_tgt = nodes[trg].copy()
-#                 nodes_cache[trg] = node_tgt
+#                 node_trg = nodes[trg].copy()
+#                 nodes_cache[trg] = node_trg
 #             else:
-#                 node_tgt = nodes_cache[trg]
+#                 node_trg = nodes_cache[trg]
 #
 #             edge = EdgeClass(iden=iden,
 #                              source=node_src,
-#                              target=node_tgt,
+#                              target=node_trg,
 #                              head=head)
 #
 #             node_src.add_edge(edge)
-#             node_tgt.add_edge(edge)
+#             node_trg.add_edge(edge)
 #             net_new.add_edge(edge)
 #
 #             # end of for
@@ -441,7 +441,7 @@ class Network(MappableItem):
 #                 continue
 #
 #             edge = attr['GRAPHICS']
-#             mid = internal_division(edge.pos_src, edge.pos_tgt, 0.5, 0.5)
+#             mid = internal_division(edge.pos_src, edge.pos_trg, 0.5, 0.5)
 #             d = dist(edge.pos_src, mid) / math.cos(math.pi / 4)
 #             cp = rotate(edge.pos_src, mid, -30, d)
 #             edge.ctrl_point.setPos(cp)

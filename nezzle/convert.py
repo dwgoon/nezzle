@@ -154,7 +154,7 @@ def to_graphics(dg, iden, no_edge_type=False):
                 head = ArrowClass()
 
         # Add edge with head
-        if str_src == str_tgt:  # Self-loop edge
+        if str_src == str_trg:  # Self-loop edge
             EdgeClass = EdgeClassFactory.create('SELFLOOP_EDGE')
             iden = "%s%s%s" % (str_src, str_edge_type, str_src)
             edge = EdgeClass(iden=iden,
@@ -169,7 +169,7 @@ def to_graphics(dg, iden, no_edge_type=False):
             edge.update(edge_data)
         else:
             EdgeClass = EdgeClassFactory.create('CURVED_EDGE')
-            iden = "%s%s%s" % (str_src, str_edge_type, str_tgt)
+            iden = "%s%s%s" % (str_src, str_edge_type, str_trg)
             edge = EdgeClass(iden=iden,
                              name= str_edge_type,
                              source=src, target=trg,
@@ -208,7 +208,7 @@ def to_graphics(dg, iden, no_edge_type=False):
                 continue
 
             edge = attr['GRAPHICS']
-            mid = internal_division(edge.pos_src, edge.pos_tgt, 0.5, 0.5)
+            mid = internal_division(edge.pos_src, edge.pos_trg, 0.5, 0.5)
             d = dist(edge.pos_src, mid)/math.cos(math.pi/4)
             cp = rotate(edge.pos_src, mid, -30, d)
             edge.ctrl_point.setPos(cp)

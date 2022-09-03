@@ -112,21 +112,21 @@ class CurvedEdge(StraightEdge):
         super()._update_bounding_rect()
 
         rect_ctrl_src = QRectF(self.pos_ctrl, self.pos_src)
-        rect_ctrl_trg = QRectF(self.pos_ctrl, self.pos_tgt)
+        rect_ctrl_trg = QRectF(self.pos_ctrl, self.pos_trg)
 
         rect = self._bounding_rect
         rect = rect.united(rect_ctrl_src)
-        rect = rect.united(rect_ctrl_tgt)
+        rect = rect.united(rect_ctrl_trg)
         self._bounding_rect = rect
 
     def _create_control_items(self):
-        mid = internal_division(self.pos_src, self.pos_tgt, 0.5, 0.5)
+        mid = internal_division(self.pos_src, self.pos_trg, 0.5, 0.5)
         self._ctrl_point = ControlPoint(parent=self, pos=mid)
 
     def _create_subpoints(self):
         self.cps = 3 * [None]
         self.cps[0] = self.pos_src
-        self.cps[2] = self.pos_tgt
+        self.cps[2] = self.pos_trg
 
         self._qps_top = []
         self._qps_bottom = []
@@ -143,7 +143,7 @@ class CurvedEdge(StraightEdge):
         offset = self._calculate_head_offset()
 
         p1 = self.pos_src
-        p2 = self.pos_tgt
+        p2 = self.pos_trg
         pc = self.ctrl_point.pos()
 
         x = np.array([p1.x(), pc.x(), p2.x()], dtype=np.float64)
@@ -161,7 +161,7 @@ class CurvedEdge(StraightEdge):
         self.pos_head.setY(ph.y())
 
     def _calculate_head_offset(self):
-        v = self.pos_ctrl - self.pos_tgt
+        v = self.pos_ctrl - self.pos_trg
         try:
             angle_rad = np.arccos(v.x() / length(v))
         except ZeroDivisionError:
@@ -178,7 +178,7 @@ class CurvedEdge(StraightEdge):
         # Control points for quadratic Bezier curve
         cps = [self.pos_src,
                self.ctrl_point.pos(),
-               self.pos_tgt]
+               self.pos_trg]
 
         if self.head:
             if self.is_straight():

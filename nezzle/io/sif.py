@@ -155,7 +155,7 @@ def read_sif(fpath, edge_map=None):
                 continue
 
             edge = attr['GRAPHICS']
-            mid = internal_division(edge.pos_src, edge.pos_tgt, 0.5, 0.5)
+            mid = internal_division(edge.pos_src, edge.pos_trg, 0.5, 0.5)
             d = dist(edge.pos_src, mid)/math.cos(math.pi/4)
             cp = rotate(edge.pos_src, mid, -30, d)
             edge.ctrl_point.setPos(cp)
