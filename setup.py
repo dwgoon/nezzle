@@ -1,8 +1,10 @@
 import os
 import os.path as osp
+import codecs
+
 from setuptools import setup, find_packages
 
-with open('README.md') as fin:
+with codecs.open('README.md', encoding="utf-8") as fin:
     lines = []
     for line in fin:
         if line.startswith("<"):
