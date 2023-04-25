@@ -107,7 +107,7 @@ class ElbowEdge(StraightEdge):
 
         if self.isSelected():
             painter.setBrush(Qt.red)
-            painter.drawEllipse(-2.5, -2.5, 5, 5)
+            painter.drawEllipse(QPointF(-2.5, -2.5), 5, 5)
             painter.setPen(QColor(50, 50, 50, 100))
 
     def is_head_visible(self):

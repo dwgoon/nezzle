@@ -1,5 +1,6 @@
 import numpy as np
 from qtpy.QtCore import Qt
+from qtpy.QtCore import QPointF
 from qtpy.QtCore import QLineF
 from qtpy.QtCore import QRectF
 from qtpy.QtGui import QColor, QPainterPath
@@ -74,7 +75,7 @@ class CurvedEdge(StraightEdge):
 
         if self.isSelected():
             painter.setBrush(Qt.red)
-            painter.drawEllipse(-2.5, -2.5, 5, 5)
+            painter.drawEllipse(QPointF(-2.5, -2.5), 5, 5)
             painter.setPen(QColor(50, 50, 50, 100))
 
             if not self.is_node_selected():
