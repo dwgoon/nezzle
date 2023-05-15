@@ -204,13 +204,13 @@ class MenuActionHandler(QWidget):
         scale_height = 200
         dpi_width = 300
         dpi_height = 300
-        image = QImage((scale_width / 100.0) * brect.width(),
-                       (scale_height / 100.0) * brect.height(),
+        image = QImage(int((scale_width / 100.0) * brect.width()),
+                       int((scale_height / 100.0) * brect.height()),
                        QImage.Format_ARGB32_Premultiplied)
 
         # dpm = 300 / 0.0254 # ~300 DPI
-        dpm_width = dpi_width / 0.0254
-        dpm_height = dpi_height / 0.0254
+        dpm_width = int(dpi_width / 0.0254)
+        dpm_height = int(dpi_height / 0.0254)
         image.setDotsPerMeterX(dpm_width)
         image.setDotsPerMeterY(dpm_height)
         # bbrush = scene.backgroundBrush()

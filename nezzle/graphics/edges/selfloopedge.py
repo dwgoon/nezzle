@@ -13,12 +13,12 @@ class SelfloopEdge(BaseEdge):
 
     ITEM_TYPE = 'SELFLOOP_EDGE'
 
-    def __init__(self, iden, node, *args, **kwargs):
+    def __init__(self, iden, node, *args, angle_begin=270, **kwargs):
         self._node = node
         self._radius_core = None
         self._angle_offset = None
         self._angle_sweep = None
-        self._angle_begin = None
+        self._angle_begin = angle_begin
         self._head_transform = Rotate()
 
         super().__init__(iden, *args, **kwargs)
@@ -84,7 +84,7 @@ class SelfloopEdge(BaseEdge):
         #node_hh = self._node.height / 2  # Half of nodes height
         radius = self._radius_core
 
-        self._angle_begin = 270
+        # self._angle_begin = 270  # To set this angle at __init__
 
         """Law of cosine
            dist_sq is the square of distance between

@@ -19,10 +19,10 @@ class ConsoleWidget(RichJupyterWidget):
         self.kernel_manager.kernel.gui = 'qt'
         self.kernel_manager.kernel.shell.cache_size = 50000
 
-        def _abort_queues(kernel):
-            pass
-
-        self.kernel_manager.kernel._abort_queues = _abort_queues
+        # def _abort_queues(kernel):
+        #     pass
+        #
+        # self.kernel_manager.kernel._abort_queues = _abort_queues
         
         self.kernel_client = self.kernel_manager.client()
         self.kernel_client.start_channels()
