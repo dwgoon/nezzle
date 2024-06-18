@@ -74,6 +74,9 @@ class MappableItem(MutableMapping):
     def __iter__(self):
         return iter(self._attr)
 
+    def __contains__(self, obj):
+        return obj in self._attr
+
     def __len__(self):
         return len(self._attr)
 
@@ -164,7 +167,6 @@ class GeometryChangeItem(MappableGraphicsItem,
             self._attr.set('POS_Y', pos.y(), trigger=False)
 
         return super().itemChange(change, value)
-
 
     def gather_children(self):
         children = self.childItems()

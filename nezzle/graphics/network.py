@@ -219,7 +219,9 @@ class Network(MappableItem):
         del self.labels[iden]
 
     def copy(self):
-        return self.from_dict(self.to_dict())
+        net = self.from_dict(self.to_dict())
+        return net
+
 
     def to_dict(self):
         dict_net = {}
@@ -238,11 +240,27 @@ class Network(MappableItem):
         for iden, node in self.nodes.items():
             dict_node = node.to_dict()
             dict_node = {key: val for key, val in dict_node.items() if not key.startswith("_")}
+
+            # Update node data from nxgraph.
+            data = self.nxgraph.nodes[iden]
+            data = data.copy()
+            data.pop('GRAPHICS')
+            dict_node['NXGRAPH'] = data
+
             dict_net["NODES"].append(dict_node)
 
         for iden, edge in self.edges.items():
             dict_edge = edge.to_dict()
             dict_edge = {key: val for key, val in dict_edge.items() if not key.startswith("_")}
+
+            # Update edge data from nxgraph.
+            u = edge.source.iden
+            v = edge.target.iden
+            data = self.nxgraph.edges[u, v]
+            data = data.copy()
+            data.pop('GRAPHICS')
+            dict_edge["NXGRAPH"] = data
+
             dict_net["EDGES"].append(dict_edge)
 
         for iden, label in self.labels.items():
@@ -310,6 +328,18 @@ class Network(MappableItem):
 
         for node in list_nodes:
             net.add_node(node)
+
+        for iden, node in net.nodes.items():
+            if 'NXGRAPH' in node:
+                data = node.pop('NXGRAPH', {})
+                net.nxgraph.nodes[iden].update(data)
+
+        for iden, edge in net.edges.items():
+            if 'NXGRAPH' in edge:
+                data = edge.pop('NXGRAPH', {})
+                u = edge.source.iden
+                v = edge.target.iden
+                net.nxgraph.edges[u, v].update(data)
 
         return net
 # end of class Network
