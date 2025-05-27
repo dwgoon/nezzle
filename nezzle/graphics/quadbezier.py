@@ -134,7 +134,7 @@ def arc_length(x: np.ndarray,
     y'(t)^2 = 4*((R-S)^2*t^2 -2*R*(R-S)*t + R^2)
     '''
 
-    Integrate 2*\sprt{x'(t)^2 + y'(t)^2} over (t1, t2)
+    Integrate 2*sprt{x'(t)^2 + y'(t)^2} over (t1, t2)
     """
 
     #p0, p1, p2 = cps
