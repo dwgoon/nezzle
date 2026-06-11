@@ -12,7 +12,11 @@ class TriggerDict(UserDict):
         self.set(key, value)
 
     def __getitem__(self, key):
-        return self.get(key)
+        value = self.data[key]
+        func = self._triggers_get.get(key)
+        if func is not None:
+            return func(key, value)
+        return value
 
     def set_trigger(self, key, func, when='set'):
         if when == 'set':
@@ -20,8 +24,8 @@ class TriggerDict(UserDict):
         elif when == 'get':
             self._triggers_get[key] = func
         else:
-            ValueError("You should choose 'set' or 'get' "
-                       "for the timing of trigger, not '%s.'"%(when))
+            raise ValueError("You should choose 'set' or 'get' "
+                             "for the timing of trigger, not '%s.'"%(when))
 
     def set(self, key, value, trigger=True):
         if key not in self._triggers_set or not trigger:
@@ -32,12 +36,12 @@ class TriggerDict(UserDict):
             func = self._triggers_set[key]
             self.data[key] = func(key, value)
 
-    def get(self, key, trigger=True):
-        if key not in self._triggers_get or not trigger:
-            return self.data.get(key)
+    def get(self, key, default=None, trigger=True):
+        if key not in self.data:
+            return default
 
         if trigger:
-            func = self._triggers_get[key]
-            value = self.data.get(key)
-            return func(key, value)
+            return self[key]
+
+        return self.data[key]
 

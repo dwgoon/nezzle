@@ -41,17 +41,18 @@ def read_metadata_from_nzj(fpath):
 # end of def
 
 
-def read_nzj(fpath, edge_map):
+def read_nzj(fpath, edge_map=None):
     with codecs.open(fpath, "r", encoding="utf-8") as fin:
         dict_net = json.loads(fin.read())
 
+    if edge_map:
         for edge in dict_net["EDGES"]:
             if not edge["HEAD"]:
                 edge["HEAD"] = {}
                 head_type_new = edge_map["None"]
                 ArrowClass = ArrowClassFactory.create(head_type_new)
                 if ArrowClass:
-                    edge["HEAD"]["ITEM_TYPE"] = edge_map["None"].upper()
+                    edge["HEAD"]["ITEM_TYPE"] = head_type_new.upper()
                     edge["HEAD"]["WIDTH"] = ArrowClass.DEFAULT_WIDTH
                     edge["HEAD"]["HEIGHT"] = ArrowClass.DEFAULT_HEIGHT
                     edge["HEAD"]["OFFSET"] = ArrowClass.DEFAULT_OFFSET
@@ -60,8 +61,6 @@ def read_nzj(fpath, edge_map):
                 head_type_ori = edge["HEAD"]["ITEM_TYPE"].title()
                 head_type_new = edge_map[head_type_ori]
                 edge["HEAD"]["ITEM_TYPE"] = head_type_new.upper()
-
-
 
     return Network.from_dict(dict_net)
 # end of def

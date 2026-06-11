@@ -13,6 +13,10 @@ class BaseNode(PainterOptionItem):
         self._iden = iden
         self._brect = QRectF()
         self._edges = []
+        # Mirror of _edges for O(1) membership (identity semantics match
+        # MappableItem.__eq__/__hash__). Mutate only via add_edge/
+        # remove_edge/pop_edge so list and set never diverge.
+        self._edge_set = set()
 
         self._attr.set_trigger('WIDTH', self._trigger_set_width)
         self._attr.set_trigger('HEIGHT', self._trigger_set_height)
@@ -59,11 +63,12 @@ class BaseNode(PainterOptionItem):
         return True
 
     def gather_children(self):
+        # No membership test needed: a QGraphicsItem has exactly one parent,
+        # so this item's children and each edge's children are disjoint sets,
+        # and add_edge guarantees the edges themselves are unique.
         children = super().gather_children()
         for edge in self.edges:
-            for child in edge.childItems():
-                if child not in children:
-                    children.append(child)
+            children.extend(edge.childItems())
 
         return children
 
@@ -76,35 +81,54 @@ class BaseNode(PainterOptionItem):
         return rect
 
     def update(self, *args, **kwargs):
+        # Marks each connected edge's geometry dirty (cheap with the new
+        # dirty-flag pattern in BaseEdge) and schedules this node's repaint.
+        # The actual Bezier work happens once per frame in the paint phase,
+        # not per pixel of mouse movement.
         for edge in self._edges:
             edge.update()
-        self._invalidate()
         return super().update(*args, **kwargs)
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
             self.update()
         elif change == QGraphicsItem.ItemSelectedHasChanged:
-            self.update()
+            # Selection does not change edge geometry; the only edge visuals
+            # that depend on node selection (control-point visibility and
+            # control lines) exist on SELECTED edges only. Repainting all
+            # incident edges here made a single node click on a dense
+            # network cost a near-full repaint.
+            QGraphicsItem.update(self)
+            for edge in self._edges:
+                if edge.isSelected():
+                    edge.update()
 
         return super().itemChange(change, value)
 
     def has_edge(self, edge):
-        return edge in self._edges
+        return edge in self._edge_set
 
     def add_edge(self, edge):
-        if self.has_edge(edge):
+        if edge in self._edge_set:
             return
+        self._edge_set.add(edge)
         self._edges.append(edge)
 
     def remove_edge(self, edge):
-        if edge in self._edges:
+        if edge in self._edge_set:
+            self._edge_set.remove(edge)
             self._edges.remove(edge)
+
+    def pop_edge(self):
+        edge = self._edges.pop()
+        self._edge_set.discard(edge)
+        return edge
 
     def copy(self):
         return self.from_dict(self.to_dict())
 
     def _trigger_set_width(self, key, value):
+        self.prepareGeometryChange()
         self._width = value
         self._brect.setX(-value / 2)
         self._brect.setWidth(value)
@@ -112,6 +136,7 @@ class BaseNode(PainterOptionItem):
         return value
 
     def _trigger_set_height(self, key, value):
+        self.prepareGeometryChange()
         self._height = value
         self._brect.setY(-value / 2)
         self._brect.setHeight(value)

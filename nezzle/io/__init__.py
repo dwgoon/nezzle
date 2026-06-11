@@ -9,9 +9,9 @@ from nezzle.io.nzj import read_metadata_from_nzj
 from nezzle.io.nzj import read_nzj
 from nezzle.io.nzj import write_nzj
 
-# from nezzle.io.cytoscape import read_metadata_from_cx
-# from nezzle.io.cytoscape import read_cx
-# from nezzle.io.cytoscape import write_cx
+from nezzle.io.cytoscape import read_metadata_from_cyjs
+from nezzle.io.cytoscape import read_cyjs
+from nezzle.io.cytoscape import write_cyjs
 
 
 from nezzle.io.image import write_image
@@ -22,10 +22,13 @@ def read_metadata(fpath):
         raise ValueError("Invalid file path: %s"%(fpath))
 
     file_name_ext = os.path.basename(fpath)
+    file_name_ext = file_name_ext.casefold()
     fname, fext = os.path.splitext(file_name_ext)
 
     if file_name_ext.endswith('.sif'):
         return read_metadata_from_sif(fpath)
+    elif file_name_ext.endswith('.cyjs'):
+        return read_metadata_from_cyjs(fpath)
     elif file_name_ext.endswith('.nzj') or file_name_ext.endswith('.json'):
         return read_metadata_from_nzj(fpath)
 
@@ -37,10 +40,13 @@ def read_network(fpath, edge_map=None):
     if not fpath:
         raise ValueError("Invalid file path: %s"%(fpath))
     file_name_ext = os.path.basename(fpath)
+    file_name_ext = file_name_ext.casefold()
     fname, fext = os.path.splitext(file_name_ext)
 
     if file_name_ext.endswith('.sif'):
         return read_sif(fpath, edge_map)
+    elif file_name_ext.endswith('.cyjs'):
+        return read_cyjs(fpath, edge_map)
     elif file_name_ext.endswith('.nzj') or file_name_ext.endswith('.json'):
         return read_nzj(fpath, edge_map)
 
@@ -55,6 +61,8 @@ def write_network(net, fpath):
 
     if file_name_ext.endswith('.sif'):
         write_sif(net, fpath)
+    elif file_name_ext.endswith('.cyjs'):
+        write_cyjs(net, fpath)
     elif file_name_ext.endswith('.nzj') or file_name_ext.endswith('.json'):
         write_nzj(net, fpath)
     else:

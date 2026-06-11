@@ -1,5 +1,7 @@
 # [DEPRECATED TESTS]
 
+import os
+
 from qtpy import QtWidgets
 from qtpy.QtGui import QColor
 from qtpy.QtCore import Qt
@@ -11,8 +13,11 @@ from nezzle.graphics import LabelClassFactory
 from nezzle.graphics import Network
 
 from nezzle.io import read_network
+from nezzle.io import write_network
 
 app = QtWidgets.QApplication([])
+
+DPATH_DATA = os.path.dirname(os.path.abspath(__file__))
 
 # def test_json_network():
 #
@@ -158,26 +163,26 @@ def test_create_network():
     assert len(dict_net["EDGES"]) == len(dict_net2["EDGES"])
     assert len(dict_net["LABELS"]) == len(dict_net2["LABELS"])
 
-def test_json_jkwon():
-    net1 = read_network("jkwon_egfr_pathway.sif")
-    io.write_network(net1, "jkwon_egfr_pathway.json")
-    net2 = read_network("jkwon_egfr_pathway.json")
+def test_json_jkwon(tmp_path):
+    fpath_json = str(tmp_path / "jkwon_egfr_pathway.json")
+    net1 = read_network(os.path.join(DPATH_DATA, "jkwon_egfr_pathway.sif"))
+    write_network(net1, fpath_json)
+    net2 = read_network(fpath_json)
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
     assert set(net1.edges.keys()) == set(net2.edges.keys())
     assert net1.to_dict() == net2.to_dict()
 
 
-def test_json_korkut_2015():
-    net1 = read_network("korkut_2015.json")
-    io.write_network(net1, "korkut_2015_02.json")
-    net2 = read_network("korkut_2015_02.json")
+def test_json_korkut_2015(tmp_path):
+    fpath_json = str(tmp_path / "korkut_2015_02.json")
+    net1 = read_network(os.path.join(DPATH_DATA, "korkut_2015.json"))
+    write_network(net1, fpath_json)
+    net2 = read_network(fpath_json)
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())
     assert set(net1.edges.keys()) == set(net2.edges.keys())
     assert net1.to_dict() == net2.to_dict()
 
 if __name__ == '__main__':
-
     test_create_network()
-    test_json_jkwon()

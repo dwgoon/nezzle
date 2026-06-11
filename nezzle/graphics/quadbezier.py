@@ -9,6 +9,7 @@ by Gabriel Suchowolski, Jul 10, 2012
 http://microbians.com/?page=math&id=math-quadraticbezieroffseting
 """
 
+import math
 from typing import Union
 import numpy as np
 # from cachetools import cached
@@ -21,6 +22,30 @@ from nezzle.utils import length
 from nezzle.utils import internal_division
 from nezzle.utils import solve_cubic
 from nezzle.utils import rotate
+
+
+def _rot90_scaled(ap_x, ap_y, rp_x, rp_y, sign, tlen):
+    """Rotate (rp_x, rp_y) around (ap_x, ap_y) by sign*90 degrees in Qt screen
+    coords (y-down, clockwise positive) and scale the resulting vector so its
+    length equals ``tlen``. Returns the rotated point as raw floats.
+
+    Equivalent to ``rotate(ap, rp, sign*90, tlen)`` but avoids the per-call
+    QTransform allocation + 5 Qt FFI hops, which dominate cost in the offset
+    pipeline.
+    """
+    vx = rp_x - ap_x
+    vy = rp_y - ap_y
+    len_v = math.sqrt(vx * vx + vy * vy)
+    if len_v == 0.0:
+        return rp_x, rp_y
+    s = tlen / len_v
+    if sign > 0:  # +90 deg in Qt (cw in screen coords): (x,y) -> (-y, x)
+        nx = -vy * s
+        ny = vx * s
+    else:  # -90 deg: (x,y) -> (y, -x)
+        nx = vy * s
+        ny = -vx * s
+    return ap_x + nx, ap_y + ny
 
 
 # def _integrate_sqrt_quad(coeff: np.ndarray, bounds: np.ndarray) -> float:
@@ -153,6 +178,121 @@ def arc_length(x: np.ndarray,
 
 
 
+def _arc_length_scalar(a, b, c, lower, upper):
+    """Pure-Python scalar version of ``2 * integrate_sqrt_quad(coeff, lo, hi)``.
+
+    Avoids numpy ufunc overhead on scalars. Returns ``2 * (F(upper) - F(lower))``
+    where ``F(t) = int sqrt(a*t^2 + b*t + c) dt``.
+    """
+    sqrt_a = math.sqrt(a)
+    inv_4a = 0.25 / a
+    inv_8a32 = 1.0 / (8.0 * a * sqrt_a)
+    coef_log = (4.0 * a * c - b * b) * inv_8a32
+
+    fl = math.sqrt(a * lower * lower + b * lower + c)
+    gl = (2.0 * a * lower + b) / sqrt_a + 2.0 * fl
+    Fl = (b * inv_4a + 0.5 * lower) * fl + coef_log * math.log(gl)
+
+    fu = math.sqrt(a * upper * upper + b * upper + c)
+    gu = (2.0 * a * upper + b) / sqrt_a + 2.0 * fu
+    Fu = (b * inv_4a + 0.5 * upper) * fu + coef_log * math.log(gu)
+
+    return 2.0 * (Fu - Fl)
+
+
+def find_t_for_arclen(p1, pc, p2, target_len, t_min=0.5, t_max=1.0):
+    """Find ``t in [t_min, t_max]`` such that the arc length of the quadratic
+    Bezier ``B(s) = (1-s)^2 p1 + 2s(1-s) pc + s^2 p2`` from ``t`` to 1 equals
+    ``target_len``.
+
+    Closed-form 2-term Taylor expansion of L(u) = arc_length(1-u, 1) around
+    u=0 seeds a safeguarded (bracketed) Newton iteration on the exact
+    closed-form arc length. L(t, 1) is strictly decreasing in t, so the
+    bisection fallback guarantees convergence even on near-cusp curves where
+    |B'(t)| has a sharp interior minimum and a raw Newton step would
+    overshoot. Allocation-free, <= 8 scalar arc-length evaluations (typically
+    1-2) — still ~2 orders of magnitude cheaper than the old 500-sample scan.
+
+    Returns ``t_max`` for degenerate inputs (target_len <= 0, zero tangent at
+    endpoint, or the whole [t_min, 1] arc shorter than target_len — the head
+    is hidden at the target node, matching the old scan's fallback).
+    """
+    if target_len <= 0.0:
+        return t_max
+
+    px = pc.x() - p1.x();  qx = p2.x() - pc.x()
+    py = pc.y() - p1.y();  qy = p2.y() - pc.y()
+
+    # |B'(1)| = 2 * |p2 - pc|
+    speed1_sq = qx * qx + qy * qy
+    if speed1_sq < 1e-24:
+        return t_max
+    alpha = 2.0 * math.sqrt(speed1_sq)            # = |B'(1)|
+
+    # Coefficients of |B'(s)|^2 / 4 = a*s^2 + b*s + c (match _integrate_sqrt_quad)
+    a = (px - qx) * (px - qx) + (py - qy) * (py - qy)
+    b = -2.0 * ((px - qx) * px + (py - qy) * py)
+    c = px * px + py * py
+
+    # L(u) ~ alpha*u - gamma*u^2 with gamma = (2a + b) / alpha
+    # (from L'(0)=alpha, L''(0)=-2(2a+b)/alpha)
+    gamma = (2.0 * a + b) / alpha
+
+    if abs(gamma) < 1e-9 or abs(a) < 1e-12:
+        u = target_len / alpha                     # first-order fallback
+    else:
+        disc = alpha * alpha - 4.0 * gamma * target_len
+        if disc < 0.0:
+            u = target_len / alpha                 # Taylor regime exceeded
+        else:
+            # Smaller root → physical (u → 0 as target_len → 0)
+            u = (alpha - math.sqrt(disc)) / (2.0 * gamma)
+
+    t = 1.0 - u
+
+    # Safeguarded Newton refinement on the exact arc length. The Taylor
+    # estimate is only trustworthy when |B'| varies mildly over [t, 1]; on
+    # near-cusp curves it lands far from the root and an unguarded Newton
+    # step divides by a tiny |B'(t)| and overshoots through the interior
+    # speed minimum. Bracketing [lo, hi] + bisection fallback makes the
+    # iteration unconditionally convergent (L(t, 1) is monotone in t).
+    if abs(a) > 1e-12:
+        try:
+            if _arc_length_scalar(a, b, c, t_min, 1.0) < target_len:
+                return t_max  # No solution in range: hide head at the node.
+
+            lo, hi = t_min, t_max
+            if not (lo < t < hi):
+                t = 0.5 * (lo + hi)
+
+            for _ in range(8):
+                L_at_t = _arc_length_scalar(a, b, c, t, 1.0)
+                err = L_at_t - target_len
+                if abs(err) <= 5e-3 * target_len:
+                    break
+                if err > 0.0:  # Too much remaining length -> move t up.
+                    lo = t
+                else:
+                    hi = t
+                # F(t) = L(t,1) - target; F'(t) = -|B'(t)| = -2*sqrt(speed_sq)
+                speed_t_sq = a * t * t + b * t + c
+                if speed_t_sq > 1e-18:
+                    t_new = t + err / (2.0 * math.sqrt(speed_t_sq))
+                else:
+                    t_new = 0.5 * (lo + hi)
+                if not (lo < t_new < hi):
+                    t_new = 0.5 * (lo + hi)  # Bisect when Newton escapes.
+                t = t_new
+        except (ValueError, ZeroDivisionError):
+            pass  # keep the Taylor estimate
+
+    if t < t_min:
+        return t_min
+    if t > t_max:
+        return t_max
+    return t
+
+
 def nearest_point(cps, pa):
     """
     Find the nearest point of the quadratic bezier curve
@@ -161,51 +301,77 @@ def nearest_point(cps, pa):
     cps: sequence of control points (QPointF)
     pa: arbitrary point
     """
-    p1 = cps[0]
-    pc = cps[1]
-    p2 = cps[2]
+    p1, pc, p2 = cps[0], cps[1], cps[2]
 
-    coords_x = 1e8*np.array([p1.x(), p2.x(), pc.x(), pa.x()])
-    coords_y = 1e8*np.array([p1.y(), p2.y(), pc.y(), pa.y()])
+    p1x, p1y = p1.x(), p1.y()
+    pcx, pcy = pc.x(), pc.y()
+    p2x, p2y = p2.x(), p2.y()
+    pax, pay = pa.x(), pa.y()
 
-    mean_x = np.average(coords_x)
-    mean_y = np.average(coords_y)
+    # Numerical conditioning: scale by 1e8 then standardize across the 4 points.
+    # Preserves the numerical behavior of the original implementation but
+    # avoids 4x numpy array allocations + np.average/np.std for size-4 inputs.
+    SCALE = 1e8
+    sx0 = p1x * SCALE; sy0 = p1y * SCALE
+    sx1 = p2x * SCALE; sy1 = p2y * SCALE
+    sx2 = pcx * SCALE; sy2 = pcy * SCALE
+    sx3 = pax * SCALE; sy3 = pay * SCALE
 
-    sv_x = np.std(coords_x)
-    sv_y = np.std(coords_y)
+    mean_x = (sx0 + sx1 + sx2 + sx3) * 0.25
+    mean_y = (sy0 + sy1 + sy2 + sy3) * 0.25
 
-    sv_x = sv_x if sv_x != 0 else 1.0
-    sv_y = sv_y if sv_y != 0 else 1.0
+    dx0 = sx0 - mean_x; dy0 = sy0 - mean_y
+    dx1 = sx1 - mean_x; dy1 = sy1 - mean_y
+    dx2 = sx2 - mean_x; dy2 = sy2 - mean_y
+    dx3 = sx3 - mean_x; dy3 = sy3 - mean_y
 
-    p1_scaled = QPointF((p1.x()-mean_x)/sv_x, (p1.y()-mean_y)/sv_y)
-    p2_scaled = QPointF((p2.x()-mean_x)/sv_x, (p2.y()-mean_y)/sv_y)
-    pc_scaled = QPointF((pc.x()-mean_x)/sv_x, (pc.y()-mean_y)/sv_y)
-    pa_scaled = QPointF((pa.x()-mean_x)/sv_x, (pa.y()-mean_y)/sv_y)
+    var_x = (dx0 * dx0 + dx1 * dx1 + dx2 * dx2 + dx3 * dx3) * 0.25
+    var_y = (dy0 * dy0 + dy1 * dy1 + dy2 * dy2 + dy3 * dy3) * 0.25
+    sv_x = math.sqrt(var_x) if var_x > 0 else 1.0
+    sv_y = math.sqrt(var_y) if var_y > 0 else 1.0
 
-    v0 = pc_scaled - p1_scaled
-    v1 = p2_scaled - pc_scaled
-    v3 = pa_scaled - p1_scaled
+    inv_sx = 1.0 / sv_x
+    inv_sy = 1.0 / sv_y
 
-    diff_v1v0 = v1 - v0
-    sq_diff_v1v0 = diff_v1v0.x()**2 + diff_v1v0.y()**2
-    sq_v0 = v0.x()**2 + v0.y()**2
+    p1xs = dx0 * inv_sx; p1ys = dy0 * inv_sy
+    p2xs = dx1 * inv_sx; p2ys = dy1 * inv_sy
+    pcxs = dx2 * inv_sx; pcys = dy2 * inv_sy
+    paxs = dx3 * inv_sx; pays = dy3 * inv_sy
 
-    a = sq_diff_v1v0  # dot((v1 - v0), (v1 - v0))
-    b = 3*(dot(v1, v0) - sq_v0)  # 3*(dot(v1, v0) - dot(v0, v0))
-    c = 2*sq_v0 - dot(v3, diff_v1v0)  # 3*dot(v0, v0) - dot(v1, v0)
-    d = -dot(v3, v0)
+    # v0 = pc - p1, v1 = p2 - pc, v3 = pa - p1
+    v0x = pcxs - p1xs; v0y = pcys - p1ys
+    v1x = p2xs - pcxs; v1y = p2ys - pcys
+    v3x = paxs - p1xs; v3y = pays - p1ys
+
+    diffx = v1x - v0x
+    diffy = v1y - v0y
+
+    sq_diff = diffx * diffx + diffy * diffy
+    sq_v0 = v0x * v0x + v0y * v0y
+    dot_v1v0 = v1x * v0x + v1y * v0y
+    dot_v3_diff = v3x * diffx + v3y * diffy
+    dot_v3_v0 = v3x * v0x + v3y * v0y
+
+    a = sq_diff
+    b = 3 * (dot_v1v0 - sq_v0)
+    c = 2 * sq_v0 - dot_v3_diff
+    d = -dot_v3_v0
 
     sols = solve_cubic(a, b, c, d)
     t = sols[0]
-    f = a*t**3 + b*t**2 + c*t + d
 
-    assert np.allclose(np.imag(t), 0)
-    t = np.real(t)
+    if t < 0 or t > 1:
+        raise FloatingPointError("Abnormal value for parameter, t: %f" % (t))
 
-    if t<0 or t>1:
-        raise FloatingPointError("Abnormal value for parameter, t: %f"%(t))
-
-    pt = (1-t)**2*p1 + 2*t*(1-t)*pc + t**2*p2
+    # Evaluate the Bezier point in ORIGINAL (unscaled) coords.
+    one_minus_t = 1.0 - t
+    w0 = one_minus_t * one_minus_t
+    w1 = 2.0 * t * one_minus_t
+    w2 = t * t
+    pt = QPointF(
+        w0 * p1x + w1 * pcx + w2 * p2x,
+        w0 * p1y + w1 * pcy + w2 * p2y,
+    )
     return pt, t
 
 
@@ -235,18 +401,25 @@ def identify_qps(sps, width):
 
     qps_top = []
     qps_bottom = []
+    hw = width * 0.5
 
     for i in range(0, len(sps)-1, 2):
         p, cp = sps[i], sps[i+1]
-        q_top = rotate(p, cp, -90, width/2)
-        q_bottom = rotate(p, cp, 90, width/2)
-        qps_top.append(q_top)
-        qps_bottom.append(q_bottom)
+        px, py = p.x(), p.y()
+        cpx, cpy = cp.x(), cp.y()
+        tx, ty = _rot90_scaled(px, py, cpx, cpy, -1, hw)
+        bx, by = _rot90_scaled(px, py, cpx, cpy, +1, hw)
+        qps_top.append(QPointF(tx, ty))
+        qps_bottom.append(QPointF(bx, by))
 
-    q_top = rotate(sps[-1], sps[-2], 90, width/2)
-    q_bottom = rotate(sps[-1], sps[-2], -90, width/2)
-    qps_top.append(q_top)
-    qps_bottom.append(q_bottom)
+    p_last = sps[-1]
+    p_prev = sps[-2]
+    plx, ply = p_last.x(), p_last.y()
+    ppx, ppy = p_prev.x(), p_prev.y()
+    tx, ty = _rot90_scaled(plx, ply, ppx, ppy, +1, hw)
+    bx, by = _rot90_scaled(plx, ply, ppx, ppy, -1, hw)
+    qps_top.append(QPointF(tx, ty))
+    qps_bottom.append(QPointF(bx, by))
 
     return qps_top, qps_bottom
 
@@ -266,8 +439,22 @@ def identify_dps(sps, width):
 
 
 def identify_dp(ap, p1, p2, width, angle_sign):
-    m1 = rotate(ap, p1, angle_sign*90, 1.0) - ap
-    m2 = rotate(ap, p2, -angle_sign*90, 1.0) - ap
-    m = m1 + m2
-    k = m*width/dot(m, m)
-    return ap + k
+    apx, apy = ap.x(), ap.y()
+
+    # m1 = unit vector from ap to p1 rotated by angle_sign*90
+    r1x, r1y = _rot90_scaled(apx, apy, p1.x(), p1.y(), angle_sign, 1.0)
+    m1x = r1x - apx
+    m1y = r1y - apy
+
+    # m2 = unit vector from ap to p2 rotated by -angle_sign*90
+    r2x, r2y = _rot90_scaled(apx, apy, p2.x(), p2.y(), -angle_sign, 1.0)
+    m2x = r2x - apx
+    m2y = r2y - apy
+
+    mx = m1x + m2x
+    my = m1y + m2y
+    m_dot_m = mx * mx + my * my
+    if m_dot_m == 0.0:
+        return QPointF(apx, apy)
+    k = width / m_dot_m
+    return QPointF(apx + mx * k, apy + my * k)

@@ -1,3 +1,4 @@
+import math
 import traceback
 
 import numpy as np
@@ -34,9 +35,6 @@ class ElbowEdge(StraightEdge):
     def __init__(self, *args, **kwargs):
         self._ctrl_points = []
         self._t_head = 0
-
-        # To avoid repetitive memory allocation, make this variable as a member.
-        self._arr_t = np.arange(1, 0.5, -0.001, dtype=np.float64)
         super().__init__(*args, **kwargs)  # initialize() is called in the hierarchy of super().__init__
 
         for i in range(3):
@@ -56,28 +54,40 @@ class ElbowEdge(StraightEdge):
     def _trigger_set_cp_pos_x(self, key, value):
         ix = int(key[2])
         cp = self._ctrl_points[ix]
+        # Hidden items ignore setSelected, and the connector propagation in
+        # ConnectorControlPoint.itemChange is gated on isSelected.
+        old_visible = cp.isVisible()
+        cp.setVisible(True)
         old_selected = cp.isSelected()
         cp.setSelected(True)
         cp.setX(value)
         cp.setSelected(old_selected)
+        cp.setVisible(old_visible)
         return value
 
     def _trigger_set_cp_pos_y(self, key, value):
         ix = int(key[2])
         cp = self._ctrl_points[ix]
+        old_visible = cp.isVisible()
+        cp.setVisible(True)
         old_selected = cp.isSelected()
         cp.setSelected(True)
         cp.setY(value)
         cp.setSelected(old_selected)
+        cp.setVisible(old_visible)
         return value
 
     def initialize(self):
+        # Path construction is deferred to the first paint()/shape(); see
+        # StraightEdge.initialize. Connector positions still need an eager
+        # pass so the conservative bbox has valid control points.
         self._identify_pos()
         self._create_connectors()
         self._create_control_items()
+        for cp in self._ctrl_points:
+            cp.setVisible(self.isSelected())
         self._create_subpoints()
-        self._create_path()
-        self._update_bounding_rect()
+        self._identify_connectors_pos()
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemSelectedHasChanged:
@@ -89,17 +99,55 @@ class ElbowEdge(StraightEdge):
         self.update_ctrl_points()
         super().update()
 
+    def _update_conservative_bbox(self):
+        """Fast O(1) superset bbox: bounding box of src/trg + all elbow
+        connector points + width and head margin. Used by boundingRect() to
+        avoid running the full elbow-path construction for off-screen edges.
+        """
+        xs = [self.pos_src.x(), self.pos_trg.x()]
+        ys = [self.pos_src.y(), self.pos_trg.y()]
+        for cp in self._ctrl_points:
+            p = cp.pos()
+            xs.append(p.x()); ys.append(p.y())
+        minx = min(xs); maxx = max(xs)
+        miny = min(ys); maxy = max(ys)
+
+        margin = self.width * 0.5 + 2.0
+        if self.head:
+            # Additive bound: covers the head's along-edge reach AND its
+            # lateral half-width (e.g. Hammer heads are 7x edge width wide)
+            # for any head rotation, since sqrt(h^2 + (w/2)^2) <= h + w/2.
+            head_reach = (self.head.height + self.head.offset
+                          + 0.5 * self.head.width + 2.0)
+            if head_reach > margin:
+                margin = head_reach
+        if margin < 8.0:
+            margin = 8.0  # Selected-state marker ellipse around the origin
+        if self._pen:
+            margin += 2.0 * self._pen.width()
+
+        self._bounding_rect = QRectF(minx - margin, miny - margin,
+                                     (maxx - minx) + 2.0 * margin,
+                                     (maxy - miny) + 2.0 * margin)
+
     def update_ctrl_points(self):
+        # Hidden handles cost nothing per frame; an unselected edge's
+        # control points paint nothing and have an empty shape anyway.
+        # A selected or mouse-grabbed handle must stay visible, though:
+        # clicking a handle momentarily deselects the parent edge, and
+        # hiding the handle in that window would break its mouse grab.
+        edge_selected = self.isSelected()
+        node_selected = self.is_node_selected()
+        scene = self.scene()
+        grabber = scene.mouseGrabberItem() if scene is not None else None
         for cp in self._ctrl_points:
             if not cp.isSelected():
                 cp.update_pos_by_connectors()
                 cp.update()
 
-            if self.is_node_selected():
-                cp.setVisible(False)
-            else:
-                cp.setVisible(True)
-
+            cp.setVisible(not node_selected
+                          and (edge_selected or cp.isSelected()
+                               or cp is grabber))
         # end of for
 
     def paint(self, painter, option, widget):
@@ -107,7 +155,9 @@ class ElbowEdge(StraightEdge):
 
         if self.isSelected():
             painter.setBrush(Qt.red)
-            painter.drawEllipse(QPointF(-2.5, -2.5), 5, 5)
+            # Centered on the local origin (midpoint of the two nodes);
+            # drawEllipse(QPointF, rx, ry) takes the CENTER, not a corner.
+            painter.drawEllipse(QPointF(0.0, 0.0), 2.5, 2.5)
             painter.setPen(QColor(50, 50, 50, 100))
 
     def is_head_visible(self):
@@ -161,18 +211,19 @@ class ElbowEdge(StraightEdge):
         self._cps[-2]: real point (the end of node)
         self._cps[-3]: previous connector (the tail of head)
         """
-
+        # Scalarized to dodge np.arccos NaN-raise when consecutive connectors
+        # coincide.
         v = self._cps[-2] - self._cps[-3]
-
-        try:
-            angle_rad = np.arccos(v.x()/length(v))
-        except ZeroDivisionError:
+        vx, vy = v.x(), v.y()
+        len_v_sq = vx * vx + vy * vy
+        if len_v_sq < 1e-18:
             return 0
-        except Exception as err:
-            print(err)
-            return 0
-
-        radius = self.target.calculate_radius(angle_rad)
+        cos_v = vx / math.sqrt(len_v_sq)
+        if cos_v > 1.0:
+            cos_v = 1.0
+        elif cos_v < -1.0:
+            cos_v = -1.0
+        radius = self.target.calculate_radius(math.acos(cos_v))
         return radius + self.head.offset + self.head.height
 
     def _create_head_path(self):
@@ -207,16 +258,16 @@ class ElbowEdge(StraightEdge):
             pos_conn_on_src = pos_conn - self.pos_src
             if self.source.contains(pos_conn_on_src):
                 ix_begin = i
-
-            break
+            else:
+                break
 
         for i in range(len_cps-2, 1, -1):
             pos_conn = self._cps[i]
             pos_conn_on_trg = pos_conn - self.pos_trg
             if self.target.contains(pos_conn_on_trg):
                 ix_end = i
-
-            break
+            else:
+                break
 
         if ix_end - ix_begin <= 1:
             self._cps = [self._cps[0], self._cps[0], self._cps[1], self._cps[-2], self._cps[-1], self._cps[-1]]
@@ -227,33 +278,40 @@ class ElbowEdge(StraightEdge):
 
 
         hw = self.width / 2  # The half of width
-        len_cps = len(self._cps)
+        cps = self._cps
 
+        # Single fused scalar loop: for the reversed traversal v1' = -v2 and
+        # v2' = -v1, and normal(-v) = -normal(v), so the backward offset sum
+        # is exactly the negation of the forward one — bps is the mirror of
+        # fps. One pass with plain float math replaces the two
+        # QVector2D-allocating loops (~4x faster per recompute).
         self._fps.clear()
-        for i in range(1, len_cps-1):
-            p0 = self._cps[i - 1]
-            p1 = self._cps[i]
-            p2 = self._cps[i + 1]
-            v1 = QVector2D(p1 - p0)
-            v2 = QVector2D(p2 - p1)
-
-            nv1 = hw * normal_vector(v1)  # Normal vector of v1
-            nv2 = hw * normal_vector(v2)  # Normal vector of v2
-            self._fps.append(p1 + (nv1 + nv2).toPointF())
-        # end of for
-
         self._bps.clear()
-        for i in range(len_cps - 2, 0, -1):
-            p0 = self._cps[i + 1]
-            p1 = self._cps[i]
-            p2 = self._cps[i - 1]
-            v1 = QVector2D(p1 - p0)
-            v2 = QVector2D(p2 - p1)
-
-            nv1 = hw * normal_vector(v1)  # Normal vector of v1
-            nv2 = hw * normal_vector(v2)  # Normal vector of v2
-            self._bps.append(p1 + (nv1 + nv2).toPointF())
+        bps_rev = []
+        for i in range(1, len(cps) - 1):
+            p0 = cps[i - 1]
+            p1 = cps[i]
+            p2 = cps[i + 1]
+            p1x = p1.x(); p1y = p1.y()
+            v1x = p1x - p0.x(); v1y = p1y - p0.y()
+            v2x = p2.x() - p1x; v2y = p2.y() - p1y
+            l1_sq = v1x * v1x + v1y * v1y
+            l2_sq = v2x * v2x + v2y * v2y
+            # The 1e-12 cutoff mirrors QVector2D.normalized()'s fuzzy-null
+            # behavior for degenerate segments.
+            nx = ny = 0.0
+            if l1_sq > 1e-12:
+                l1 = math.sqrt(l1_sq)
+                nx -= v1y / l1
+                ny += v1x / l1
+            if l2_sq > 1e-12:
+                l2 = math.sqrt(l2_sq)
+                nx -= v2y / l2
+                ny += v2x / l2
+            self._fps.append(QPointF(p1x + hw * nx, p1y + hw * ny))
+            bps_rev.append(QPointF(p1x - hw * nx, p1y - hw * ny))
         # end of for
+        self._bps.extend(reversed(bps_rev))
 
     def _create_elbow_path(self):
         self._identify_elbow_points()
@@ -284,7 +342,6 @@ class ElbowEdge(StraightEdge):
         # end of for
 
     def _create_path(self):
-        self._identify_pos()  # Identify the position of this edge
         self._identify_connectors_pos()  # Identify the positions of connectors
         try:
             # if self.is_straight():

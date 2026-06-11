@@ -16,6 +16,8 @@ from qtpy.QtWidgets import QProgressBar
 #import nezzle.utils
 from nezzle.utils import reload_modules
 from nezzle.utils import extract_name_and_ext
+from nezzle.utils import get_last_dir
+from nezzle.utils import set_last_dir
 from nezzle.dialogs.progressdialog import ProgressDialog
 
 
@@ -34,6 +36,7 @@ class TaskThread(QThread):
 
 class Worker(QObject):
     finished = Signal(object)
+    error = Signal(str)
 
     def set_job(self, func, net):
         self._func_execute = func
@@ -41,7 +44,12 @@ class Worker(QObject):
 
     @Slot()
     def execute(self):
-        nets = self._func_execute(self._net)
+        try:
+            nets = self._func_execute(self._net)
+        except Exception:
+            self.error.emit(traceback.format_exc())
+            self.finished.emit(None)
+            return
         self.finished.emit(nets)
 
 
@@ -63,6 +71,7 @@ class CodeManager(QObject):
         self._thread = QThread()
         self._worker.moveToThread(self._thread)
         self._worker.finished.connect(self.on_thread_finished)
+        self._worker.error.connect(self.on_worker_error)
         self._thread.started.connect(self._worker.execute)
 
 
@@ -87,6 +96,7 @@ class CodeManager(QObject):
             dialog.setAcceptMode(QFileDialog.AcceptOpen)
             dialog.setNameFilters([self.tr("Python module files (*.py)")])
             dialog.setFileMode(QFileDialog.ExistingFile)
+            dialog.setDirectory(get_last_dir("code"))
             if dialog.exec() == QDialog.Accepted:
                 fpath = dialog.selectedFiles()[0]
                 fpath = fpath.strip()
@@ -94,6 +104,7 @@ class CodeManager(QObject):
                     raise RuntimeError("An inappropriate file "
                                        "for Python code: %s"%(fpath))
                 # end of if
+                set_last_dir("code", fpath)
                 self._file_path_edit.setText(fpath)
             # end of if
         except Exception as err:
@@ -107,14 +118,32 @@ class CodeManager(QObject):
             self.show_exception_message(err)
 
 
+    @Slot(str)
+    def on_worker_error(self, err):
+        print(err)
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setWindowTitle("An error has occurred")
+        msg.setText(err)
+        msg.exec()
+
     @Slot(object)
     def on_thread_finished(self, nets):
         self._thread.quit()
+        self._thread.wait()
         if nets:
-            for net in nets:
-                self.mw.nt_manager.append_item(net.copy())
+            if not isinstance(nets, (list, tuple)):
+                nets = [nets]
+            try:
+                for net in nets:
+                    self.mw.nt_manager.append_item(net.copy())
+            except Exception as err:
+                self.show_exception_message(err)
 
     def process_code(self, fpath):
+        if self._thread.isRunning():
+            raise RuntimeError("A previous code execution is still running.")
+
         fname, fext = extract_name_and_ext(fpath)
 
         if not fname:
@@ -131,7 +160,7 @@ class CodeManager(QObject):
             net = None
 
         if hasattr(mod, 'create'):
-            self._worker.set_job(mod.create, net.copy())
+            self._worker.set_job(mod.create, net.copy() if net is not None else None)
             self._thread.start()
 
         if hasattr(mod, 'update'):

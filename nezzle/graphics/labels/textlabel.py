@@ -1,5 +1,7 @@
 from qtpy.QtCore import Qt
+from qtpy.QtCore import QRectF
 from qtpy.QtGui import QFont
+from qtpy.QtGui import QFontMetricsF
 from qtpy.QtGui import QColor
 
 from qtpy.QtWidgets import QGraphicsItem
@@ -8,6 +10,7 @@ from qtpy.QtWidgets import QGraphicsTextItem
 from nezzle.graphics.mixins import Lockable
 from nezzle.graphics.baseitem import PainterOptionItem
 from nezzle.graphics import BaseEdge
+from nezzle.graphics import SelfloopEdge
 
 
 @Lockable
@@ -70,14 +73,6 @@ class TextLabel(PainterOptionItem):
     @font.setter
     def font(self, obj):
         self._attr['FONT'] = obj
-
-    @property
-    def text(self):
-        return self._attr['TEXT']
-
-    @text.setter
-    def text(self, val):
-        self._attr['TEXT'] = val
 
     @property
     def text(self):
@@ -177,7 +172,11 @@ class TextLabel(PainterOptionItem):
         if change == QGraphicsItem.ItemPositionChange:
             parent = self.parentItem()
             if isinstance(parent, BaseEdge):
-                if parent.is_node_selected():
+                if isinstance(parent, SelfloopEdge):
+                    node_selected = parent.node.isSelected()
+                else:
+                    node_selected = parent.is_node_selected()
+                if node_selected:
                     self._text_item.itemChange(change, self.pos())
                     return super().itemChange(change, self.pos())
 
@@ -218,21 +217,59 @@ class TextLabel(PainterOptionItem):
         obj._attr.update(attr)
         return obj
 
+    def _ink_rect(self):
+        """Tight bounding rect of the *visible* text in the text item's local
+        coordinates (same frame as ``boundingRect()``: origin at the top-left
+        of the loose box, y growing downward).
+
+        ``QGraphicsTextItem.boundingRect()`` is the loose layout box: it pads
+        the text with the document margin (4 px on each side) and spans the
+        font's whole line box, whose descent region is empty for
+        ascender-only strings such as digits. Centering on that box lifts the
+        glyphs noticeably above the node center. ``tightBoundingRect`` returns
+        the actual inked rectangle, so centering on it puts the visible text
+        on the node center.
+
+        Falls back to the loose box for empty or multi-line text, where the
+        single-line ``tightBoundingRect`` would not describe the real layout.
+        """
+        loose = self._text_item.boundingRect()
+        text = self._text_item.toPlainText()
+        if not text or "\n" in text:
+            return loose
+
+        fm = QFontMetricsF(self._text_item.font())
+        tight = fm.tightBoundingRect(text)
+        if tight.isEmpty():
+            return loose
+
+        margin = self._text_item.document().documentMargin()
+        baseline = margin + fm.ascent()          # first baseline within the box
+        left = margin + tight.left()             # tight.left(): left side bearing
+        top = baseline + tight.top()             # tight.top() < 0 (ink above baseline)
+        return QRectF(left, top, tight.width(), tight.height())
+
     def align(self, mode="middle-center"):
-        rect = self._text_item.boundingRect()
+        """Position this label relative to its parent node's origin (0, 0).
 
-        if "top" in mode:
-            self._attr["POS_Y"] = -rect.height()
-        elif "bottom" in mode:
-            self._attr["POS_Y"] = 0
-        elif "middle" in mode:
-            self._attr["POS_Y"] = -rect.height() / 2
+        Alignment is computed against the visible text ink (see
+        ``_ink_rect``), so ``middle``/``center`` land the glyphs on the node
+        center instead of floating above it.
+        """
+        ink = self._ink_rect()
 
-        if "left" in mode:
-            self._attr["POS_X"] = -rect.width()
-        elif "right" in mode:
-            self._attr["POS_X"] = 0
-        elif "center" in mode:
-            self._attr["POS_X"] = -rect.width() / 2
+        if "top" in mode:        # label above the node: ink bottom at origin
+            self._attr["POS_Y"] = -ink.bottom()
+        elif "bottom" in mode:   # label below the node: ink top at origin
+            self._attr["POS_Y"] = -ink.top()
+        elif "middle" in mode:   # ink vertical center at origin
+            self._attr["POS_Y"] = -(ink.top() + ink.bottom()) / 2
+
+        if "left" in mode:       # label left of the node: ink right at origin
+            self._attr["POS_X"] = -ink.right()
+        elif "right" in mode:    # label right of the node: ink left at origin
+            self._attr["POS_X"] = -ink.left()
+        elif "center" in mode:   # ink horizontal center at origin
+            self._attr["POS_X"] = -(ink.left() + ink.right()) / 2
 
         self._attr["_OLD_POS"] = self.pos()

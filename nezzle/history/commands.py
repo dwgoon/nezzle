@@ -18,25 +18,31 @@ class MoveByMouseCommand(QUndoCommand):
         self._items = items
         self._new_positions = []
         self._old_positions = []
+        self._text = ""
 
         for item in items:
             self._new_positions.append((item, QPointF(item.pos())))
             self._old_positions.append((item, QPointF(item["_OLD_POS"])))
 
-            children = item.childItems()
-            if not children:
-                children = []
+            children = list(item.childItems())
 
             if isinstance(item, BaseNode):
+                # Disjoint by construction: each child has exactly one
+                # parent and add_edge deduplicates edges, so no membership
+                # scan is needed.
                 for edge in item.edges:
-                    for child in edge.childItems():
-                        if child not in children:
-                            children.append(child)
+                    children.extend(edge.childItems())
 
-            if children:
-                for child in children:
-                    self._new_positions.append((child, QPointF(child.pos())))
-                    self._old_positions.append((child, QPointF(child["_OLD_POS"])))
+            for child in children:
+                new_pos = QPointF(child.pos())
+                old_pos = QPointF(child["_OLD_POS"])
+                if new_pos == old_pos:
+                    # setPos to an identical position is a Qt no-op, so
+                    # recording unchanged children only bloats the command
+                    # (e.g. control points during a plain node drag).
+                    continue
+                self._new_positions.append((child, new_pos))
+                self._old_positions.append((child, old_pos))
 
         # end of for
 
@@ -60,12 +66,9 @@ class MoveByMouseCommand(QUndoCommand):
             else:
                 item.setPos(pos)
 
-            new_item, new_pos = self._new_positions[i]
-
         for selected_item in selected:
             selected_item.setSelected(True)
 
-        scene.update()
         self.setText(self._text)
 
     def redo(self):
@@ -80,8 +83,6 @@ class MoveByMouseCommand(QUndoCommand):
                 item.setPos(pos)
 
         # end of for
-        item.scene().update()
-
         num_items = len(self._items)
         if num_items == 1:
             item = self._items[0]
@@ -111,13 +112,15 @@ class MoveByKeyCommand(MoveByMouseCommand):
         if not isinstance(command, MoveByKeyCommand):
             return False
 
-        items = command._items
-        self._new_positions = [(item, QPointF(item.pos())) for item in items]
+        if [it for it, _ in self._old_positions] != [it for it, _ in command._old_positions]:
+            return False
+
+        self._new_positions = list(command._new_positions)
 
         num_items = len(self._items)
         if num_items == 1:
             item = self._items[0]
-            old_pos = item.pos()
+            _, old_pos = self._old_positions[0]
             _, new_pos = self._new_positions[0]
             self._text = f"Move {str(item)} from ({old_pos.x():.2f}, {old_pos.y():.2f}) to ({new_pos.x():.2f}, {new_pos.y():.2f})"
         else:
@@ -134,6 +137,7 @@ class ConvertNodeCommand(QUndoCommand):
         self._net = net
         self._old_items = old_items
         self._new_items = new_items
+        self._text = ""
 
     def undo(self):
         for old_item, new_item in zip(self._old_items, self._new_items):
@@ -142,7 +146,6 @@ class ConvertNodeCommand(QUndoCommand):
             old_item.update_children_old_positions()
             old_item["_OLD_POS"] = old_item.pos()
 
-        old_item.scene().update()
         self.setText(self._text)
 
     def redo(self):
@@ -151,8 +154,6 @@ class ConvertNodeCommand(QUndoCommand):
             self._net.replace_node(old_item, new_item)
             new_item.update_children_old_positions()
             new_item["_OLD_POS"] = new_item.pos()
-
-        new_item.scene().update()
 
         NewNodeClass = NodeClassFactory.create(new_item.ITEM_TYPE)
         num_items = len(self._old_items)
@@ -178,15 +179,15 @@ class ConvertEdgeCommand(QUndoCommand):
         self._net = net
         self._old_items = old_items  # [item.copy() for item in new_items]
         self._new_items = new_items  # [item.copy() for item in old_items]
+        self._text = ""
 
     def undo(self):
         for old_item, new_item in zip(self._old_items, self._new_items):
             old_item.setSelected(new_item.isSelected())
             self._net.replace_edge(new_item, old_item)
             old_item.update_children_old_positions()
-            old_item["_OLD_POS"] = new_item.pos()
+            old_item["_OLD_POS"] = old_item.pos()
 
-        old_item.scene().update()
         self.setText(self._text)
 
     def redo(self):
@@ -195,8 +196,6 @@ class ConvertEdgeCommand(QUndoCommand):
             self._net.replace_edge(old_item, new_item)
             new_item.update_children_old_positions()
             new_item["_OLD_POS"] = new_item.pos()
-
-        new_item.scene().update()
 
         NewEdgeClass = EdgeClassFactory.create(new_item.ITEM_TYPE)
         num_items = len(self._old_items)

@@ -39,7 +39,10 @@ class HistoryViewManager(QObject):
         self.history_view.setStack(history.stack)
 
     def on_selection_changed(self, current, previous):
-        model_index = current.indexes()[0]  # Get QModelIndex from QItemSelection
+        indexes = current.indexes()
+        if not indexes:
+            return
+        model_index = indexes[0]  # Get QModelIndex from QItemSelection
         scene = self.mw.sv_manager.current_scene
         selected = scene.selectedItems()
 

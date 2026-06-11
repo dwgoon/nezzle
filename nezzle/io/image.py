@@ -15,12 +15,13 @@ def write_image(net,
                 pad_width=10, pad_height=10):
 
     fname, fext = extract_name_and_ext(fpath)
+    fext = fext.casefold()
 
     scene = net.scene
     scene.clearSelection()
     scene.clearFocus()
     brect = scene.itemsBoundingRect()
-    brect.adjust(-pad_width, -pad_height, +2*pad_width, +2*pad_height)
+    brect.adjust(-pad_width, -pad_height, +pad_width, +pad_height)
 
     if image_width and image_height:
         image = QImage(image_width,
@@ -40,22 +41,26 @@ def write_image(net,
 
     bbrush = scene.backgroundBrush()
 
+    image.fill(Qt.transparent)
     painter = QPainter(image)
-    if not transparent or fext in ["jpeg", "jpg"]:
-        image.fill(Qt.white)
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(bbrush.color())
-        painter.drawRect(0, 0, image.width(), image.height())
-    elif fext in ['png']:
-        image.fill(bbrush.color())
+    try:
+        if not transparent or fext in ["jpeg", "jpg"]:
+            image.fill(Qt.white)
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(bbrush.color())
+            painter.drawRect(0, 0, image.width(), image.height())
+        elif fext in ['png']:
+            image.fill(bbrush.color())
 
-    painter.setRenderHints(QPainter.TextAntialiasing
-                           | QPainter.Antialiasing
-                           | QPainter.SmoothPixmapTransform
-                           | QPainter.HighQualityAntialiasing)
+        painter.setRenderHints(QPainter.TextAntialiasing
+                               | QPainter.Antialiasing
+                               | QPainter.SmoothPixmapTransform
+                               | QPainter.HighQualityAntialiasing)
 
-    scene.render(painter)
+        scene.render(painter, source=brect)
+    finally:
+        painter.end()
+
     image.save(fpath, fext.upper(), quality)
-    painter.end()
 # end of def
 

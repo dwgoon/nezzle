@@ -11,6 +11,8 @@ from qtpy.QtWidgets import QComboBox
 from nezzle.ui.ui_opennetworkdialog import Ui_OpenNetworkDialog
 from nezzle.io import read_metadata
 from nezzle.graphics.arrows.arrowclassfactory import ArrowClassFactory
+from nezzle.utils import get_last_dir
+from nezzle.utils import set_last_dir
 
 
 class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
@@ -52,10 +54,12 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
             dialog = QFileDialog(self)
             dialog.setWindowTitle("Open a network file")
             dialog.setAcceptMode(QFileDialog.AcceptOpen)
-            dialog.setNameFilters([self.tr("Text files (*.sif *.cx *.nzj *.json)")])
+            dialog.setNameFilters([self.tr("Network files (*.sif *.nzj *.json *.cyjs)")])
             dialog.setFileMode(QFileDialog.ExistingFile)
+            dialog.setDirectory(get_last_dir("network"))
             if dialog.exec() == QDialog.Accepted:
                 fpath = dialog.selectedFiles()[0]
+                set_last_dir("network", fpath)
                 self.ui_filePathEdit.setText(fpath)
                 self.on_reload_button_released()
             # end of if
@@ -76,36 +80,45 @@ class OpenNetworkDialog(QDialog, Ui_OpenNetworkDialog):
         if not fpath or len(fpath) <= 0:
             return
 
-        self._head_selections.clear()
-        metadata = read_metadata(fpath)
-        interactions = metadata["INTERACTIONS"]
-        num_rows = len(interactions)
-        self.ui_edgeHeadMappingTable.setRowCount(num_rows)
-        for i, (interaction_name, count) in enumerate(interactions.items()):
-            # Column (0): Count of each interaction
-            count_item = QTableWidgetItem(str(count))
-            count_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-            count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
-            self.ui_edgeHeadMappingTable.setItem(i, 0, count_item)
+        try:
+            metadata = read_metadata(fpath)
+            self._head_selections.clear()
+            interactions = metadata["INTERACTIONS"]
+            num_rows = len(interactions)
+            self.ui_edgeHeadMappingTable.setRowCount(num_rows)
+            for i, (interaction_name, count) in enumerate(interactions.items()):
+                # Column (0): Count of each interaction
+                count_item = QTableWidgetItem(str(count))
+                count_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
+                self.ui_edgeHeadMappingTable.setItem(i, 0, count_item)
 
-            # Column (1): Interaction name
-            interaction_item = QTableWidgetItem(interaction_name)
-            interaction_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-            count_item.setFlags(count_item.flags() ^ Qt.ItemIsEditable)
-            self.ui_edgeHeadMappingTable.setItem(i, 1, interaction_item)
+                # Column (1): Interaction name
+                interaction_item = QTableWidgetItem(interaction_name)
+                interaction_item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+                interaction_item.setFlags(interaction_item.flags() ^ Qt.ItemIsEditable)
+                self.ui_edgeHeadMappingTable.setItem(i, 1, interaction_item)
 
-            # Column (2): QComboBox for selecting heads
-            cb = QComboBox()
-            cb.addItems(self._available_heads)
-            if interaction_name in self._available_heads:
-                index = self._available_heads.index(interaction_name)
-                cb.setCurrentIndex(index)
+                # Column (2): QComboBox for selecting heads
+                cb = QComboBox()
+                cb.addItems(self._available_heads)
+                if interaction_name in self._available_heads:
+                    index = self._available_heads.index(interaction_name)
+                    cb.setCurrentIndex(index)
 
-            self.ui_edgeHeadMappingTable.setCellWidget(i, 2, cb)
-            self._head_selections[interaction_name] = cb
-        # end of for
+                self.ui_edgeHeadMappingTable.setCellWidget(i, 2, cb)
+                self._head_selections[interaction_name] = cb
+            # end of for
 
-        self.ui_networkNameEdit.setText(metadata["NETWORK_NAME"])
+            self.ui_networkNameEdit.setText(metadata["NETWORK_NAME"])
+        except Exception as err:
+            print(err)
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setWindowTitle("Open a network file")
+            msg.setText("Invalid file type or file contents:\n\n%s"%(traceback.format_exc()))
+            msg.exec()
+        # end of except
 
     @Slot()
     def on_accepted(self):

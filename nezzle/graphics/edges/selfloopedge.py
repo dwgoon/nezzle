@@ -34,9 +34,34 @@ class SelfloopEdge(BaseEdge):
         self._node = obj
 
     def initialize(self):
+        # Path construction is deferred: _identify_pos() computes
+        # _radius_core, which is all the conservative bbox needs; the first
+        # paint()/shape() builds the real path.
         self._identify_pos()
-        self._create_path()
-        self._update_bounding_rect()
+
+    def _update_conservative_bbox(self):
+        """Fast O(1) superset bbox: the loop is centered at the edge's local
+        origin with radius ``_radius_core``, so its local bbox is invariant
+        under node position changes (only depends on node size + loop width).
+        """
+        if self._radius_core is None:
+            # Pre-init: fall back to whatever path bbox + pen padding gives.
+            return BaseEdge._update_conservative_bbox(self)
+        r = self._radius_core
+        margin = self._width * 0.5 + 2.0
+        head = self._head
+        if head:
+            # Additive bound: covers the head's along-edge reach AND its
+            # lateral half-width (e.g. Hammer heads are 7x edge width wide)
+            # for any head rotation, since sqrt(h^2 + (w/2)^2) <= h + w/2.
+            head_reach = (head.height + head.offset
+                          + 0.5 * head.width + 2.0)
+            if head_reach > margin:
+                margin = head_reach
+        if self._pen:
+            margin += 2.0 * self._pen.width()
+        side = 2.0 * (r + margin)
+        self._bounding_rect = QRectF(-r - margin, -r - margin, side, side)
 
     def _identify_pos(self):
         node_hw = self._node.width/2  # Half of nodes width
@@ -117,8 +142,6 @@ class SelfloopEdge(BaseEdge):
         return path.currentPosition()
 
     def _create_path(self):
-        self._identify_pos()
-
         # The calculating the angles, offset and sweep, should be done
         # in the sequence: (1) offset, (2) sweep.
         self._calculate_angle_offset()

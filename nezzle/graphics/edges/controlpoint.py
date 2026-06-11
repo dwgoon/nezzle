@@ -95,10 +95,6 @@ class BaseControlPoint(GeometryChangeItem):
             painter.setBrush(Qt.white)
             painter.drawEllipse(self.small_rect)
 
-        scene = self.scene()
-        if scene:
-            scene.invalidate()
-
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         self.parent.setSelected(True)

@@ -2,12 +2,23 @@
 Utility functions for mathematical calculation.
 """
 
+import math as _math
 import numpy as np
 
 from qtpy.QtCore import QLineF
 from qtpy.QtCore import QPointF
-from qtpy.QtGui import QTransform
 from qtpy.QtGui import QVector2D
+
+
+def _cbrt_signed(x):
+    """Real cube root that handles negative inputs (like np.cbrt).
+
+    ``x ** (1/3)`` returns a complex number for negative x in Python, so
+    this helper mimics np.cbrt without the numpy overhead.
+    """
+    if x < 0.0:
+        return -((-x) ** (1.0 / 3.0))
+    return x ** (1.0 / 3.0)
 
 
 def dot(v1, v2):
@@ -66,7 +77,9 @@ def length(v):
         >>> length(v1) == np.sqrt(2)
         True
     """
-    return np.sqrt(v.x()**2 + v.y()**2)
+    x = v.x()
+    y = v.y()
+    return _math.sqrt(x * x + y * y)
 
 
 def dist(p1, p2):
@@ -89,8 +102,9 @@ def dist(p1, p2):
         14.142135623730951
 
     """
-    diff = p1 - p2
-    return np.sqrt(diff.x()**2 + diff.y()**2)
+    dx = p1.x() - p2.x()
+    dy = p1.y() - p2.y()
+    return _math.sqrt(dx * dx + dy * dy)
 
 
 def angle(v1, v2, radian=False):
@@ -181,9 +195,10 @@ def internal_division(p1, p2, r1, r2):
         PyQt5.QtCore.QPointF(0.4, 0.0)
     """
     sum_r = r1 + r2
-
-
-    return (r2/sum_r*p1) + (r1/sum_r*p2)
+    f1 = r2 / sum_r
+    f2 = r1 / sum_r
+    return QPointF(f1 * p1.x() + f2 * p2.x(),
+                   f1 * p1.y() + f2 * p2.y())
 
 
 def solve_cubic(a, b, c, d):
@@ -227,49 +242,46 @@ def solve_cubic(a, b, c, d):
            pp. 404-407.
     """
 
-    sols = []
+    # All inputs are scalars; using ``math.*`` avoids the ~30x overhead of
+    # invoking numpy ufuncs on scalar arguments.
     A = b / a
     B = c / a
     C = d / a
 
-    # Substitute x = y - A/3 to eliminate quadratic term:
-    # x^3 +px + q = 0
-
+    # Substitute x = y - A/3 to eliminate the quadratic term:
+    # x^3 + px + q = 0
     sq_A = A * A
-    p = 1.0/3 * (-1.0/3*sq_A + B)
-    q = 1.0/2 * (2.0/27*A*sq_A - 1.0/3*A*B + C)
+    p = (1.0 / 3.0) * (-(1.0 / 3.0) * sq_A + B)
+    q = 0.5 * ((2.0 / 27.0) * A * sq_A - (1.0 / 3.0) * A * B + C)
 
-    # Use Cardano's formula
     cb_p = p * p * p
     D = q * q + cb_p
 
-    if np.isclose(D, 1e-12):
-        if np.isclose(q, 1e-12):  # One triple solution
-            sols.append(0)
+    # Threshold matches the historical behavior of np.isclose(D, 1e-12)
+    # (default atol=1e-8 dominates when comparing tiny values).
+    _ZERO_TOL = 1e-8
+
+    if abs(D) < _ZERO_TOL:
+        if abs(q) < _ZERO_TOL:  # One triple solution
+            sols = [0.0]
         else:  # One single and one double solution
-            u = np.cbrt(-q)
-            sols.append(2 * u)
-            sols.append(-u)
-
+            u = _cbrt_signed(-q)
+            sols = [2.0 * u, -u]
     elif D < 0:  # Casus irreducibilis: three real solutions
-        phi = 1.0/3 * np.arccos(-q/np.sqrt(-cb_p))
-        t = 2*np.sqrt(-p)
-        s0 = t*np.cos(phi)
-        s1 = -t*np.cos(phi + np.pi/3)
-        s2 = -t*np.cos(phi - np.pi/3)
+        phi = (1.0 / 3.0) * _math.acos(-q / _math.sqrt(-cb_p))
+        t = 2.0 * _math.sqrt(-p)
+        s0 = t * _math.cos(phi)
+        s1 = -t * _math.cos(phi + _math.pi / 3.0)
+        s2 = -t * _math.cos(phi - _math.pi / 3.0)
         sols = [s0, s1, s2]
-    else:  # one real solution
-        sqrt_D = np.sqrt(D)
-        u = np.cbrt(sqrt_D - q)
-        v = - np.cbrt(sqrt_D + q)
+    else:  # One real solution
+        sqrt_D = _math.sqrt(D)
+        u = _cbrt_signed(sqrt_D - q)
+        v = -_cbrt_signed(sqrt_D + q)
         sols = [u + v]
-    # end of if-else
 
-    sub = 1.0/3*A
-    for i, v in enumerate(sols):
-        sols[i] -= sub
-
-    return sols
+    sub = (1.0 / 3.0) * A
+    return [s - sub for s in sols]
 
 
 def rotate(ap, rp, angle, tlen=None):
@@ -303,9 +315,15 @@ def rotate(ap, rp, angle, tlen=None):
         >>> rotate(org, v1, 45)
         PyQt5.QtCore.QPointF(0.0, 1.4142135623730951)
     """
-    transform = QTransform()
-    v = rp - ap
-    len_v = length(v)
+    # Scalar math equivalent of the original QTransform pipeline
+    # (translate/rotate/scale/translate + map). QTransform.rotate uses
+    # x' = x*cos - y*sin, y' = x*sin + y*cos (clockwise on screen, y-down),
+    # so the same matrix is applied here directly without the per-call
+    # QTransform allocation and FFI hops.
+    apx = ap.x(); apy = ap.y()
+    vx = rp.x() - apx
+    vy = rp.y() - apy
+    len_v = _math.sqrt(vx * vx + vy * vy)
 
     if len_v == 0:
         return rp
@@ -313,12 +331,12 @@ def rotate(ap, rp, angle, tlen=None):
     if not tlen:
         tlen = len_v
 
-    transform.translate(ap.x(), ap.y())
-    transform.rotate(angle)
-    transform.scale(tlen/len_v, tlen/len_v)
-    transform.translate(-ap.x(), -ap.y())
-    tp = transform.map(rp)  # Point which has been transformed
-    return tp
+    k = tlen / len_v
+    rad = _math.radians(angle)
+    c = _math.cos(rad)
+    s = _math.sin(rad)
+    return QPointF(apx + (vx * c - vy * s) * k,
+                   apy + (vx * s + vy * c) * k)
 
 
 def reflect_yaxis(ap, rp):

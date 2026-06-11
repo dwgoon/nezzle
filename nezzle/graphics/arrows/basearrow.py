@@ -1,29 +1,22 @@
 from qtpy.QtCore import QPointF
-from nezzle.utils import TriggerDict
 
 
 class BaseArrow(object):
+    """Plain (width, height, offset) value holder for an edge's arrow head.
+
+    Deliberately NOT TriggerDict-backed: one arrow is constructed per edge,
+    so building trigger machinery here measurably slowed bulk network
+    loading while nothing ever read the attribute dict.
+    """
 
     ITEM_TYPE = 'BASE_HEAD'
 
     DEFAULT_OFFSET = 4
 
     def __init__(self, width, height, offset):
-
-        self._attr = TriggerDict()
-        self._attr['ITEM_TYPE'] = self.ITEM_TYPE
-
         self._offset = offset
         self._height = height
         self._width = width
-
-        self._attr.set_trigger('WIDTH', self._trigger_set_width, when='set')
-        self._attr.set_trigger('HEIGHT', self._trigger_set_height, when='set')
-        self._attr.set_trigger('OFFSET', self._trigger_set_offset, when='set')
-        
-        self._attr['WIDTH'] = width
-        self._attr['HEIGHT'] = height
-        self._attr['OFFSET'] = offset
 
     # Read-write properties
     @property
@@ -40,12 +33,8 @@ class BaseArrow(object):
 
     @width.setter
     def width(self, val):
-        self._attr['WIDTH'] = val
+        self._width = val
         self.update()
-
-    def _trigger_set_width(self, key, value):
-        self._width = value
-        return value
 
     @property
     def height(self):
@@ -53,12 +42,8 @@ class BaseArrow(object):
 
     @height.setter
     def height(self, val):
-        self._attr['HEIGHT'] = val
+        self._height = val
         self.update()
-
-    def _trigger_set_height(self, key, value):
-        self._height = value
-        return value
 
     @property
     def offset(self):
@@ -69,12 +54,8 @@ class BaseArrow(object):
         if not hasattr(self, "_parent") or not self._parent:
             raise ValueError("A edge should be assigned for this arrow before setting offset.")
 
-        self._attr['OFFSET'] = val
+        self._offset = val
         self.update()
-
-    def _trigger_set_offset(self, key, value):
-        self._offset = value
-        return value
 
     def update(self):
         self.parent.update()
@@ -83,14 +64,12 @@ class BaseArrow(object):
         raise NotImplementedError("identify_pos should be implemented!")
 
     def to_dict(self):
-        dict_head = {}
-        dict_head['ITEM_TYPE'] = self.ITEM_TYPE
-        dict_head['WIDTH'] = self.width
-        dict_head['HEIGHT'] = self.height
-        dict_head['OFFSET'] = self.offset
-        dict_head.update(self._attr)
-
-        return dict_head
+        return {
+            'ITEM_TYPE': self.ITEM_TYPE,
+            'WIDTH': self._width,
+            'HEIGHT': self._height,
+            'OFFSET': self._offset,
+        }
 
     @classmethod
     def from_dict(cls, dict_head):

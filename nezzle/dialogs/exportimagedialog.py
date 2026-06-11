@@ -9,6 +9,8 @@ from qtpy.QtCore import Slot
 
 from nezzle.ui.ui_exportimagedialog import Ui_ExportImageDialog
 from nezzle.utils import extract_name_and_ext
+from nezzle.utils import get_last_dir
+from nezzle.utils import set_last_dir
 #from nezzle.constants import DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT
 
 class ExportImageDialog(QDialog, Ui_ExportImageDialog):
@@ -69,11 +71,12 @@ class ExportImageDialog(QDialog, Ui_ExportImageDialog):
         try:
             fpath = QFileDialog.getSaveFileName(self,
                                                 self.tr("Save an image"),
-                                                "",
+                                                get_last_dir("image"),
                                                 self.tr("Image files (*.png *.jpeg)"))
 
             fpath = fpath[0]
             if fpath:
+                set_last_dir("image", fpath)
                 self.ui_filePathEdit.setText(fpath)
                 fname, fext = extract_name_and_ext(fpath)
                 if fext.casefold() in ['jpeg']:
@@ -109,7 +112,7 @@ class ExportImageDialog(QDialog, Ui_ExportImageDialog):
             self._scaleWidth = 200
 
         try:
-            self._scaleHeight = int(self.ui_scaleWidthEdit.text())
+            self._scaleHeight = int(self.ui_scaleHeightEdit.text())
         except ValueError:
             self._scaleHeight = 200
 
@@ -132,8 +135,13 @@ class ExportImageDialog(QDialog, Ui_ExportImageDialog):
 
     @Slot()
     def onQualityEditTextChanged(self):
-        if self.ui_qualityEdit.text():
-            self.ui_qualitySlider.setValue(int(self.ui_qualityEdit.text()))
+        text = self.ui_qualityEdit.text()
+        if text:
+            try:
+                value = int(text)
+            except ValueError:
+                return
+            self.ui_qualitySlider.setValue(value)
         else:
             self.ui_qualitySlider.setValue(0)
 

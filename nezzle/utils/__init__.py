@@ -1,4 +1,5 @@
 from nezzle.utils.etc import *
+from nezzle.utils.lastdir import *
 from nezzle.utils.math import *
 from nezzle.utils.meta import *
 from nezzle.utils.networkx import *

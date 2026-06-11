@@ -1,13 +1,11 @@
-import numpy as np
+import math
 
-from qtpy.QtCore import QPointF, Qt
+from qtpy.QtCore import QPointF
 from qtpy.QtCore import QRectF
 
 from qtpy.QtGui import QPainterPath
 from qtpy.QtWidgets import QGraphicsItem
 
-from nezzle.utils import dist
-from nezzle.utils import length
 from nezzle.utils import internal_division
 
 from nezzle.graphics.baseitem import PainterOptionItem
@@ -35,9 +33,29 @@ class BaseEdge(PainterOptionItem):
         self._path_paint = QPainterPath()
         self._bounding_rect = QRectF()
 
+        # Two-level dirty tracking for lazy geometry recompute.
+        #
+        #   _brect_dirty: cheap conservative bounding rect needs refresh.
+        #                 Used by boundingRect() — must be fast because Qt
+        #                 calls it for visibility/clipping decisions even
+        #                 when the edge will not be painted this frame.
+        #
+        #   _geom_dirty:  full path (stroker output + tight bbox) needs
+        #                 refresh. Done only when paint() / shape() actually
+        #                 require the polygon.
+        #
+        # `update()` sets both; boundingRect() clears only _brect_dirty;
+        # paint()/shape() clears both. This way off-screen edges in a large
+        # network never pay the stroker/head cost.
+        self._brect_dirty = True
+        self._geom_dirty = True
+
+        # No ItemSendsGeometryChanges: the 2 itemChange notifications per
+        # setPos() through the Python MRO were ~half the per-move cost of an
+        # edge, and the only consumer was mirroring POS_X/POS_Y into _attr —
+        # which GeometryChangeItem.to_dict now refreshes at serialization.
         self.setFlags(QGraphicsItem.ItemIsSelectable
-                      | QGraphicsItem.ItemIsFocusable
-                      | QGraphicsItem.ItemSendsGeometryChanges)
+                      | QGraphicsItem.ItemIsFocusable)
 
         self._attr.set_trigger('WIDTH', self._trigger_set_width, when='set')
         self._attr.set('WIDTH', width, trigger=False)
@@ -75,6 +93,19 @@ class BaseEdge(PainterOptionItem):
         self.set_width(value)
         return value
 
+    def _trigger_set_border_color(self, key, value):
+        # The painted path can depend on pen visibility (CurvedEdge merges
+        # the head subpath only when the border would stroke a seam), so a
+        # border change must also invalidate the cached geometry.
+        ret = super()._trigger_set_border_color(key, value)
+        self._geom_dirty = True
+        return ret
+
+    def _trigger_set_border_line(self, key, value):
+        ret = super()._trigger_set_border_line(key, value)
+        self._geom_dirty = True
+        return ret
+
     def _trigger_set_head(self, key, value):
         self._head = value
         if self._head:
@@ -97,21 +128,6 @@ class BaseEdge(PainterOptionItem):
     def pos_head(self):
         return self._pos_head
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            """
-            The following check prevents this item being selected
-            simply according to boundingRect.
-            """
-
-            pos = event.pos() - self.pos()
-            if self._path_paint.contains(pos):
-                self.setSelected(True)
-                event.accept()
-        else:
-            event.reject()
-
-
     """
     [Reference] https://stackoverflow.com/a/34199293
     QGraphicsItem::shape is used for object collision detection, hit tests and knowing where mouse clicks occur.
@@ -119,13 +135,20 @@ class BaseEdge(PainterOptionItem):
     """
 
     def boundingRect(self):
+        # Cheap conservative path: just refresh the bbox (O(constant) work
+        # using the convex-hull property of the Bezier control polygon).
+        # The full path is NOT computed here.
+        if self._brect_dirty:
+            self._update_conservative_bbox()
+            self._brect_dirty = False
         return self._bounding_rect
 
     def shape(self):
+        # Hit-testing needs the actual filled polygon, so force a full
+        # recompute if dirty.
+        if self._geom_dirty:
+            self._recompute_geometry()
         return self._path_paint
-
-    def itemChange(self, change, value):
-        return super().itemChange(change, value)
 
     def _create_head_path(self):
         points = self.head.identify_points(self.pos_head,
@@ -139,12 +162,47 @@ class BaseEdge(PainterOptionItem):
         self._path_head = path
 
     def update(self, *args, **kwargs):
+        # Cheap: reposition (O(1) midpoint math) and mark dirty.
+        # Actual Bezier work happens lazily in paint(); boundingRect() uses
+        # a fast conservative-superset bbox so off-screen culling is cheap.
+        #
+        # _identify_pos() must run eagerly here — not inside the lazy
+        # _create_path() — because paint()/shape() must never mutate the
+        # item position mid-render/hit-test.
+        self._identify_pos()
+        if not self._brect_dirty or not self._geom_dirty:
+            # Re-notify whenever a consumer may have read the previous rect.
+            # (Gating this on _geom_dirty alone froze off-screen edges:
+            # boundingRect() clears _brect_dirty every frame, while
+            # _geom_dirty stays True until a paint that may never come.)
+            self.prepareGeometryChange()
+        self._brect_dirty = True
+        self._geom_dirty = True
+        # Explicit QGraphicsItem.update: super().update would resolve to
+        # MutableMapping.update (MappableItem precedes QGraphicsItem in the
+        # MRO) and silently skip the repaint request.
+        return QGraphicsItem.update(self, *args, **kwargs)
+
+    def _recompute_geometry(self):
         self._create_path()
         self._update_bounding_rect()
-        self._invalidate()
-        return super().update(*args, **kwargs)
+        self._geom_dirty = False
+        self._brect_dirty = False
+
+    def _update_conservative_bbox(self):
+        # Default: derive a conservative superset from whatever the current
+        # _path_paint reports plus pen padding. Subclasses with explicit
+        # control-polygon information override this with a faster
+        # closed-form bbox that does NOT require a fresh path.
+        rect = self._path_paint.boundingRect()
+        if self._pen:
+            pad = 2 * self._pen.width()
+            rect.adjust(-pad, -pad, +pad, +pad)
+        self._bounding_rect = rect
 
     def paint(self, painter, option, widget):
+        if self._geom_dirty:
+            self._recompute_geometry()
         super().paint(painter, option, widget)
         painter.drawPath(self._path_paint)
 
@@ -194,7 +252,9 @@ class BaseEdge(PainterOptionItem):
             pad = 2 * self._pen.width()
             rect.adjust(-pad, -pad, +pad, +pad)
 
-        self._bounding_rect = rect
+        # The selected-state marker ellipse is drawn around the local origin
+        # (radius 5 at (-2.5, -2.5)); make sure thin edges still cover it.
+        self._bounding_rect = rect.united(QRectF(-8.0, -8.0, 16.0, 16.0))
 
 
 class TwoNodeEdge(BaseEdge):
@@ -211,9 +271,6 @@ class TwoNodeEdge(BaseEdge):
     def __str__(self):
         str_edge_type = ''.join([word.title() for word in self.ITEM_TYPE.split('_')])
         return "%s(%s, %s)"%(str_edge_type, self.source.name, self.target.name)
-
-    def __eq__(self, other):
-        return id(other) == id(self)
 
     @property
     def source(self):
@@ -254,19 +311,26 @@ class TwoNodeEdge(BaseEdge):
     def are_nodes_close(self):
         """Decide whether the two nodes are overlapped to show the graphics of edge appropriately.
         """
-        v = self.pos_trg - self.pos_src
-        len_v = length(v)
+        ps = self.pos_src
+        pt = self.pos_trg
+        vx = pt.x() - ps.x()
+        vy = pt.y() - ps.y()
+        len_v = math.sqrt(vx * vx + vy * vy)
         if len_v <= 1e-6:
             return True
 
-        angle_rad = np.arccos(v.x() / len_v)
-        radius_src = self.source.calculate_radius(angle_rad)
+        # Clamped to acos domain — np.arccos would yield NaN here, which the
+        # global np.seterr('raise') (set in elbowedge.py) turns fatal.
+        cos_v = vx / len_v
+        if cos_v > 1.0:
+            cos_v = 1.0
+        elif cos_v < -1.0:
+            cos_v = -1.0
 
-        v *= -1
-        angle_rad = np.arccos(v.x() / len_v)
-        radius_trg = self.target.calculate_radius(angle_rad)
+        radius_src = self.source.calculate_radius(math.acos(cos_v))
+        radius_trg = self.target.calculate_radius(math.acos(-cos_v))
 
-        return dist(self.pos_src, self.pos_trg) < radius_src + radius_trg
+        return len_v < radius_src + radius_trg
 
     def _identify_pos(self):
         m = internal_division(self.source.pos(), self.target.pos(), 0.5, 0.5)

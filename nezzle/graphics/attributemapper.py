@@ -67,7 +67,7 @@ class AttributeMapper(object):
         color = QColor(val)
         return color
 
-    def _to_color_str(self, obj):
+    def _to_color_str(self, attr, obj):
         if isinstance(obj, QColor):
             return obj.name(QColor.HexArgb)
         elif isinstance(obj, Qt.GlobalColor):

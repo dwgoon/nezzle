@@ -28,6 +28,8 @@ from nezzle.io import write_image
 
 from nezzle.systemstate import get_system_state
 from nezzle.constants import Lock
+from nezzle.utils import get_last_dir
+from nezzle.utils import set_last_dir
 
 from nezzle.graphics.nodes.nodeconverter import NodeConverter
 from nezzle.graphics.nodes.basenode import BaseNode
@@ -284,19 +286,21 @@ class MenuActionHandler(QWidget):
 
     @Slot(bool)
     def process_save_network(self):
+        net = self.mw.nt_manager.current_net
+        if net is None:
+            err_msg = "There is no selected network."
+            self.show_error("Save a network", err_msg)
+            return
+
         try:
             fpath = QFileDialog.getSaveFileName(self.mw,
                                                 self.tr("Save a network file"),
-                                                "",
+                                                get_last_dir("network"),
                                                 self.tr("Network files (*.sif *.nzj *.json)"))
             fpath = fpath[0]
             if fpath:
-                net = self.mw.nt_manager.current_item.data()
-                if net:
-                    write_network(net, fpath)
-                else:
-                    err_msg = "There is no selected network."
-                    self.show_error("Save a network", err_msg)
+                set_last_dir("network", fpath)
+                write_network(net, fpath)
             # end of if
         except Exception as err:
             err_msg = "An error has occurred during saving the file:\n%s"
@@ -304,33 +308,38 @@ class MenuActionHandler(QWidget):
 
     @Slot(bool)
     def process_export_image(self):
+        net = self.mw.nt_manager.current_net
+        if net is None:
+            err_msg = "There is no selected network."
+            self.show_error("Export a network image", err_msg)
+            return
+
         try:
             self.exportImageDialog.exec()
 
             if self.exportImageDialog.result() == QDialog.Rejected:
                 return
 
-            net = self.mw.nt_manager.current_item.data()
-            if net:
-                fpath = self.exportImageDialog.fpath
-                is_transparent = self.exportImageDialog.isTransparent
-                quality = self.exportImageDialog.quality
-                scale_width = self.exportImageDialog.scaleWidth
-                scale_height = self.exportImageDialog.scaleHeight
-                dpi_width = self.exportImageDialog.dpiWidth
-                dpi_height = self.exportImageDialog.dpiHeight
-                if not fpath:
-                    err_msg = "File name is not designated."
-                    self.show_error("Export a network image", err_msg)
+            fpath = self.exportImageDialog.fpath
+            is_transparent = self.exportImageDialog.isTransparent
+            quality = self.exportImageDialog.quality
+            scale_width = self.exportImageDialog.scaleWidth
+            scale_height = self.exportImageDialog.scaleHeight
+            dpi_width = self.exportImageDialog.dpiWidth
+            dpi_height = self.exportImageDialog.dpiHeight
+            if not fpath:
+                err_msg = "File name is not designated."
+                self.show_error("Export a network image", err_msg)
+                return
 
-                write_image(net,
-                            fpath,
-                            transparent=is_transparent,
-                            quality=quality,
-                            scale_width=scale_width,
-                            scale_height=scale_height,
-                            dpi_width=dpi_width,
-                            dpi_height=dpi_height)
+            write_image(net,
+                        fpath,
+                        transparent=is_transparent,
+                        quality=quality,
+                        scale_width=scale_width,
+                        scale_height=scale_height,
+                        dpi_width=dpi_width,
+                        dpi_height=dpi_height)
         except Exception as err:
             err_msg = "An error has occurred during saving the file:\n%s"
             self.show_error("Export a network image", err_msg % format_exc())

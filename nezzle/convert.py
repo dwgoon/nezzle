@@ -53,6 +53,7 @@ def to_graphics(dg, iden, no_edge_type=False):
     str_inh = '-'
 
     for str_src, str_trg, edge_data in dg.edges(data=True):
+        edge_data = dict(edge_data)
         str_edge_type = None
         head = None
 
@@ -187,6 +188,34 @@ def to_graphics(dg, iden, no_edge_type=False):
         net.add_edge(edge)
     # end of for : reading each line of SIF file
 
+    for str_name in dg.nodes:
+        if str_name in nodes:
+            continue
+
+        counter_node += 1
+
+        if 'POS_X' in dg.nodes[str_name]:
+            x = dg.nodes[str_name]['POS_X']
+        else:
+            x = half_width + random.uniform(*range_x)
+
+        if 'POS_Y' in dg.nodes[str_name]:
+            y = dg.nodes[str_name]['POS_Y']
+        else:
+            y = half_height + random.uniform(*range_y)
+
+        node = NodeClass(str_name, width=width, height=height,
+                         pos=QPointF(x, y))
+
+        if "FILL_COLOR" not in dg.nodes[str_name]:
+            node["FILL_COLOR"] = color_node
+
+        if 'BORDER_COLOR' not in dg.nodes[str_name]:
+            node['BORDER_COLOR'] = Qt.darkGray
+
+        node.update(dg.nodes[str_name])
+        nodes[str_name] = node
+
     # Add nodes and labels in network
     font = QFont()
     font.setFamily("Tahoma")
@@ -253,5 +282,10 @@ def to_networkx(net):
                 sign_edge = -1
 
             edge_data['SIGN'] = sign_edge
+
+    for iden, node in net.nodes.items():
+        if iden not in dg.nodes:
+            dg.add_node(iden)
+            dg.nodes[iden].update(node.to_dict())
 
     return dg

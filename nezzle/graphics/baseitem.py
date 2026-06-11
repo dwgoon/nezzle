@@ -15,6 +15,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
 from qtpy.QtWidgets import QGraphicsItem
 from qtpy.QtWidgets import QStyle
+from qtpy.QtGui import QBrush
 from qtpy.QtGui import QColor
 from qtpy.QtGui import QPen
 
@@ -79,6 +80,17 @@ class MappableItem(MutableMapping):
 
     def __len__(self):
         return len(self._attr)
+
+    # Graphics items are entities, not values: two items with identical
+    # attributes are still different items. Without these overrides
+    # Mapping.__eq__ kicks in for `item in list` membership tests and
+    # iterates half-constructed items (e.g. TwoNodeEdge registers itself
+    # with its nodes before _attr exists), and Mapping sets __hash__ = None.
+    def __eq__(self, other):
+        return other is self
+
+    def __hash__(self):
+        return id(self)
 
     def __str__(self):
         return str(self._attr)
@@ -168,6 +180,14 @@ class GeometryChangeItem(MappableGraphicsItem,
 
         return super().itemChange(change, value)
 
+    def to_dict(self):
+        # The live position is authoritative. Items without the
+        # ItemSendsGeometryChanges flag (edges) do not mirror setPos() into
+        # the attribute dict on every move, so refresh at serialization time.
+        self._attr.set('POS_X', self.x(), trigger=False)
+        self._attr.set('POS_Y', self.y(), trigger=False)
+        return super().to_dict()
+
     def gather_children(self):
         children = self.childItems()
         return children
@@ -200,17 +220,21 @@ class PainterOptionItem(GeometryChangeItem):
         self._pen.setJoinStyle(Qt.MiterJoin)
 
         self._color = QColor()
+        self._brush = QBrush(self._color)
 
     @property
     def attr_map(self):
         return __class__._attr_map
 
     def _invalidate(self):
-        if self.scene():
-            self.scene().invalidate()
+        # Schedule a repaint of just this item's area.
+        # NEVER call scene().invalidate() here — that wipes the background cache
+        # and forces every item in the scene to repaint, killing drag performance.
+        QGraphicsItem.update(self)
 
     def _trigger_set_border_width(self, key, value):
         width = int(value)
+        self.prepareGeometryChange()  # boundingRect pads by the pen width
         self._pen.setWidth(width)
         self._invalidate()
         return width
@@ -225,36 +249,35 @@ class PainterOptionItem(GeometryChangeItem):
         if isinstance(value, str):
             join_style = self.attr_map.to_qt('BORDER_JOIN', value)
             self._pen.setJoinStyle(join_style)
+            self._invalidate()
             return value
         elif isinstance(value, Qt.JoinStyle):
             self._pen.setJoinStyle(value)
+            self._invalidate()
             return self.attr_map.to_str('BORDER_JOIN', value)
         else:
             err_msg = "It is not an border join option: %s"%(value)
             raise AttributeError(err_msg)
 
-        self._invalidate()
-
-        return value
-
     def _trigger_set_border_line(self, key, value):
         if isinstance(value, str):
             line_type = self.attr_map.to_qt('BORDER_LINE', value)
             self._pen.setStyle(line_type)
+            self._invalidate()
             return value
         elif isinstance(value, Qt.PenStyle):
             self._pen.setStyle(value)
+            self._invalidate()
             return self.attr_map.to_str('BORDER_LINE', value)
         else:
             err_msg = "It is not an border line type: %s"%(value)
             raise AttributeError(err_msg)
 
-        self._invalidate()
-
-        return value
-
     def _trigger_set_fill_color(self, key, value):
         self._color = QColor(value)
+        # Cached: painter.setBrush(QColor) constructs an implicit QBrush on
+        # every paint of every item otherwise.
+        self._brush = QBrush(self._color)
         self._invalidate()
         return self._color.name(QColor.HexArgb)
 
@@ -262,17 +285,17 @@ class PainterOptionItem(GeometryChangeItem):
         painter.setPen(self._pen)
 
     def _set_fill_options(self, painter):
-        painter.setBrush(self._color)
+        painter.setBrush(self._brush)
 
     def _set_painter_options(self, painter):
-        painter.setPen(Qt.NoPen)
         self._set_border_options(painter)
         self._set_fill_options(painter)
 
     def paint(self, painter, option, widget):
-
-        painter.setClipRect(option.exposedRect)
-
+        # No setClipRect(option.exposedRect) here: without the
+        # ItemUsesExtendedStyleOption flag Qt fills exposedRect with the
+        # plain boundingRect, so the clip excluded nothing and only added
+        # per-item raster state changes on every frame.
         if option.state & QStyle.State_Selected:
             pen = QPen(self._pen)
             pen.setBrush(Qt.green)

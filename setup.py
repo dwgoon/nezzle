@@ -56,7 +56,7 @@ setup (
     packages=find_packages(),
     package_data={
         "": ["VERSION", "*.ui", "*.sif", "*.nzj", "*.json"],
-        "nezzle.resources": ["icon.png", "logo.png"],
+        "nezzle.resources": ["icon.png", "icon.ico", "logo.png"],
     },
     entry_points={
         "console_scripts": ["nezzle = nezzle.app:main"],

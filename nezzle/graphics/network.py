@@ -100,15 +100,17 @@ class Network(MappableItem):
 
         node = self.nodes[iden]
         while node.edges:
-            edge = node.edges.pop()
+            edge = node.pop_edge()
             self.remove_edge(edge)
 
         self.scene.removeItem(node)
         del self.nodes[iden]
+        if self.nxgraph.has_node(iden):
+            self.nxgraph.remove_node(iden)
 
     def replace_node(self, old_node, new_node):
         while old_node.edges:
-            edge = old_node.edges.pop()  # Remove all edges from old node
+            edge = old_node.pop_edge()  # Remove all edges from old node
 
             if isinstance(edge, SelfloopEdge):
                 edge.node = new_node
@@ -138,14 +140,26 @@ class Network(MappableItem):
     def replace_edge(self, old_edge, new_edge):
 
         if isinstance(old_edge, SelfloopEdge):
-            self.nxgraph.remove_edge(old_edge.node.iden, old_edge.node.iden)
-            self.nxgraph.add_edge(new_edge.node.iden, new_edge.node.iden)
+            u_old = v_old = old_edge.node.iden
+            u_new = v_new = new_edge.node.iden
+
+            data = dict(self.nxgraph[u_old][v_old])
+            self.nxgraph.remove_edge(u_old, v_old)
+            self.nxgraph.add_edge(u_new, v_new, **data)
+            self.nxgraph[u_new][v_new]['GRAPHICS'] = new_edge
 
             old_edge.node.remove_edge(old_edge)
             old_edge.node.add_edge(new_edge)
         else:
-            self.nxgraph.remove_edge(old_edge.source.iden, old_edge.target.iden)
-            self.nxgraph.add_edge(new_edge.source.iden, new_edge.target.iden)
+            u_old = old_edge.source.iden
+            v_old = old_edge.target.iden
+            u_new = new_edge.source.iden
+            v_new = new_edge.target.iden
+
+            data = dict(self.nxgraph[u_old][v_old])
+            self.nxgraph.remove_edge(u_old, v_old)
+            self.nxgraph.add_edge(u_new, v_new, **data)
+            self.nxgraph[u_new][v_new]['GRAPHICS'] = new_edge
 
             old_edge.source.remove_edge(old_edge)
             old_edge.target.remove_edge(old_edge)
@@ -194,7 +208,7 @@ class Network(MappableItem):
 
         edge = self.edges[iden]
         self.scene.removeItem(edge)
-        if isinstance(obj, SelfloopEdge):
+        if isinstance(edge, SelfloopEdge):
             self.nxgraph.remove_edge(edge.node.iden, edge.node.iden)
             edge.node.remove_edge(edge)
         else:
@@ -217,6 +231,7 @@ class Network(MappableItem):
 
         self.scene.removeItem(self.labels[iden])
         del self.labels[iden]
+        self.nxgraph.labels.pop(iden, None)
 
     def copy(self):
         net = self.from_dict(self.to_dict())
@@ -244,7 +259,7 @@ class Network(MappableItem):
             # Update node data from nxgraph.
             data = self.nxgraph.nodes[iden]
             data = data.copy()
-            data.pop('GRAPHICS')
+            data.pop('GRAPHICS', None)
             dict_node['NXGRAPH'] = data
 
             dict_net["NODES"].append(dict_node)
@@ -254,11 +269,14 @@ class Network(MappableItem):
             dict_edge = {key: val for key, val in dict_edge.items() if not key.startswith("_")}
 
             # Update edge data from nxgraph.
-            u = edge.source.iden
-            v = edge.target.iden
+            if isinstance(edge, SelfloopEdge):
+                u = v = edge.node.iden
+            else:
+                u = edge.source.iden
+                v = edge.target.iden
             data = self.nxgraph.edges[u, v]
             data = data.copy()
-            data.pop('GRAPHICS')
+            data.pop('GRAPHICS', None)
             dict_edge["NXGRAPH"] = data
 
             dict_net["EDGES"].append(dict_edge)
@@ -337,8 +355,11 @@ class Network(MappableItem):
         for iden, edge in net.edges.items():
             if 'NXGRAPH' in edge:
                 data = edge.pop('NXGRAPH', {})
-                u = edge.source.iden
-                v = edge.target.iden
+                if isinstance(edge, SelfloopEdge):
+                    u = v = edge.node.iden
+                else:
+                    u = edge.source.iden
+                    v = edge.target.iden
                 net.nxgraph.edges[u, v].update(data)
 
         return net

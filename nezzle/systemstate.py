@@ -5,7 +5,7 @@ from nezzle.constants import Lock
 class SystemState(QObject):
 
     def __init__(self):
-
+        super().__init__()
         self._lock_state = 0
 
     @property

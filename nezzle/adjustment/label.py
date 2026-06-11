@@ -14,9 +14,11 @@ def _set_displacement(pos, dp):
 
 
 def _align_label_center(net):
-    for label in net.labels:
-        rect = label.boundingRect()
-        label.setPos(-rect.width() / 2, -rect.height() / 2)
+    # Delegate to TextLabel.align so centering uses the visible text ink
+    # (not the loose layout box, which would float glyphs above the node).
+    # net.labels is a dict keyed by iden, so iterate its values.
+    for label in net.labels.values():
+        label.align("middle-center")
 
 
 def align_label(net, pos='bottomright', dp=7):

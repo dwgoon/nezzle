@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QPointF
@@ -13,6 +15,8 @@ from nezzle.graphics import NodeClassFactory
 from nezzle.graphics import Network
 
 app = QtWidgets.QApplication([])
+
+DPATH_DATA = os.path.dirname(os.path.abspath(__file__))
 
 
 def test_copy_node():
@@ -83,7 +87,7 @@ def test_copy_label():
 
 
 def test_copy_network():
-    net1 = read_network("jkwon_egfr_pathway.sif")
+    net1 = read_network(os.path.join(DPATH_DATA, "jkwon_egfr_pathway.sif"))
     net2 = net1.copy()
 
     assert set(net1.nodes.keys()) == set(net2.nodes.keys())

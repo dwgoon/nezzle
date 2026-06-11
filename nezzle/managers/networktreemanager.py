@@ -127,7 +127,7 @@ class NetworkTreeManager(QObject):
 
     def clear_selection(self):
         selection_model = self.tree_view.selectionModel()
-        selection_model.clear_selection()
+        selection_model.clearSelection()
 
     def on_context_menu(self, point):
         action_selected = self.pop_menu.exec_(self.tree_view.mapToGlobal(point))
